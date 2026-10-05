@@ -59,8 +59,20 @@ export function protectPage(requiredRoles){
         return
     }
     const user = getUser()
+    if(!user){
+        logout()
+        return
+    }
+    if(user.isVerified === false){
+        window.location.href = `${prefix}auth/verify-email.html?email=${encodeURIComponent(user.email || '')}`
+        return
+    }
+    if(user.isActive === false){
+        logout()
+        return
+    }
     const allowed = Array.isArray(requiredRoles) ? requiredRoles : [requiredRoles]
-    if(!user || !allowed.includes(user.role)){
-        redirectByRole(user?.role)
+    if(!allowed.includes(user.role)){
+        redirectByRole(user.role)
     }
 }

@@ -155,7 +155,6 @@
 
 
             <!-- Error -->
-
             <div
                 id="verify-error"
                 class="hidden text-center"
@@ -193,23 +192,75 @@
                     id="verify-error-message"
                     class="text-sm text-red-600 mt-3 leading-6"
                 >
-                    حدث خطأ أثناء محاولة تأكيد بريدك الإلكتروني.
+                    حدث خطأ أثناء محاولة تأكيد بريدك الإلكتروني أو أن الرابط منتهي الصلاحية.
                 </p>
 
-                <a
-                    href="./login.html"
-                    class="mt-6 inline-flex w-full
-                           items-center justify-center
-                           rounded-xl
-                           border border-slate-300
-                           bg-white
-                           px-5 py-3
-                           text-sm font-semibold
-                           text-slate-700
-                           transition hover:bg-slate-50"
-                >
-                    العودة إلى تسجيل الدخول
-                </a>
+                <div class="mt-5 pt-4 border-t border-slate-100">
+                    <p class="text-xs text-slate-500 mb-3">يمكنك طلب رابط تفعيل جديد أدناه:</p>
+                </div>
+
+            </div>
+
+
+            <!-- Resend Verification Section -->
+            <div id="resend-section" class="hidden">
+
+                <div class="text-center mb-6">
+                    <h2 class="text-xl font-bold text-slate-800">
+                        تأكيد البريد الإلكتروني
+                    </h2>
+                    <p class="text-sm text-slate-500 mt-2">
+                        أدخل بريدك الإلكتروني لاستلام رابط تفعيل جديد.
+                    </p>
+                </div>
+
+                <!-- Alert Boxes -->
+                <div id="resend-success-box" class="hidden mb-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-xs font-medium text-emerald-800 leading-relaxed shadow-sm">
+                    <div class="flex items-center gap-2">
+                        <svg class="h-4 w-4 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span id="resend-success-message">تم إرسال رابط تفعيل جديد إلى بريدك الإلكتروني. الرابط صالح لمدة 15 دقيقة.</span>
+                    </div>
+                </div>
+
+                <div id="resend-error-box" class="hidden mb-5 rounded-xl border border-red-200 bg-red-50 p-4 text-xs font-medium text-red-700 leading-relaxed shadow-sm">
+                    <span id="resend-error-message">تعذر إرسال رابط التفعيل. يرجى المحاولة لاحقاً.</span>
+                </div>
+
+                <form id="resend-form" class="space-y-4">
+                    <div>
+                        <label for="resend-email" class="mb-2 block text-xs font-bold text-slate-700">
+                            البريد الإلكتروني
+                        </label>
+                        <input
+                            type="email"
+                            id="resend-email"
+                            name="email"
+                            placeholder="user@example.com"
+                            required
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 px-4 text-sm text-slate-800 outline-none transition focus:border-emerald-600 focus:bg-white focus:ring-4 focus:ring-emerald-600/10"
+                        />
+                    </div>
+
+                    <button
+                        type="submit"
+                        id="resend-submit-btn"
+                        class="w-full rounded-xl bg-emerald-700 px-5 py-3 text-sm font-bold text-white shadow-md shadow-emerald-700/20 transition hover:bg-emerald-800 focus:outline-none focus:ring-4 focus:ring-emerald-700/20 disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
+                        إعادة إرسال رابط التفعيل
+                    </button>
+                </form>
+
+                <p class="mt-4 text-center text-xs text-slate-400">
+                    سيتم إرسال رابط تفعيل جديد إلى بريدك الإلكتروني ويكون صالحاً لمدة 15 دقيقة.
+                </p>
+
+                <div class="mt-6 border-t border-slate-100 pt-4 text-center">
+                    <a href="./login.html" class="text-xs font-bold text-emerald-700 hover:underline">
+                        العودة إلى تسجيل الدخول &larr;
+                    </a>
+                </div>
 
             </div>
 

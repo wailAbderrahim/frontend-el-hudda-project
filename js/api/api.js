@@ -24,7 +24,13 @@ export async function apiRequest(endpoint, options = {}) {
             const isInsidePages = window.location.pathname.includes("/pages/")
             window.location.href = isInsidePages ? "../auth/login.html" : "pages/auth/login.html"
         }
-        throw new Error(data.message || "حدث خطأ في الاتصال بالخادم")
+        const error = new Error(data.message || "حدث خطأ في الاتصال بالخادم")
+        error.status = response.status
+        error.data = data
+        error.code = data.code || null
+        error.isUnverified = Boolean(data.isUnverified)
+        error.isActive = data.isActive
+        throw error
     }
 
     return data

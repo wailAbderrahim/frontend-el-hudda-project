@@ -59,6 +59,20 @@ export async function forgotPassword(email) {
 
 
 
+export async function resendVerification(email) {
+    const data = await apiRequest('/auth/resend-verification', {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            email
+        })
+    })
+    return data
+}
+
+
 export async function resetPassword(token, newPassword){
     const data = await apiRequest('/auth/reset-password',{
         method: 'POST',
@@ -67,8 +81,9 @@ export async function resetPassword(token, newPassword){
         },
         body:JSON.stringify({
             token,
-            email
+            newPassword
         })
     })
     return data
 }
+
