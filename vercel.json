@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    { "source": "/verify-email.html", "destination": "/pages/auth/verify-email.html" },
+    { "source": "/login.html", "destination": "/pages/auth/login.html" },
+    { "source": "/register.html", "destination": "/pages/auth/register.html" },
+    { "source": "/forgot-password.html", "destination": "/pages/auth/forgot-password.html" },
+    { "source": "/reset-password.html", "destination": "/pages/auth/reset-password.html" }
+  ]
+}

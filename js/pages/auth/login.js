@@ -1,6 +1,7 @@
-import { login } from "../../api/authApi.js";
+import { login, resendVerification } from "../../api/authApi.js";
 import { getProfile } from "../../api/usersApi.js";
 import { getUser, redirectByRole, getToken } from "../../auth/auth.js";
+import { getArabicErrorMessage } from "../../utils/errorHandler.js";
 
 // If already authenticated, redirect to appropriate dashboard
 const existingToken = getToken();
@@ -31,7 +32,15 @@ if (form) {
         const email = (document.getElementById("email")?.value || '').trim().toLowerCase();
         const password = document.getElementById("password")?.value || '';
 
-        const originalBtnText = submitBtn ? submitBtn.textContent : '';
+        if (!email || !password) {
+            if (errorBox) {
+                errorBox.textContent = 'يرجى إدخال البريد الإلكتروني وكلمة المرور.';
+                errorBox.classList.remove('hidden');
+            }
+            return;
+        }
+
+        const originalBtnText = submitBtn ? submitBtn.textContent : 'تسجيل الدخول';
         if (submitBtn) {
             submitBtn.disabled = true;
             submitBtn.textContent = 'جاري تسجيل الدخول...';
@@ -40,23 +49,29 @@ if (form) {
         try {
             const data = await login(email, password);
 
-            if (data.user && data.user.isActive === false) {
-                const err = new Error('Your account has been disabled. Please contact the administrator.');
-                err.code = 'ACCOUNT_DISABLED';
-                err.isActive = false;
+            const userObj = data.user || (data.data && data.data.user);
+            const tokenStr = data.token || (data.data && data.data.token);
+
+            if (userObj && userObj.isActive === false) {
+                const err = new Error('Your account is deactivated');
+                err.code = 'ACCOUNT_INACTIVE';
+                err.statusCode = 403;
                 throw err;
             }
 
-            if (data.user && data.user.isVerified === false) {
-                const err = new Error('Your email address has not been verified yet. Please verify your email to continue.');
+            if (userObj && userObj.isVerified === false) {
+                const err = new Error('Please verify your email before logging in');
                 err.code = 'EMAIL_NOT_VERIFIED';
                 err.isUnverified = true;
+                err.statusCode = 403;
                 throw err;
             }
 
-            localStorage.setItem("token", data.token);
+            // Save token
+            localStorage.setItem("token", tokenStr);
 
-            let userProfile = data.user;
+            // Attempt to load full profile with reliable fallback
+            let userProfile = userObj;
             try {
                 const profile = await getProfile();
                 if (profile && profile.role) {
@@ -67,17 +82,17 @@ if (form) {
             }
             localStorage.setItem("user", JSON.stringify(userProfile));
 
-            const user = getUser();
-            redirectByRole(user.role);
+            const finalUser = getUser() || userProfile;
+            redirectByRole(finalUser.role);
         } catch (error) {
             console.error('Login error:', error);
             if (errorBox) {
-                const msg = (error.message || '').toLowerCase();
-                const isUnverified = error.code === 'EMAIL_NOT_VERIFIED' || error.isUnverified || msg.includes('verify') || msg.includes('تفعيل');
-                const isDisabled = error.code === 'ACCOUNT_DISABLED' || error.isActive === false || msg.includes('disabled') || msg.includes('deactivated') || msg.includes('تعطيل');
+                const code = error.code || (error.data && error.data.code);
+                const isUnverified = code === 'EMAIL_NOT_VERIFIED' || error.isUnverified;
+                const isInactive = code === 'ACCOUNT_INACTIVE' || code === 'ACCOUNT_DISABLED' || error.isActive === false;
 
                 if (isUnverified) {
-                    errorBox.className = 'mb-5 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 shadow-sm';
+                    errorBox.className = 'mb-5 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 shadow-xs';
                     errorBox.innerHTML = `
                         <div class="flex items-start gap-3">
                             <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
@@ -86,13 +101,21 @@ if (form) {
                                 </svg>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <h4 class="font-bold text-amber-900">البريد الإلكتروني غير مفعّل</h4>
+                                <h4 class="font-bold text-amber-900">لم يتم تأكيد بريدك الإلكتروني بعد</h4>
                                 <p class="mt-1 text-xs text-amber-700 leading-relaxed">
-                                    لم يتم تأكيد بريدك الإلكتروني بعد. يرجى تأكيد بريدك الإلكتروني للمتابعة.
+                                    يرجى تأكيد بريدك الإلكتروني لتتمكن من الدخول إلى حسابك.
                                 </p>
-                                <div class="mt-3">
-                                    <a href="./verify-email.html?email=${encodeURIComponent(email)}" class="inline-flex items-center gap-1.5 rounded-xl bg-amber-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-amber-700 transition">
-                                        <span>تأكيد البريد الإلكتروني</span>
+                                <div id="login-resend-feedback" class="hidden mt-2 text-xs font-semibold"></div>
+                                <div class="mt-3 flex flex-wrap items-center gap-2">
+                                    <button
+                                        type="button"
+                                        id="inline-resend-btn"
+                                        class="inline-flex items-center gap-1.5 rounded-xl bg-amber-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-amber-700 transition disabled:opacity-60 disabled:cursor-not-allowed"
+                                    >
+                                        <span>إعادة إرسال رابط التحقق</span>
+                                    </button>
+                                    <a href="./verify-email.html?email=${encodeURIComponent(email)}" class="inline-flex items-center gap-1 rounded-xl border border-amber-300 bg-amber-100/60 px-3 py-1.5 text-xs font-bold text-amber-900 hover:bg-amber-200/70 transition">
+                                        <span>صفحة التحقق</span>
                                         <span>&larr;</span>
                                     </a>
                                 </div>
@@ -100,8 +123,51 @@ if (form) {
                         </div>
                     `;
                     errorBox.classList.remove('hidden');
-                } else if (isDisabled) {
-                    errorBox.className = 'mb-5 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-900 shadow-sm';
+
+                    // Bind inline resend button
+                    const inlineBtn = document.getElementById('inline-resend-btn');
+                    const feedback = document.getElementById('login-resend-feedback');
+                    if (inlineBtn) {
+                        inlineBtn.addEventListener('click', async () => {
+                            inlineBtn.disabled = true;
+                            const originalText = inlineBtn.textContent;
+                            inlineBtn.textContent = 'جاري الإرسال...';
+                            if (feedback) feedback.classList.add('hidden');
+
+                            try {
+                                const res = await resendVerification(email);
+                                if (feedback) {
+                                    feedback.className = 'mt-2 text-xs font-bold text-emerald-700';
+                                    feedback.textContent = res.message || 'تم إرسال رابط تحقق جديد إلى بريدك الإلكتروني.';
+                                    feedback.classList.remove('hidden');
+                                }
+
+                                // 60s cooldown
+                                let cooldown = 60;
+                                inlineBtn.textContent = `إعادة الإرسال بعد (${cooldown})`;
+                                const interval = setInterval(() => {
+                                    cooldown--;
+                                    if (cooldown > 0) {
+                                        inlineBtn.textContent = `إعادة الإرسال بعد (${cooldown})`;
+                                    } else {
+                                        clearInterval(interval);
+                                        inlineBtn.disabled = false;
+                                        inlineBtn.textContent = originalText;
+                                    }
+                                }, 1000);
+                            } catch (resendErr) {
+                                inlineBtn.disabled = false;
+                                inlineBtn.textContent = originalText;
+                                if (feedback) {
+                                    feedback.className = 'mt-2 text-xs font-bold text-red-600';
+                                    feedback.textContent = getArabicErrorMessage(resendErr);
+                                    feedback.classList.remove('hidden');
+                                }
+                            }
+                        });
+                    }
+                } else if (isInactive) {
+                    errorBox.className = 'mb-5 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-900 shadow-xs';
                     errorBox.innerHTML = `
                         <div class="flex items-start gap-3">
                             <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-red-100 text-red-600">
@@ -110,9 +176,9 @@ if (form) {
                                 </svg>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <h4 class="font-bold text-red-900">الحساب معطّل</h4>
+                                <h4 class="font-bold text-red-900">حسابك غير مفعل حاليًا</h4>
                                 <p class="mt-1 text-xs text-red-700 leading-relaxed">
-                                    تم تعطيل حسابك. يرجى التواصل مع إدارة المدرسة.
+                                    تم تعطيل أو إيقاف تفعيل حسابك. يرجى التواصل مع إدارة المدرسة القرآنية.
                                 </p>
                             </div>
                         </div>
@@ -120,11 +186,7 @@ if (form) {
                     errorBox.classList.remove('hidden');
                 } else {
                     errorBox.className = 'mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700';
-                    if (msg.includes('invalid') || msg.includes('password') || msg.includes('email') || msg.includes('exist') || msg.includes('غير صحيحة')) {
-                        errorBox.textContent = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
-                    } else {
-                        errorBox.textContent = error.message || 'حدث خطأ أثناء تسجيل الدخول.';
-                    }
+                    errorBox.textContent = getArabicErrorMessage(error);
                     errorBox.classList.remove('hidden');
                 }
             }

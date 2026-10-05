@@ -1,4 +1,5 @@
 import { register } from "../../api/authApi.js";
+import { getArabicErrorMessage } from "../../utils/errorHandler.js";
 
 const form = document.getElementById('register-form');
 const success = document.getElementById('register-success');
@@ -32,11 +33,28 @@ if (form) {
             success.textContent = '';
         }
 
+        // Frontend validation
+        if (!firstName || !lastName || !phone || !placeOfBirth || !municipalityOfBirth || !educationLevel || !email || !password) {
+            if (errorBox) {
+                errorBox.textContent = 'يرجى ملء جميع الحقول المطلوبة والتأكد من صحة البيانات.';
+                errorBox.classList.remove('hidden');
+            }
+            return;
+        }
+
+        if (password.length < 8) {
+            if (errorBox) {
+                errorBox.textContent = 'كلمة المرور يجب أن تكون 8 أحرف على الأقل.';
+                errorBox.classList.remove('hidden');
+            }
+            return;
+        }
+
         if (password !== confirmedPassword) {
             if (passError) {
                 passError.classList.remove('hidden');
             } else if (errorBox) {
-                errorBox.textContent = 'كلمتا المرور غير متطابقتين';
+                errorBox.textContent = 'كلمتا المرور غير متطابقتين.';
                 errorBox.classList.remove('hidden');
             }
             return;
@@ -49,7 +67,7 @@ if (form) {
         }
 
         try {
-            const data = await register({
+            await register({
                 firstName,
                 lastName,
                 name,
@@ -72,13 +90,17 @@ if (form) {
                             </svg>
                         </div>
                         <div class="flex-1">
-                            <h4 class="font-bold text-emerald-900">تم إنشاء الحساب بنجاح</h4>
+                            <h4 class="font-bold text-emerald-900">تم إنشاء حسابك بنجاح</h4>
                             <p class="mt-1 text-xs text-emerald-700 leading-relaxed">
-                                تم إرسال رابط تأكيد إلى بريدك الإلكتروني (<strong>${email}</strong>). يرجى فتح البريد لتأكيد الحساب قبل تسجيل الدخول.
+                                تم إرسال رابط التحقق إلى بريدك الإلكتروني (<strong>${email}</strong>). يرجى فتح البريد والضغط على الرابط لتأكيد الحساب قبل تسجيل الدخول.
                             </p>
-                            <div class="mt-3">
-                                <a href="./login.html" class="inline-flex items-center gap-1 text-xs font-bold text-emerald-800 hover:underline">
-                                    الانتقال إلى تسجيل الدخول &larr;
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <a href="./verify-email.html?email=${encodeURIComponent(email)}" class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-700 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-emerald-800 transition">
+                                    <span>الانتقال إلى صفحة التحقق</span>
+                                    <span>&larr;</span>
+                                </a>
+                                <a href="./login.html" class="inline-flex items-center gap-1 rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-800 hover:bg-emerald-100 transition">
+                                    تسجيل الدخول
                                 </a>
                             </div>
                         </div>
@@ -91,14 +113,7 @@ if (form) {
         } catch (error) {
             if (success) success.classList.add('hidden');
             if (errorBox) {
-                const msg = error.message || '';
-                if (msg.includes('already exist') || msg.includes('موجود مسبقاً')) {
-                    errorBox.textContent = 'هذا البريد الإلكتروني مسجل مسبقاً. يرجى تسجيل الدخول أو استخدام بريد آخر.';
-                } else if (msg.includes('all fields are required')) {
-                    errorBox.textContent = 'يرجى ملء جميع الحقول المطلوبة.';
-                } else {
-                    errorBox.textContent = msg || 'حدث خطأ أثناء إنشاء الحساب. يرجى المحاولة مرة أخرى.';
-                }
+                errorBox.textContent = getArabicErrorMessage(error);
                 errorBox.classList.remove('hidden');
             }
         } finally {
