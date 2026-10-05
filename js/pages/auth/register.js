@@ -81,35 +81,8 @@ if (form) {
 
             if (errorBox) errorBox.classList.add('hidden');
 
-            if (success) {
-                success.innerHTML = `
-                    <div class="flex items-start gap-3">
-                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600">
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="font-bold text-emerald-900">تم إنشاء حسابك بنجاح</h4>
-                            <p class="mt-1 text-xs text-emerald-700 leading-relaxed">
-                                تم إرسال رابط التحقق إلى بريدك الإلكتروني (<strong>${email}</strong>). يرجى فتح البريد والضغط على الرابط لتأكيد الحساب قبل تسجيل الدخول.
-                            </p>
-                            <div class="mt-4 flex flex-wrap gap-2">
-                                <a href="./verify-email.html?email=${encodeURIComponent(email)}" class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-700 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-emerald-800 transition">
-                                    <span>الانتقال إلى صفحة التحقق</span>
-                                    <span>&larr;</span>
-                                </a>
-                                <a href="./login.html" class="inline-flex items-center gap-1 rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-800 hover:bg-emerald-100 transition">
-                                    تسجيل الدخول
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                success.classList.remove('hidden');
-            }
-
-            form.reset();
+            // Immediately redirect to the verification page per requirements
+            window.location.href = `./verify-email.html?email=${encodeURIComponent(email)}`;
         } catch (error) {
             if (success) success.classList.add('hidden');
             if (errorBox) {
