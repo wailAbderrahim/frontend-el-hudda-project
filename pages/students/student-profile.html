@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>الملف الشخصي للطالب | الهدى للقرآن</title>
+</head>
+
+<body class="min-h-screen bg-slate-50 text-slate-800">
+
+    <!-- Mobile Overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 z-30 hidden bg-slate-900/40 lg:hidden"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar"
+        class="fixed inset-y-0 right-0 z-40 flex w-72 translate-x-full flex-col border-l border-slate-200 bg-white transition-transform duration-300 lg:translate-x-0">
+
+        <!-- Brand -->
+        <div class="flex h-20 items-center gap-3 border-b border-slate-100 px-6">
+            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-700 text-white shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5S19.832 5.477 21 6.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253" />
+                </svg>
+            </div>
+            <div>
+                <h1 class="font-bold text-slate-800">الهدى للقرآن</h1>
+                <p class="text-xs text-slate-400">بوابة الطالب</p>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 space-y-1 overflow-y-auto px-4 py-5">
+            <p class="mb-3 px-3 text-xs font-semibold text-slate-400">القائمة الرئيسية</p>
+
+            <a href="./dashboard.html"
+                class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l9-9 9 9M5 10v10h14V10" />
+                </svg>
+                <span>الرئيسية وتقدمي</span>
+            </a>
+
+            <a href="./student-profile.html"
+                class="flex w-full items-center gap-3 rounded-xl bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span>ملفي الشخصي</span>
+            </a>
+
+            <a href="./dashboard.html#memorization"
+                class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5S19.832 5.477 21 6.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253" />
+                </svg>
+                <span>حفظي وتسميعي</span>
+            </a>
+
+            <a href="./dashboard.html#evaluations"
+                class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                </svg>
+                <span>تقييماتي</span>
+            </a>
+
+            <a href="./dashboard.html#attendance"
+                class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M8 7V3m8 4V3M4 11h16M5 21h14a1 1 0 001-1V6a1 1 0 00-1-1H5a1 1 0 00-1 1v14a1 1 0 001 1z" />
+                </svg>
+                <span>سجلي في الحضور</span>
+            </a>
+
+            <a href="./dashboard.html#announcements"
+                class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                </svg>
+                <span>إعلانات المدرسة</span>
+            </a>
+        </nav>
+
+        <!-- Sidebar Footer -->
+        <div class="border-t border-slate-100 p-4">
+            <button id="logout-btn"
+                class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-red-600 transition hover:bg-red-50">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5m5 5H3" />
+                </svg>
+                <span>تسجيل الخروج</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="min-h-screen lg:mr-72">
+
+        <!-- Header -->
+        <header
+            class="sticky top-0 z-20 flex h-20 items-center justify-between border-b border-slate-200 bg-white/95 px-4 backdrop-blur sm:px-6 lg:px-8">
+            <div class="flex items-center gap-4">
+                <button id="menu-btn" class="rounded-xl p-2 text-slate-600 hover:bg-slate-100 lg:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="1.7">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800">الملف الشخصي للطالب</h2>
+                    <p class="text-xs text-slate-400">بياناتك الشخصية، معلومات حلقتك، وسجل تقدمك القرآني</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div class="text-left hidden sm:block">
+                    <p id="student-name-header" class="text-sm font-semibold text-slate-800">جاري التحميل...</p>
+                    <p class="text-xs text-slate-400">طالب قرآن كريم</p>
+                </div>
+                <div id="student-avatar-header"
+                    class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 font-bold text-emerald-800 shadow-sm">
+                    ط
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Body -->
+        <main class="p-4 sm:p-6 lg:p-8 space-y-8 max-w-6xl">
+
+            <!-- Alert notification box -->
+            <div id="status-alert" class="hidden rounded-2xl border p-4 text-xs font-semibold shadow-sm transition"></div>
+
+            <!-- Loading Spinner -->
+            <div id="profile-loading" class="flex flex-col items-center justify-center py-16">
+                <div class="h-10 w-10 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent"></div>
+                <p class="mt-4 text-sm font-medium text-slate-500">جاري تحميل بيانات الطالب والتقدم الأكاديمي...</p>
+            </div>
+
+            <!-- Main Content Container -->
+            <div id="profile-content" class="hidden space-y-8">
+
+                <!-- 1. Identity & Overview Card -->
+                <div class="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
+                    <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                        <div id="student-avatar-badge"
+                            class="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-emerald-700 text-3xl font-bold text-white shadow-md shadow-emerald-700/20">
+                            ط
+                        </div>
+                        <div class="flex-1 text-center sm:text-right space-y-2">
+                            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                                <h3 id="display-student-name" class="text-2xl font-bold text-slate-800">—</h3>
+                                <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                    طالب قرآن كريم
+                                </span>
+                            </div>
+                            <p id="display-student-email" class="text-sm text-slate-500 font-medium">—</p>
+
+                            <!-- Profile Meta Grid -->
+                            <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-slate-100 text-xs">
+                                <div class="bg-slate-50 rounded-xl p-3">
+                                    <span class="text-slate-400 block mb-1">رقم الهاتف</span>
+                                    <span id="display-student-phone" class="font-semibold text-slate-700">—</span>
+                                </div>
+                                <div class="bg-slate-50 rounded-xl p-3">
+                                    <span class="text-slate-400 block mb-1">المستوى التعليمي</span>
+                                    <span id="display-student-education" class="font-semibold text-slate-700">—</span>
+                                </div>
+                                <div class="bg-slate-50 rounded-xl p-3">
+                                    <span class="text-slate-400 block mb-1">مكان / بلدية الميلاد</span>
+                                    <span id="display-student-birth" class="font-semibold text-slate-700">—</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Assigned Halaqa Card -->
+                <div class="rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50/70 via-white to-white p-6 shadow-sm">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-700 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5S19.832 5.477 21 6.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-base">الحلقة القرآنية الملتحق بها</h4>
+                            <p class="text-xs text-slate-500">تفاصيل الحلقة والشيخ المشرف ومواعيد التسميع</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                        <div class="bg-white rounded-xl border border-slate-200/80 p-4">
+                            <span class="text-xs text-slate-400 block mb-1">اسم الحلقة</span>
+                            <span id="halaqa-name-val" class="font-bold text-slate-800 text-sm">غير مسجل بحلقة حالياً</span>
+                        </div>
+                        <div class="bg-white rounded-xl border border-slate-200/80 p-4">
+                            <span class="text-xs text-slate-400 block mb-1">الشيخ المعلم</span>
+                            <span id="halaqa-teacher-val" class="font-bold text-emerald-700 text-sm">—</span>
+                        </div>
+                        <div class="bg-white rounded-xl border border-slate-200/80 p-4">
+                            <span class="text-xs text-slate-400 block mb-1">موعد التسميع الأسبوعي</span>
+                            <span id="halaqa-schedule-val" class="font-bold text-slate-700 text-sm">—</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Progress Metrics Cards (Attendance, Memorization, Evaluations) -->
+                <div>
+                    <h4 class="text-base font-bold text-slate-800 mb-4">ملخص الأداء والتقدم القرآني</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+                        <!-- Attendance Metric -->
+                        <div class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-semibold text-slate-400">سجل الحضور والالتزام</span>
+                                <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="flex items-baseline gap-2">
+                                <span id="metric-att-rate" class="text-3xl font-extrabold text-emerald-700">0%</span>
+                                <span class="text-xs text-slate-400">نسبة الحضور</span>
+                            </div>
+                            <div class="mt-4 flex items-center justify-between text-xs text-slate-500 border-t border-slate-100 pt-3">
+                                <span>حضور: <strong id="metric-att-present" class="text-emerald-700">0</strong></span>
+                                <span>غياب: <strong id="metric-att-absent" class="text-red-600">0</strong></span>
+                                <span>تأخر: <strong id="metric-att-late" class="text-amber-600">0</strong></span>
+                            </div>
+                        </div>
+
+                        <!-- Memorization Metric -->
+                        <div class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-semibold text-slate-400">سجل التسميع والحفظ</span>
+                                <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-blue-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5S19.832 5.477 21 6.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253" />
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="flex items-baseline gap-2">
+                                <span id="metric-mem-count" class="text-3xl font-extrabold text-blue-700">0</span>
+                                <span class="text-xs text-slate-400">جلسة تسميع مسجلة</span>
+                            </div>
+                            <div class="mt-4 text-xs text-slate-500 border-t border-slate-100 pt-3">
+                                <span>آخر تسميع: <strong id="metric-mem-last" class="text-slate-800">لا يوجد بعد</strong></span>
+                            </div>
+                        </div>
+
+                        <!-- Evaluations Metric -->
+                        <div class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-semibold text-slate-400">متوسط درجات التقييم</span>
+                                <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-amber-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="flex items-baseline gap-2">
+                                <span id="metric-eval-avg" class="text-3xl font-extrabold text-amber-700">0 / 100</span>
+                                <span class="text-xs text-slate-400">معدل التقييم</span>
+                            </div>
+                            <div class="mt-4 flex items-center justify-between text-xs text-slate-500 border-t border-slate-100 pt-3">
+                                <span>التقييمات: <strong id="metric-eval-total" class="text-slate-800">0</strong></span>
+                                <span>آخر درجة: <strong id="metric-eval-last" class="text-emerald-700">—</strong></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- 4. Two-Column Cards: Edit Profile & Change Password -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <!-- Edit Profile Card -->
+                    <div class="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
+                        <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+                            <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" stroke-width="1.8">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-base">تعديل بيانات الحساب</h4>
+                                <p class="text-xs text-slate-400">تحديث معلومات الاتصال والاسم</p>
+                            </div>
+                        </div>
+
+                        <form id="edit-student-form" class="space-y-4">
+                            <div>
+                                <label class="mb-1.5 block text-xs font-semibold text-slate-700">الاسم الكامل</label>
+                                <input type="text" id="input-stud-name" required
+                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-800 outline-none transition focus:border-emerald-600 focus:bg-white focus:ring-4 focus:ring-emerald-600/10" />
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="mb-1.5 block text-xs font-semibold text-slate-700">الاسم الشخصي</label>
+                                    <input type="text" id="input-stud-firstname" required
+                                        class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-800 outline-none transition focus:border-emerald-600 focus:bg-white focus:ring-4 focus:ring-emerald-600/10" />
+                                </div>
+                                <div>
+                                    <label class="mb-1.5 block text-xs font-semibold text-slate-700">اللقب</label>
+                                    <input type="text" id="input-stud-lastname" required
+                                        class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-800 outline-none transition focus:border-emerald-600 focus:bg-white focus:ring-4 focus:ring-emerald-600/10" />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="mb-1.5 block text-xs font-semibold text-slate-700">رقم الهاتف</label>
+                                <input type="text" id="input-stud-phone" required
+                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-800 outline-none transition focus:border-emerald-600 focus:bg-white focus:ring-4 focus:ring-emerald-600/10" />
+                            </div>
+
+                            <div>
+                                <label class="mb-1.5 block text-xs font-semibold text-slate-700">البريد الإلكتروني</label>
+                                <input type="email" id="input-stud-email" disabled
+                                    class="w-full rounded-xl border border-slate-200 bg-slate-100 px-3.5 py-2.5 text-xs text-slate-400 cursor-not-allowed" />
+                                <span class="text-[10px] text-slate-400 mt-1 block">البريد الإلكتروني غير قابل للتعديل</span>
+                            </div>
+
+                            <button type="submit" id="btn-save-stud-profile"
+                                class="mt-4 w-full rounded-xl bg-emerald-700 px-4 py-3 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-800 disabled:opacity-50">
+                                حفظ التغييرات
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Change Password Card -->
+                    <div class="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
+                        <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+                            <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" stroke-width="1.8">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-base">تغيير كلمة المرور</h4>
+                                <p class="text-xs text-slate-400">تحديث كلمة مرور الحساب الخاصة بك</p>
+                            </div>
+                        </div>
+
+                        <form id="change-stud-password-form" class="space-y-4">
+                            <div>
+                                <label class="mb-1.5 block text-xs font-semibold text-slate-700">كلمة المرور الحالية</label>
+                                <input type="password" id="input-stud-curr-pass" required placeholder="••••••••"
+                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-800 outline-none transition focus:border-emerald-600 focus:bg-white focus:ring-4 focus:ring-emerald-600/10" />
+                            </div>
+
+                            <div>
+                                <label class="mb-1.5 block text-xs font-semibold text-slate-700">كلمة المرور الجديدة</label>
+                                <input type="password" id="input-stud-new-pass" required minlength="6" placeholder="••••••••"
+                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-800 outline-none transition focus:border-emerald-600 focus:bg-white focus:ring-4 focus:ring-emerald-600/10" />
+                            </div>
+
+                            <div>
+                                <label class="mb-1.5 block text-xs font-semibold text-slate-700">تأكيد كلمة المرور الجديدة</label>
+                                <input type="password" id="input-stud-confirm-pass" required minlength="6" placeholder="••••••••"
+                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-slate-800 outline-none transition focus:border-emerald-600 focus:bg-white focus:ring-4 focus:ring-emerald-600/10" />
+                            </div>
+
+                            <button type="submit" id="btn-save-stud-pass"
+                                class="mt-4 w-full rounded-xl bg-slate-800 px-4 py-3 text-xs font-bold text-white shadow-sm transition hover:bg-slate-900 disabled:opacity-50">
+                                تحديث كلمة المرور
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Page Script -->
+    <script type="module" src="../../js/pages/students/student-profile.js"></script>
+</body>
+
+</html>

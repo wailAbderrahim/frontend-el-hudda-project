@@ -1,0 +1,1397 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <title>الحلقات | الهدى للقرآن</title>
+</head>
+
+<body class="min-h-screen bg-slate-50 text-slate-800">
+
+    <!-- Mobile Overlay -->
+    <div
+        id="sidebar-overlay"
+        class="fixed inset-0 z-30 hidden bg-slate-900/40 lg:hidden">
+    </div>
+
+
+    <!-- Sidebar -->
+    <aside
+        id="sidebar"
+        class="fixed inset-y-0 right-0 z-40 flex w-72 translate-x-full flex-col border-l border-slate-200 bg-white transition-transform duration-300 lg:translate-x-0">
+
+        <!-- Brand -->
+        <div class="flex h-20 items-center gap-3 border-b border-slate-100 px-6">
+
+            <div
+                class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-700 text-white">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5S19.832 5.477 21 6.253v13C19.832 18.477 18.246 18 16.5 18s-3.332-.477-4.5 1.253"
+                    />
+
+                </svg>
+
+            </div>
+
+            <div>
+                <h1 class="font-bold text-slate-800">
+                    الهدى للقرآن
+                </h1>
+
+                <p class="text-xs text-slate-400">
+                    لوحة الإدارة
+                </p>
+            </div>
+
+        </div>
+
+
+        <!-- Navigation -->
+        <nav class="flex-1 space-y-1 overflow-y-auto px-4 py-5">
+
+            <p class="mb-3 px-3 text-xs font-semibold text-slate-400">
+                الرئيسية
+            </p>
+
+
+            <!-- Dashboard -->
+            <a
+                href="./dashboard.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M3 12l9-9 9 9M5 10v10h14V10"
+                    />
+
+                </svg>
+
+                <span>الرئيسية</span>
+
+            </a>
+
+
+            <!-- Users -->
+            <a
+                href="./users.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"
+                    />
+
+                </svg>
+
+                <span>إدارة المستخدمين</span>
+
+            </a>
+
+
+            <!-- Halaqas -->
+            <a
+                href="./halaqas.html"
+                class="flex items-center gap-3 rounded-xl bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M4 19.5A2.5 2.5 0 016.5 17H20M4 19.5A2.5 2.5 0 011.5 17V5A2.5 2.5 0 014 2.5h12A2.5 2.5 0 0118.5 5v12M4 19.5V21h14"
+                    />
+
+                </svg>
+
+                <span>الحلقات</span>
+
+            </a>
+
+
+            <!-- Memorization -->
+            <a
+                href="./memorization.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5S19.832 5.477 21 6.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253"
+                    />
+
+                </svg>
+
+                <span>الحفظ</span>
+
+            </a>
+
+
+            <!-- Evaluations -->
+            <a
+                href="./evaluations.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"
+                    />
+
+                </svg>
+
+                <span>التقييمات</span>
+
+            </a>
+
+
+            <!-- Attendance -->
+            <a
+                href="./attendance.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M8 7V3m8 4V3M4 11h16M5 21h14a1 1 0 001-1V6a1 1 0 00-1-1H5a1 1 0 00-1 1v14a1 1 0 001 1z"
+                    />
+
+                </svg>
+
+                <span>الحضور</span>
+
+            </a>
+
+
+            <!-- Announcements -->
+            <a
+                href="./announcements.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M19 11H5m14 0a7 7 0 01-14 0m14 0V8a7 7 0 00-14 0v3m14 0v3a7 7 0 01-14 0v-3"
+                    />
+
+                </svg>
+
+                <span>الإعلانات</span>
+
+            </a>
+
+
+            <!-- Reports -->
+            <a
+                href="./reports.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M9 17v-6m4 6V7m4 10v-3M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z"
+                    />
+
+                </svg>
+
+                <span>التقارير</span>
+
+            </a>
+
+
+            <!-- Notifications -->
+            <a
+                href="./notifications.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M15 17h5l-1.5-2V9a6.5 6.5 0 00-13 0v6L4 17h5m6 0a3 3 0 01-6 0"
+                    />
+
+                </svg>
+
+                <span>الإشعارات</span>
+
+            </a>
+
+        </nav>
+
+
+        <!-- Sidebar Footer -->
+        <div class="border-t border-slate-100 p-4">
+
+            <button
+                id="logout-btn"
+                class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-red-600 transition hover:bg-red-50">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5m5 5H3"
+                    />
+
+                </svg>
+
+                <span>تسجيل الخروج</span>
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Main -->
+    <div class="min-h-screen lg:mr-72">
+
+
+        <!-- Header -->
+        <header
+            class="sticky top-0 z-20 flex h-20 items-center justify-between border-b border-slate-200 bg-white/95 px-4 backdrop-blur sm:px-6 lg:px-8">
+
+            <!-- Mobile Menu -->
+            <button
+                id="menu-btn"
+                class="rounded-xl p-2 text-slate-600 hover:bg-slate-100 lg:hidden">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M4 6h16M4 12h16M4 18h16"
+                    />
+
+                </svg>
+
+            </button>
+
+
+            <!-- Page Title -->
+            <div>
+
+                <h2 class="text-lg font-bold text-slate-800">
+                    إدارة الحلقات
+                </h2>
+
+                <p class="hidden text-xs text-slate-400 sm:block">
+                    تنظيم الحلقات والمعلمين والطلاب
+                </p>
+
+            </div>
+
+
+            <!-- Header Actions -->
+            <div class="flex items-center gap-2 sm:gap-4">
+
+                <!-- Notifications -->
+                <a
+                    href="./notifications.html"
+                    class="relative rounded-xl p-2.5 text-slate-500 transition hover:bg-slate-100 hover:text-emerald-700">
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="1.7">
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M15 17h5l-1.5-2V9a6.5 6.5 0 00-13 0v6L4 17h5m6 0a3 3 0 01-6 0"
+                        />
+
+                    </svg>
+
+                    <span
+                        class="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500">
+                    </span>
+
+                </a>
+
+
+                <!-- User -->
+                <div class="hidden items-center gap-3 border-r border-slate-200 pr-4 sm:flex">
+
+                    <div class="text-left">
+
+                        <p
+                            id="admin-name"
+                            class="text-sm font-bold text-slate-700">
+                            الإدارة
+                        </p>
+
+                        <p class="text-xs text-slate-400">
+                            مدير النظام
+                        </p>
+
+                    </div>
+
+                    <div
+                        class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 font-bold text-emerald-700">
+
+                        <span id="admin-avatar">
+                            أ
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- Content -->
+        <main class="p-4 sm:p-6 lg:p-8">
+
+
+            <!-- Page Intro -->
+            <section class="mb-8">
+
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+                    <div>
+
+                        <h1 class="text-2xl font-bold text-slate-800">
+                            الحلقات
+                        </h1>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                            إدارة حلقات تحفيظ القرآن وتنظيم الطلاب والمعلمين.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        id="add-halaqa-btn"
+                        class="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800">
+
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.7">
+
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M12 5v14M5 12h14"
+                            />
+
+                        </svg>
+
+                        <span>إضافة حلقة</span>
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- Loading -->
+            <div
+                id="halaqas-loading"
+                class="mb-6 rounded-2xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-500 shadow-sm">
+
+                جاري تحميل بيانات الحلقات...
+            </div>
+
+
+            <!-- Error -->
+            <div
+                id="halaqas-error"
+                class="mb-6 hidden rounded-2xl border border-red-200 bg-red-50 p-5 text-red-700">
+
+                <p class="font-semibold">
+                    تعذر تحميل الحلقات
+                </p>
+
+                <p
+                    id="halaqas-error-message"
+                    class="mt-1 text-sm">
+                </p>
+
+            </div>
+
+
+            <!-- Statistics -->
+            <section class="mb-8">
+
+                <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+
+
+                    <!-- Total -->
+                    <div
+                        class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                        <div class="flex items-start justify-between">
+
+                            <div>
+
+                                <p class="text-sm text-slate-500">
+                                    إجمالي الحلقات
+                                </p>
+
+                                <p
+                                    id="halaqas-count"
+                                    class="mt-2 text-3xl font-bold text-slate-800">
+                                    —
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-6 w-6"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    stroke-width="1.7">
+
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M4 19.5A2.5 2.5 0 016.5 17H20M4 19.5A2.5 2.5 0 011.5 17V5A2.5 2.5 0 014 2.5h12A2.5 2.5 0 0118.5 5v12M4 19.5V21h14"
+                                    />
+
+                                </svg>
+
+                            </div>
+
+                        </div>
+
+                        <p class="mt-4 text-xs text-slate-400">
+                            جميع الحلقات المسجلة
+                        </p>
+
+                    </div>
+
+
+                    <!-- Active -->
+                    <div
+                        class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                        <div class="flex items-start justify-between">
+
+                            <div>
+
+                                <p class="text-sm text-slate-500">
+                                    الحلقات النشطة
+                                </p>
+
+                                <p
+                                    id="active-halaqas-count"
+                                    class="mt-2 text-3xl font-bold text-slate-800">
+                                    —
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-6 w-6"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    stroke-width="1.7">
+
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M5 13l4 4L19 7"
+                                    />
+
+                                </svg>
+
+                            </div>
+
+                        </div>
+
+                        <p class="mt-4 text-xs text-slate-400">
+                            الحلقات المتاحة حاليا
+                        </p>
+
+                    </div>
+
+
+                    <!-- Inactive -->
+                    <div
+                        class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                        <div class="flex items-start justify-between">
+
+                            <div>
+
+                                <p class="text-sm text-slate-500">
+                                    الحلقات غير النشطة
+                                </p>
+
+                                <p
+                                    id="inactive-halaqas-count"
+                                    class="mt-2 text-3xl font-bold text-slate-800">
+                                    —
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
+
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-6 w-6"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    stroke-width="1.7">
+
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M18.364 18.364A9 9 0 105.636 5.636m12.728 12.728L5.636 5.636"
+                                    />
+
+                                </svg>
+
+                            </div>
+
+                        </div>
+
+                        <p class="mt-4 text-xs text-slate-400">
+                            الحلقات المتوقفة مؤقتا
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- Filters -->
+            <section
+                class="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                <div class="grid gap-4 md:grid-cols-3">
+
+                    <!-- Search -->
+                    <div>
+
+                        <label
+                            for="search-halaqa"
+                            class="mb-2 block text-sm font-medium text-slate-600">
+                            البحث
+                        </label>
+
+                        <div class="relative">
+
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="1.7">
+
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M21 21l-4.35-4.35m2.35-5.65a8 8 0 11-16 0 8 8 0 0116 0z"
+                                />
+
+                            </svg>
+
+                            <input
+                                id="search-halaqa"
+                                type="text"
+                                placeholder="ابحث باسم الحلقة أو المعلم..."
+                                class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pr-10 pl-4 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100">
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Status -->
+                    <div>
+
+                        <label
+                            for="status-filter"
+                            class="mb-2 block text-sm font-medium text-slate-600">
+                            الحالة
+                        </label>
+
+                        <select
+                            id="status-filter"
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100">
+
+                            <option value="all">
+                                جميع الحالات
+                            </option>
+
+                            <option value="active">
+                                نشطة
+                            </option>
+
+                            <option value="inactive">
+                                غير نشطة
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Count -->
+                    <div class="flex items-end">
+
+                        <div
+                            class="flex w-full items-center justify-between rounded-xl bg-slate-50 px-4 py-3">
+
+                            <span class="text-sm text-slate-500">
+                                النتائج
+                            </span>
+
+                            <span
+                                id="filtered-halaqas-count"
+                                class="font-bold text-slate-700">
+                                0
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- Halaqas Table -->
+            <section
+                id="halaqas-table-container"
+                class="hidden overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+                <div
+                    class="flex flex-col gap-3 border-b border-slate-100 px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
+
+                    <div>
+
+                        <h2 class="font-bold text-slate-800">
+                            قائمة الحلقات
+                        </h2>
+
+                        <p class="mt-1 text-xs text-slate-400">
+                            جميع الحلقات المسجلة في النظام
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="overflow-x-auto">
+
+                    <table class="w-full min-w-[850px] text-right">
+
+                        <thead class="bg-slate-50">
+
+                            <tr class="border-b border-slate-200">
+
+                                <th class="px-6 py-4 text-xs font-semibold text-slate-500">
+                                    الحلقة
+                                </th>
+
+                                <th class="px-6 py-4 text-xs font-semibold text-slate-500">
+                                    المعلم
+                                </th>
+
+                                <th class="px-6 py-4 text-xs font-semibold text-slate-500">
+                                    الطلاب
+                                </th>
+
+                                <th class="px-6 py-4 text-xs font-semibold text-slate-500">
+                                    البرنامج
+                                </th>
+
+                                <th class="px-6 py-4 text-xs font-semibold text-slate-500">
+                                    الحالة
+                                </th>
+
+                                <th class="px-6 py-4 text-xs font-semibold text-slate-500">
+                                    الإجراءات
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody
+                            id="halaqas-table-body"
+                            class="divide-y divide-slate-100">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+            <!-- Empty State -->
+            <div
+                id="halaqas-empty"
+                class="hidden rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center">
+
+                <div
+                    class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-7 w-7"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="1.7">
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M4 19.5A2.5 2.5 0 016.5 17H20M4 19.5A2.5 2.5 0 011.5 17V5A2.5 2.5 0 014 2.5h12A2.5 2.5 0 0118.5 5v12M4 19.5V21h14"
+                        />
+
+                    </svg>
+
+                </div>
+
+                <h3 class="mt-4 font-bold text-slate-700">
+                    لا توجد حلقات
+                </h3>
+
+                <p class="mt-1 text-sm text-slate-400">
+                    لم يتم العثور على حلقات مطابقة للبحث.
+                </p>
+
+            </div>
+
+        </main>
+
+
+        <!-- Footer -->
+        <footer
+            class="border-t border-slate-200 px-4 py-6 text-center text-xs text-slate-400 sm:px-6 lg:px-8">
+
+            الهدى للقرآن — نظام إدارة المدرسة القرآنية
+
+        </footer>
+
+    </div>
+
+
+    <!-- Add / Edit Halaqa Modal -->
+    <div
+        id="halaqa-form-modal"
+        class="fixed inset-0 z-[70] hidden items-center justify-center bg-slate-900/40 p-4">
+
+        <div
+            class="w-full max-w-lg rounded-2xl bg-white shadow-xl">
+
+            <!-- Modal Header -->
+            <div
+                class="flex items-center justify-between border-b border-slate-100 px-6 py-5">
+
+                <div>
+
+                    <h2
+                        id="halaqa-form-title"
+                        class="font-bold text-slate-800">
+                        إضافة حلقة
+                    </h2>
+
+                    <p class="mt-1 text-xs text-slate-400">
+                        أدخل معلومات الحلقة
+                    </p>
+
+                </div>
+
+                <button
+                    id="close-halaqa-form"
+                    type="button"
+                    class="rounded-xl p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700">
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="1.7">
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
+                        />
+
+                    </svg>
+
+                </button>
+
+            </div>
+
+
+            <!-- Form -->
+            <form
+                id="halaqa-form"
+                class="space-y-5 p-6">
+
+                <div>
+
+                    <label
+                        for="halaqa-name"
+                        class="mb-2 block text-sm font-medium text-slate-600">
+                        اسم الحلقة
+                    </label>
+
+                    <input
+                        id="halaqa-name"
+                        type="text"
+                        required
+                        placeholder="مثال: حلقة الفجر"
+                        class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100">
+
+                </div>
+
+
+                <div>
+
+                    <label
+                        for="halaqa-teacher"
+                        class="mb-2 block text-sm font-medium text-slate-600">
+                        المعلم
+                    </label>
+
+                    <select
+                        id="halaqa-teacher"
+                        required
+                        class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100">
+
+                        <option value="">
+                            اختر المعلم
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div>
+
+                    <label
+                        for="halaqa-schedule"
+                        class="mb-2 block text-sm font-medium text-slate-600">
+                        البرنامج
+                    </label>
+
+                    <textarea
+                        id="halaqa-schedule"
+                        rows="3"
+                        placeholder="مثال: السبت والأحد بعد العصر"
+                        class="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100"></textarea>
+
+                    <p class="mt-1 text-xs text-slate-400">
+                        يمكن كتابة البرنامج في سطر واحد.
+                    </p>
+
+                </div>
+
+
+                <div
+                    id="halaqa-form-error"
+                    class="hidden rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                </div>
+
+
+                <div class="flex gap-3 pt-2">
+
+                    <button
+                        id="save-halaqa-btn"
+                        type="submit"
+                        class="flex-1 rounded-xl bg-emerald-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800">
+
+                        حفظ الحلقة
+
+                    </button>
+
+                    <button
+                        id="cancel-halaqa-form"
+                        type="button"
+                        class="rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">
+
+                        إلغاء
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- Halaqa Details Modal -->
+    <div
+        id="halaqa-details-modal"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40 p-4">
+
+        <div
+            class="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white shadow-xl">
+
+            <!-- Header -->
+            <div
+                class="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-white px-6 py-5">
+
+                <div>
+
+                    <h2
+                        id="details-halaqa-name"
+                        class="font-bold text-slate-800">
+                        تفاصيل الحلقة
+                    </h2>
+
+                    <p class="mt-1 text-xs text-slate-400">
+                        معلومات الحلقة والطلاب
+                    </p>
+
+                </div>
+
+                <button
+                    id="close-halaqa-details"
+                    type="button"
+                    class="rounded-xl p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700">
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="1.7">
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
+                        />
+
+                    </svg>
+
+                </button>
+
+            </div>
+
+
+            <div class="space-y-6 p-6">
+
+                <!-- Basic Info -->
+                <section>
+
+                    <h3 class="mb-4 font-bold text-slate-800">
+                        معلومات الحلقة
+                    </h3>
+
+                    <div class="grid gap-4 sm:grid-cols-2">
+
+                        <div class="rounded-xl bg-slate-50 p-4">
+
+                            <p class="text-xs text-slate-400">
+                                اسم الحلقة
+                            </p>
+
+                            <p
+                                id="details-name"
+                                class="mt-1 font-semibold text-slate-700">
+                                -
+                            </p>
+
+                        </div>
+
+
+                        <div class="rounded-xl bg-slate-50 p-4">
+
+                            <p class="text-xs text-slate-400">
+                                المعلم
+                            </p>
+
+                            <p
+                                id="details-teacher"
+                                class="mt-1 font-semibold text-slate-700">
+                                -
+                            </p>
+
+                        </div>
+
+
+                        <div class="rounded-xl bg-slate-50 p-4">
+
+                            <p class="text-xs text-slate-400">
+                                عدد الطلاب
+                            </p>
+
+                            <p
+                                id="details-students-count"
+                                class="mt-1 font-semibold text-slate-700">
+                                0
+                            </p>
+
+                        </div>
+
+
+                        <div class="rounded-xl bg-slate-50 p-4">
+
+                            <p class="text-xs text-slate-400">
+                                الحالة
+                            </p>
+
+                            <p
+                                id="details-status"
+                                class="mt-1 font-semibold">
+                                -
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="mt-4 rounded-xl bg-slate-50 p-4">
+
+                        <p class="text-xs text-slate-400">
+                            البرنامج
+                        </p>
+
+                        <p
+                            id="details-schedule"
+                            class="mt-1 text-sm font-medium text-slate-700">
+                            -
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- Students -->
+                <section>
+
+                    <div class="mb-4 flex items-center justify-between">
+
+                        <div>
+
+                            <h3 class="font-bold text-slate-800">
+                                طلاب الحلقة
+                            </h3>
+
+                            <p class="mt-1 text-xs text-slate-400">
+                                إدارة الطلاب المسجلين في الحلقة
+                            </p>
+
+                        </div>
+
+                        <button
+                            id="add-student-btn"
+                            type="button"
+                            class="rounded-xl bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-100">
+
+                            إضافة طالب
+
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        id="students-list"
+                        class="overflow-hidden rounded-xl border border-slate-200">
+
+                    </div>
+
+
+                    <div
+                        id="students-empty"
+                        class="hidden rounded-xl border border-dashed border-slate-300 p-8 text-center">
+
+                        <p class="text-sm text-slate-500">
+                            لا يوجد طلاب في هذه الحلقة حاليا.
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- Actions -->
+                <section class="border-t border-slate-100 pt-5">
+
+                    <div class="flex flex-col gap-3 sm:flex-row">
+
+                        <button
+                            id="edit-halaqa-btn"
+                            type="button"
+                            class="flex-1 rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
+
+                            تعديل الحلقة
+
+                        </button>
+
+                        <button
+                            id="toggle-halaqa-status-btn"
+                            type="button"
+                            class="flex-1 rounded-xl bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-700">
+
+                            تعطيل الحلقة
+
+                        </button>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Add Student Modal -->
+    <div
+        id="add-student-modal"
+        class="fixed inset-0 z-[80] hidden items-center justify-center bg-slate-900/40 p-4">
+
+        <div
+            class="w-full max-w-md rounded-2xl bg-white shadow-xl">
+
+            <div
+                class="flex items-center justify-between border-b border-slate-100 px-6 py-5">
+
+                <div>
+
+                    <h2 class="font-bold text-slate-800">
+                        إضافة طالب
+                    </h2>
+
+                    <p class="mt-1 text-xs text-slate-400">
+                        اختر الطالب لإضافته إلى الحلقة
+                    </p>
+
+                </div>
+
+                <button
+                    id="close-add-student"
+                    type="button"
+                    class="rounded-xl p-2 text-slate-400 hover:bg-slate-100">
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="1.7">
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
+                        />
+
+                    </svg>
+
+                </button>
+
+            </div>
+
+
+            <div class="space-y-5 p-6">
+
+                <div>
+
+                    <label
+                        for="student-select"
+                        class="mb-2 block text-sm font-medium text-slate-600">
+                        الطالب
+                    </label>
+
+                    <select
+                        id="student-select"
+                        class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100">
+
+                        <option value="">
+                            اختر الطالب
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div
+                    id="add-student-error"
+                    class="hidden rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                </div>
+
+
+                <div class="flex gap-3">
+
+                    <button
+                        id="confirm-add-student"
+                        type="button"
+                        class="flex-1 rounded-xl bg-emerald-700 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-800">
+
+                        إضافة الطالب
+
+                    </button>
+
+                    <button
+                        id="cancel-add-student"
+                        type="button"
+                        class="rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50">
+
+                        إلغاء
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script type="module" src="../../js/pages/admin/halaqas.js"></script>
+
+</body>
+
+</html>

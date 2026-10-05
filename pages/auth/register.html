@@ -1,0 +1,427 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>إنشاء حساب | الهدى للقرآن</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="min-h-screen bg-slate-50">
+
+    <main class="min-h-screen flex items-center justify-center px-4 py-10">
+
+        <div class="w-full max-w-2xl">
+
+            <!-- Brand -->
+            <div class="text-center mb-8">
+
+                <div
+                    class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-600 text-2xl font-bold text-white shadow-lg shadow-emerald-600/20"
+                >
+                    ه
+                </div>
+
+                <h1 class="text-2xl font-bold text-slate-900">
+                    الهدى للقرآن
+                </h1>
+
+                <p class="mt-2 text-sm text-slate-500">
+                    نظام إدارة المدرسة القرآنية
+                </p>
+
+            </div>
+
+
+            <!-- Register Card -->
+            <div class="rounded-2xl bg-white p-6 shadow-xl shadow-slate-200/60 sm:p-8">
+
+                <div class="mb-8">
+
+                    <h2 class="text-2xl font-bold text-slate-900">
+                        إنشاء حساب
+                    </h2>
+
+                    <p class="mt-2 text-sm text-slate-500">
+                        أنشئ حسابك للانضمام إلى المدرسة القرآنية
+                    </p>
+
+                </div>
+
+
+                <!-- Error -->
+                <div
+                    id="register-error"
+                    class="mb-6 hidden rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+                ></div>
+
+
+                <!-- Success -->
+                <div
+                    id="register-success"
+                    class="mb-6 hidden rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700"
+                ></div>
+
+
+                <form id="register-form" class="space-y-6">
+
+                    <!-- Name -->
+                    <div>
+
+                        <h3 class="mb-4 text-sm font-semibold text-slate-800">
+                            المعلومات الشخصية
+                        </h3>
+
+                        <div class="grid gap-4 sm:grid-cols-2">
+
+                            <!-- First Name -->
+                            <div>
+                                <label
+                                    for="firstName"
+                                    class="mb-2 block text-sm font-medium text-slate-700"
+                                >
+                                    الاسم
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="firstName"
+                                    name="firstName"
+                                    required
+                                    autocomplete="given-name"
+                                    placeholder="أدخل اسمك"
+                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
+                                >
+                            </div>
+
+
+                            <!-- Last Name -->
+                            <div>
+                                <label
+                                    for="lastName"
+                                    class="mb-2 block text-sm font-medium text-slate-700"
+                                >
+                                    اللقب
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="lastName"
+                                    name="lastName"
+                                    required
+                                    autocomplete="family-name"
+                                    placeholder="أدخل لقبك"
+                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
+                                >
+                            </div>
+
+
+                            <!-- Full Name -->
+                            <div class="sm:col-span-2">
+
+                                <label
+                                    for="name"
+                                    class="mb-2 block text-sm font-medium text-slate-700"
+                                >
+                                    الاسم الكامل
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    required
+                                    autocomplete="name"
+                                    placeholder="أدخل الاسم الكامل"
+                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
+                                >
+
+                            </div>
+
+
+                            <!-- Phone -->
+                            <div class="sm:col-span-2">
+
+                                <label
+                                    for="phone"
+                                    class="mb-2 block text-sm font-medium text-slate-700"
+                                >
+                                    رقم الهاتف
+                                </label>
+
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    name="phone"
+                                    required
+                                    autocomplete="tel"
+                                    placeholder="مثال: 0550123456"
+                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Birth Information -->
+                    <div>
+
+                        <h3 class="mb-4 text-sm font-semibold text-slate-800">
+                            معلومات الميلاد
+                        </h3>
+
+                        <div class="grid gap-4 sm:grid-cols-2">
+
+                            <!-- Place of Birth -->
+                            <div>
+
+                                <label
+                                    for="placeOfBirth"
+                                    class="mb-2 block text-sm font-medium text-slate-700"
+                                >
+                                    مكان الميلاد
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="placeOfBirth"
+                                    name="placeOfBirth"
+                                    required
+                                    placeholder="مكان الميلاد"
+                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
+                                >
+
+                            </div>
+
+
+                            <!-- Municipality -->
+                            <div>
+
+                                <label
+                                    for="municipalityOfBirth"
+                                    class="mb-2 block text-sm font-medium text-slate-700"
+                                >
+                                    بلدية الميلاد
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="municipalityOfBirth"
+                                    name="municipalityOfBirth"
+                                    required
+                                    placeholder="بلدية الميلاد"
+                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Education -->
+                    <div>
+
+                        <label
+                            for="educationLevel"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            المستوى الدراسي
+                        </label>
+
+                        <select
+                            id="educationLevel"
+                            name="educationLevel"
+                            required
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
+                        >
+
+                            <option value="" disabled selected>
+                                اختر المستوى الدراسي
+                            </option>
+
+                            <option value="ابتدائي">
+                                ابتدائي
+                            </option>
+
+                            <option value="متوسط">
+                                متوسط
+                            </option>
+
+                            <option value="ثانوي">
+                                ثانوي
+                            </option>
+
+                            <option value="جامعي">
+                                جامعي
+                            </option>
+
+                            <option value="دراسات عليا">
+                                دراسات عليا
+                            </option>
+
+                            <option value="متخرج">
+                                متخرج
+                            </option>
+
+                            <option value="بدون دراسة">
+                                بدون دراسة
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Account Information -->
+                    <div>
+
+                        <h3 class="mb-4 text-sm font-semibold text-slate-800">
+                            معلومات الحساب
+                        </h3>
+
+                        <div class="space-y-4">
+
+                            <!-- Email -->
+                            <div>
+
+                                <label
+                                    for="email"
+                                    class="mb-2 block text-sm font-medium text-slate-700"
+                                >
+                                    البريد الإلكتروني
+                                </label>
+
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    required
+                                    autocomplete="email"
+                                    placeholder="example@email.com"
+                                    dir="ltr"
+                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-left text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
+                                >
+
+                            </div>
+
+
+                            <!-- Password -->
+                            <div>
+
+                                <label
+                                    for="password"
+                                    class="mb-2 block text-sm font-medium text-slate-700"
+                                >
+                                    كلمة المرور
+                                </label>
+
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    required
+                                    autocomplete="new-password"
+                                    placeholder="أدخل كلمة المرور"
+                                    dir="ltr"
+                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-left text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
+                                >
+
+                            </div>
+
+
+                            <!-- Confirm Password -->
+                            <div>
+
+                                <label
+                                    for="confirmPassword"
+                                    class="mb-2 block text-sm font-medium text-slate-700"
+                                >
+                                    تأكيد كلمة المرور
+                                </label>
+
+                                <input
+                                    type="password"
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    required
+                                    autocomplete="new-password"
+                                    placeholder="أعد إدخال كلمة المرور"
+                                    dir="ltr"
+                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-left text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
+                                >
+                                <p id="password-error" class="hidden mt-2 text-sm text-red-600">
+                                    كلمتا المرور غير متطابقتين
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Submit -->
+                    <button
+                        type="submit"
+                        id="register-btn"
+                        class="w-full rounded-xl bg-emerald-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-emerald-600/20 transition hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                        إنشاء الحساب
+                    </button>
+
+                </form>
+
+
+                <!-- Login -->
+                <div class="mt-6 border-t border-slate-100 pt-6 text-center">
+
+                    <p class="text-sm text-slate-500">
+
+                        لديك حساب بالفعل؟
+
+                        <a
+                            href="./login.html"
+                            class="font-semibold text-emerald-600 hover:text-emerald-700"
+                        >
+                            تسجيل الدخول
+                        </a>
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Footer -->
+            <p class="mt-6 text-center text-xs text-slate-400">
+                © الهدى للقرآن — جميع الحقوق محفوظة
+            </p>
+
+        </div>
+
+    </main>
+
+
+    <!-- Register JS -->
+    <script
+        type="module"
+        src="../../js/pages/auth/register.js"
+    ></script>
+
+</body>
+
+</html>

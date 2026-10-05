@@ -1,0 +1,1763 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <title>الحفظ | الهدى للقرآن</title>
+</head>
+
+<body class="min-h-screen bg-slate-50 text-slate-800">
+
+    <!-- =========================
+         Mobile Overlay
+    ========================== -->
+
+    <div
+        id="sidebar-overlay"
+        class="fixed inset-0 z-30 hidden bg-slate-900/40 lg:hidden">
+    </div>
+
+
+    <!-- =========================
+         Sidebar
+    ========================== -->
+
+    <aside
+        id="sidebar"
+        class="fixed inset-y-0 right-0 z-40 flex w-72 translate-x-full flex-col border-l border-slate-200 bg-white transition-transform duration-300 lg:translate-x-0">
+
+        <!-- Brand -->
+
+        <div class="flex h-20 items-center gap-3 border-b border-slate-100 px-6">
+
+            <div
+                class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-700 text-white">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5S19.832 5.477 21 6.253v13C19.832 18.477 18.246 18 16.5 18s-3.332-.477-4.5 1.253"
+                    />
+
+                </svg>
+
+            </div>
+
+            <div>
+
+                <h1 class="font-bold text-slate-800">
+                    الهدى للقرآن
+                </h1>
+
+                <p class="text-xs text-slate-400">
+                    لوحة الإدارة
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Navigation -->
+
+        <nav class="flex-1 space-y-1 overflow-y-auto px-4 py-5">
+
+            <p class="mb-3 px-3 text-xs font-semibold text-slate-400">
+                الرئيسية
+            </p>
+
+
+            <!-- Dashboard -->
+
+            <a
+                href="./dashboard.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M3 12l9-9 9 9M5 10v10h14V10"
+                    />
+
+                </svg>
+
+                <span>الرئيسية</span>
+
+            </a>
+
+
+            <!-- Users -->
+
+            <a
+                href="./users.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"
+                    />
+
+                </svg>
+
+                <span>إدارة المستخدمين</span>
+
+            </a>
+
+
+            <!-- Halaqas -->
+
+            <a
+                href="./halaqas.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M4 19.5A2.5 2.5 0 016.5 17H20M4 19.5A2.5 2.5 0 011.5 17V5A2.5 2.5 0 014 2.5h12A2.5 2.5 0 0118.5 5v12M4 19.5V21h14"
+                    />
+
+                </svg>
+
+                <span>الحلقات</span>
+
+            </a>
+
+
+            <!-- Memorization Active -->
+
+            <a
+                href="./memorization.html"
+                class="flex items-center gap-3 rounded-xl bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5S19.832 5.477 21 6.253v13C19.832 18.477 18.246 18 16.5 18s-3.332-.477-4.5 1.253"
+                    />
+
+                </svg>
+
+                <span>الحفظ</span>
+
+            </a>
+
+
+            <!-- Evaluations -->
+
+            <a
+                href="./evaluations.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"
+                    />
+
+                </svg>
+
+                <span>التقييمات</span>
+
+            </a>
+
+
+            <!-- Attendance -->
+
+            <a
+                href="./attendance.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M8 7V3m8 4V3M4 11h16M5 21h14a1 1 0 001-1V6a1 1 0 00-1-1H5a1 1 0 00-1 1v14a1 1 0 001 1z"
+                    />
+
+                </svg>
+
+                <span>الحضور</span>
+
+            </a>
+
+
+            <!-- Announcements -->
+
+            <a
+                href="./announcements.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M19 11H5m14 0a7 7 0 01-14 0m14 0V8a7 7 0 00-14 0v3m14 0v3a7 7 0 01-14 0v-3"
+                    />
+
+                </svg>
+
+                <span>الإعلانات</span>
+
+            </a>
+
+
+            <!-- Reports -->
+
+            <a
+                href="./reports.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M9 17v-6m4 6V7m4 10v-3M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z"
+                    />
+
+                </svg>
+
+                <span>التقارير</span>
+
+            </a>
+
+
+            <!-- Notifications -->
+
+            <a
+                href="./notifications.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M15 17h5l-1.5-2V9a6.5 6.5 0 00-13 0v6L4 17h5m6 0a3 3 0 01-6 0"
+                    />
+
+                </svg>
+
+                <span>الإشعارات</span>
+
+            </a>
+
+        </nav>
+
+
+        <!-- Sidebar Footer -->
+
+        <div class="border-t border-slate-100 p-4">
+
+            <button
+                id="logout-btn"
+                class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-red-600 transition hover:bg-red-50">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5m5 5H3"
+                    />
+
+                </svg>
+
+                <span>تسجيل الخروج</span>
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================
+         Main
+    ========================== -->
+
+    <div class="min-h-screen lg:mr-72">
+
+
+        <!-- Header -->
+
+        <header
+            class="sticky top-0 z-20 flex h-20 items-center justify-between border-b border-slate-200 bg-white/95 px-4 backdrop-blur sm:px-6 lg:px-8">
+
+            <!-- Mobile Menu -->
+
+            <button
+                id="menu-btn"
+                class="rounded-xl p-2 text-slate-600 hover:bg-slate-100 lg:hidden">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M4 6h16M4 12h16M4 18h16"
+                    />
+
+                </svg>
+
+            </button>
+
+
+            <!-- Page Title -->
+
+            <div>
+
+                <h2 class="text-lg font-bold text-slate-800">
+                    إدارة الحفظ
+                </h2>
+
+                <p class="hidden text-xs text-slate-400 sm:block">
+                    متابعة وتسجيل حفظ القرآن للطلاب
+                </p>
+
+            </div>
+
+
+            <!-- Header Actions -->
+
+            <div class="flex items-center gap-2 sm:gap-4">
+
+                <!-- Notifications -->
+
+                <a
+                    href="./notifications.html"
+                    class="relative rounded-xl p-2.5 text-slate-500 transition hover:bg-slate-100 hover:text-emerald-700">
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="1.7">
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M15 17h5l-1.5-2V9a6.5 6.5 0 00-13 0v6L4 17h5m6 0a3 3 0 01-6 0"
+                        />
+
+                    </svg>
+
+                    <span
+                        class="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500">
+                    </span>
+
+                </a>
+
+
+                <!-- User -->
+
+                <div
+                    class="hidden items-center gap-3 border-r border-slate-200 pr-4 sm:flex">
+
+                    <div class="text-left">
+
+                        <p
+                            id="admin-name"
+                            class="text-sm font-bold text-slate-700">
+                            الإدارة
+                        </p>
+
+                        <p class="text-xs text-slate-400">
+                            مدير النظام
+                        </p>
+
+                    </div>
+
+                    <div
+                        class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 font-bold text-emerald-700">
+
+                        <span id="admin-avatar">
+                            أ
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =========================
+             Content
+        ========================== -->
+
+        <main class="p-4 sm:p-6 lg:p-8">
+
+
+            <!-- Page Intro -->
+
+            <section class="mb-8">
+
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+                    <div>
+
+                        <h1 class="text-2xl font-bold text-slate-800">
+                            الحفظ
+                        </h1>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                            تسجيل ومتابعة عمليات حفظ القرآن الكريم للطلاب.
+                        </p>
+
+                    </div>
+
+                    <button
+                        id="add-memorization-btn"
+                        class="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800">
+
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.7">
+
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M12 5v14m-7-7h14"
+                            />
+
+                        </svg>
+
+                        <span>
+                            تسجيل حفظ جديد
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 Loading
+            ========================== -->
+
+            <div
+                id="memorization-loading"
+                class="mb-6 rounded-2xl border border-slate-200 bg-white p-6 text-center text-sm text-slate-500 shadow-sm">
+
+                جاري تحميل سجلات الحفظ...
+
+            </div>
+
+
+            <!-- =========================
+                 Error
+            ========================== -->
+
+            <div
+                id="memorization-error"
+                class="mb-6 hidden rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+
+                <div class="flex items-center justify-between gap-4">
+
+                    <span id="memorization-error-message"></span>
+
+                    <button
+                        id="retry-memorization-btn"
+                        class="rounded-lg bg-red-100 px-3 py-2 text-xs font-semibold text-red-700 hover:bg-red-200">
+
+                        إعادة المحاولة
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 Statistics
+            ========================== -->
+
+            <section class="mb-8">
+
+                <div class="mb-4">
+
+                    <h2 class="font-bold text-slate-800">
+                        الإحصائيات
+                    </h2>
+
+                </div>
+
+
+                <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+
+
+                    <!-- Total -->
+
+                    <div
+                        class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                        <div class="flex items-start justify-between">
+
+                            <div>
+
+                                <p class="text-sm text-slate-500">
+                                    إجمالي عمليات الحفظ
+                                </p>
+
+                                <p
+                                    id="total-memorization-count"
+                                    class="mt-2 text-3xl font-bold text-slate-800">
+                                    —
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-6 w-6"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    stroke-width="1.7">
+
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5S19.832 5.477 21 6.253v13C19.832 18 18.246 18 16.5 18s-3.332.477-4.5 1.253"
+                                    />
+
+                                </svg>
+
+                            </div>
+
+                        </div>
+
+                        <p class="mt-4 text-xs text-slate-400">
+                            جميع سجلات الحفظ
+                        </p>
+
+                    </div>
+
+
+                    <!-- Today -->
+
+                    <div
+                        class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                        <div class="flex items-start justify-between">
+
+                            <div>
+
+                                <p class="text-sm text-slate-500">
+                                    حفظ اليوم
+                                </p>
+
+                                <p
+                                    id="today-memorization-count"
+                                    class="mt-2 text-3xl font-bold text-slate-800">
+                                    —
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-6 w-6"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    stroke-width="1.7">
+
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M5 13l4 4L19 7"
+                                    />
+
+                                </svg>
+
+                            </div>
+
+                        </div>
+
+                        <p class="mt-4 text-xs text-slate-400">
+                            العمليات المسجلة اليوم
+                        </p>
+
+                    </div>
+
+
+                    <!-- Students -->
+
+                    <div
+                        class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                        <div class="flex items-start justify-between">
+
+                            <div>
+
+                                <p class="text-sm text-slate-500">
+                                    الطلاب
+                                </p>
+
+                                <p
+                                    id="students-with-memorization-count"
+                                    class="mt-2 text-3xl font-bold text-slate-800">
+                                    —
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-6 w-6"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    stroke-width="1.7">
+
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"
+                                    />
+
+                                </svg>
+
+                            </div>
+
+                        </div>
+
+                        <p class="mt-4 text-xs text-slate-400">
+                            الطلاب الذين لديهم سجلات حفظ
+                        </p>
+
+                    </div>
+
+
+                    <!-- Halaqas -->
+
+                    <div
+                        class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                        <div class="flex items-start justify-between">
+
+                            <div>
+
+                                <p class="text-sm text-slate-500">
+                                    الحلقات
+                                </p>
+
+                                <p
+                                    id="halaqas-with-memorization-count"
+                                    class="mt-2 text-3xl font-bold text-slate-800">
+                                    —
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-6 w-6"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    stroke-width="1.7">
+
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M4 19.5A2.5 2.5 0 016.5 17H20M4 19.5A2.5 2.5 0 011.5 17V5A2.5 2.5 0 014 2.5h12A2.5 2.5 0 0118.5 5v12M4 19.5V21h14"
+                                    />
+
+                                </svg>
+
+                            </div>
+
+                        </div>
+
+                        <p class="mt-4 text-xs text-slate-400">
+                            الحلقات التي تحتوي على حفظ
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 Filters
+            ========================== -->
+
+            <section
+                class="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                <div class="mb-4">
+
+                    <h2 class="font-bold text-slate-800">
+                        البحث والتصفية
+                    </h2>
+
+                    <p class="mt-1 text-xs text-slate-400">
+                        ابحث عن سجل حفظ أو قم بتصفية النتائج.
+                    </p>
+
+                </div>
+
+
+                <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+
+
+                    <!-- Search -->
+
+                    <div class="xl:col-span-2">
+
+                        <label
+                            for="search-memorization"
+                            class="mb-2 block text-sm font-medium text-slate-600">
+
+                            البحث
+
+                        </label>
+
+                        <div class="relative">
+
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="1.7">
+
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 11-14 0 7 7 0 0114 0z"
+                                />
+
+                            </svg>
+
+                            <input
+                                id="search-memorization"
+                                type="text"
+                                placeholder="ابحث باسم الطالب أو السورة..."
+                                class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pr-10 pl-4 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100">
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Halaqa Filter -->
+
+                    <div>
+
+                        <label
+                            for="halaqa-filter"
+                            class="mb-2 block text-sm font-medium text-slate-600">
+
+                            الحلقة
+
+                        </label>
+
+                        <select
+                            id="halaqa-filter"
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100">
+
+                            <option value="">
+                                جميع الحلقات
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Date Filter -->
+
+                    <div>
+
+                        <label
+                            for="date-filter"
+                            class="mb-2 block text-sm font-medium text-slate-600">
+
+                            التاريخ
+
+                        </label>
+
+                        <input
+                            id="date-filter"
+                            type="date"
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100">
+
+                    </div>
+
+                </div>
+
+
+                <div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+
+                    <p class="text-xs text-slate-400">
+
+                        النتائج:
+                        <span
+                            id="filtered-memorization-count"
+                            class="font-bold text-slate-600">
+                            0
+                        </span>
+
+                    </p>
+
+                    <button
+                        id="reset-filters-btn"
+                        class="rounded-lg px-3 py-2 text-xs font-semibold text-slate-500 transition hover:bg-slate-100 hover:text-emerald-700">
+
+                        إعادة ضبط الفلاتر
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 Table
+            ========================== -->
+
+            <section
+                id="memorization-table-container"
+                class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+                <!-- Table Header -->
+
+                <div
+                    class="flex flex-col gap-3 border-b border-slate-100 p-5 sm:flex-row sm:items-center sm:justify-between">
+
+                    <div>
+
+                        <h2 class="font-bold text-slate-800">
+                            سجلات الحفظ
+                        </h2>
+
+                        <p class="mt-1 text-xs text-slate-400">
+                            قائمة جميع عمليات الحفظ المسجلة.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Responsive Table -->
+
+                <div class="overflow-x-auto">
+
+                    <table class="min-w-full text-right">
+
+                        <thead class="border-b border-slate-100 bg-slate-50">
+
+                            <tr>
+
+                                <th class="whitespace-nowrap px-5 py-4 text-xs font-semibold text-slate-500">
+                                    الطالب
+                                </th>
+
+                                <th class="whitespace-nowrap px-5 py-4 text-xs font-semibold text-slate-500">
+                                    الحلقة
+                                </th>
+
+                                <th class="whitespace-nowrap px-5 py-4 text-xs font-semibold text-slate-500">
+                                    السورة
+                                </th>
+
+                                <th class="whitespace-nowrap px-5 py-4 text-xs font-semibold text-slate-500">
+                                    الآيات
+                                </th>
+
+                                <th class="whitespace-nowrap px-5 py-4 text-xs font-semibold text-slate-500">
+                                    التاريخ
+                                </th>
+
+                                <th class="whitespace-nowrap px-5 py-4 text-xs font-semibold text-slate-500">
+                                    الإجراءات
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody
+                            id="memorization-table-body"
+                            class="divide-y divide-slate-100">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- Empty -->
+
+                <div
+                    id="memorization-empty"
+                    class="hidden p-12 text-center">
+
+                    <div
+                        class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
+
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-7 w-7"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.7">
+
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5S19.832 5.477 21 6.253v13C19.832 18.477 18.246 18 16.5 18s-3.332-.477-4.5 1.253"
+                            />
+
+                        </svg>
+
+                    </div>
+
+                    <h3 class="mt-4 font-bold text-slate-700">
+                        لا توجد سجلات حفظ
+                    </h3>
+
+                    <p class="mt-1 text-sm text-slate-400">
+                        لم يتم العثور على أي عملية حفظ مطابقة للبحث.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </main>
+
+
+        <!-- Footer -->
+
+        <footer
+            class="border-t border-slate-200 px-4 py-6 text-center text-xs text-slate-400 sm:px-6 lg:px-8">
+
+            الهدى للقرآن — نظام إدارة المدرسة القرآنية
+
+        </footer>
+
+    </div>
+
+
+    <!-- =====================================================
+         Add Memorization Modal
+    ====================================================== -->
+
+    <div
+        id="memorization-form-modal"
+        class="fixed inset-0 z-[70] hidden items-center justify-center bg-slate-900/40 p-4">
+
+        <div
+            class="w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-2xl">
+
+            <!-- Modal Header -->
+
+            <div class="flex items-center justify-between border-b border-slate-100 px-6 py-5">
+
+                <div>
+
+                    <h2
+                        id="memorization-form-title"
+                        class="font-bold text-slate-800">
+
+                        تسجيل حفظ جديد
+
+                    </h2>
+
+                    <p class="mt-1 text-xs text-slate-400">
+                        أدخل بيانات عملية الحفظ.
+                    </p>
+
+                </div>
+
+                <button
+                    id="close-memorization-form"
+                    class="rounded-xl p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600">
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="1.7">
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
+                        />
+
+                    </svg>
+
+                </button>
+
+            </div>
+
+
+            <!-- Form -->
+
+            <form
+                id="memorization-form"
+                class="p-6">
+
+                <div class="grid gap-5 sm:grid-cols-2">
+
+
+                    <!-- Student -->
+
+                    <div>
+
+                        <label
+                            for="memorization-student"
+                            class="mb-2 block text-sm font-medium text-slate-600">
+
+                            الطالب
+
+                        </label>
+
+                        <select
+                            id="memorization-student"
+                            required
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100">
+
+                            <option value="">
+                                اختر الطالب
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Halaqa -->
+
+                    <div>
+
+                        <label
+                            for="memorization-halaqa"
+                            class="mb-2 block text-sm font-medium text-slate-600">
+
+                            الحلقة
+
+                        </label>
+
+                        <select
+                            id="memorization-halaqa"
+                            required
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100">
+
+                            <option value="">
+                                اختر الحلقة
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Surah -->
+
+                    <div>
+
+                        <label
+                            for="memorization-surah"
+                            class="mb-2 block text-sm font-medium text-slate-600">
+
+                            السورة
+
+                        </label>
+
+                        <input
+                            id="memorization-surah"
+                            type="text"
+                            required
+                            placeholder="مثال: البقرة"
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100">
+
+                    </div>
+
+
+                    <!-- Date -->
+
+                    <div>
+
+                        <label
+                            for="memorization-date"
+                            class="mb-2 block text-sm font-medium text-slate-600">
+
+                            التاريخ
+
+                        </label>
+
+                        <input
+                            id="memorization-date"
+                            type="date"
+                            required
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100">
+
+                    </div>
+
+
+                    <!-- From Verse -->
+
+                    <div>
+
+                        <label
+                            for="memorization-from-verse"
+                            class="mb-2 block text-sm font-medium text-slate-600">
+
+                            من الآية
+
+                        </label>
+
+                        <input
+                            id="memorization-from-verse"
+                            type="number"
+                            min="1"
+                            required
+                            placeholder="مثال: 1"
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100">
+
+                    </div>
+
+
+                    <!-- To Verse -->
+
+                    <div>
+
+                        <label
+                            for="memorization-to-verse"
+                            class="mb-2 block text-sm font-medium text-slate-600">
+
+                            إلى الآية
+
+                        </label>
+
+                        <input
+                            id="memorization-to-verse"
+                            type="number"
+                            min="1"
+                            required
+                            placeholder="مثال: 10"
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100">
+
+                    </div>
+
+                </div>
+
+
+                <!-- Error -->
+
+                <div
+                    id="memorization-form-error"
+                    class="mt-5 hidden rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                </div>
+
+
+                <!-- Actions -->
+
+                <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+
+                    <button
+                        type="button"
+                        id="cancel-memorization-form"
+                        class="rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">
+
+                        إلغاء
+
+                    </button>
+
+                    <button
+                        type="submit"
+                        id="save-memorization-btn"
+                        class="rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800">
+
+                        حفظ العملية
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         Details Modal
+    ====================================================== -->
+
+    <div
+        id="memorization-details-modal"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40 p-4">
+
+        <div
+            class="w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-2xl">
+
+            <!-- Header -->
+
+            <div class="flex items-center justify-between border-b border-slate-100 px-6 py-5">
+
+                <div>
+
+                    <h2 class="font-bold text-slate-800">
+                        تفاصيل الحفظ
+                    </h2>
+
+                    <p class="mt-1 text-xs text-slate-400">
+                        معلومات عملية الحفظ المسجلة.
+                    </p>
+
+                </div>
+
+                <button
+                    id="close-memorization-details"
+                    class="rounded-xl p-2 text-slate-400 transition hover:bg-slate-100">
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="1.7">
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
+                        />
+
+                    </svg>
+
+                </button>
+
+            </div>
+
+
+            <!-- Details -->
+
+            <div class="space-y-4 p-6">
+
+
+                <!-- Student -->
+
+                <div
+                    class="flex items-center justify-between rounded-xl bg-slate-50 p-4">
+
+                    <span class="text-sm text-slate-500">
+                        الطالب
+                    </span>
+
+                    <span
+                        id="details-student"
+                        class="font-semibold text-slate-700">
+                        —
+                    </span>
+
+                </div>
+
+
+                <!-- Halaqa -->
+
+                <div
+                    class="flex items-center justify-between rounded-xl bg-slate-50 p-4">
+
+                    <span class="text-sm text-slate-500">
+                        الحلقة
+                    </span>
+
+                    <span
+                        id="details-halaqa"
+                        class="font-semibold text-slate-700">
+                        —
+                    </span>
+
+                </div>
+
+
+                <!-- Surah -->
+
+                <div
+                    class="flex items-center justify-between rounded-xl bg-slate-50 p-4">
+
+                    <span class="text-sm text-slate-500">
+                        السورة
+                    </span>
+
+                    <span
+                        id="details-surah"
+                        class="font-semibold text-emerald-700">
+                        —
+                    </span>
+
+                </div>
+
+
+                <!-- Verses -->
+
+                <div
+                    class="flex items-center justify-between rounded-xl bg-slate-50 p-4">
+
+                    <span class="text-sm text-slate-500">
+                        الآيات
+                    </span>
+
+                    <span
+                        id="details-verses"
+                        class="font-semibold text-slate-700">
+                        —
+                    </span>
+
+                </div>
+
+
+                <!-- Date -->
+
+                <div
+                    class="flex items-center justify-between rounded-xl bg-slate-50 p-4">
+
+                    <span class="text-sm text-slate-500">
+                        التاريخ
+                    </span>
+
+                    <span
+                        id="details-date"
+                        class="font-semibold text-slate-700">
+                        —
+                    </span>
+
+                </div>
+
+
+                <!-- Actions -->
+
+                <div class="grid grid-cols-2 gap-3 pt-2">
+
+                    <button
+                        id="edit-memorization-btn"
+                        class="rounded-xl bg-emerald-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800">
+
+                        تعديل
+
+                    </button>
+
+                    <button
+                        id="delete-memorization-btn"
+                        class="rounded-xl bg-red-50 px-4 py-3 text-sm font-semibold text-red-600 transition hover:bg-red-100">
+
+                        حذف
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         Edit Memorization Modal
+    ====================================================== -->
+
+    <div
+        id="edit-memorization-modal"
+        class="fixed inset-0 z-[70] hidden items-center justify-center bg-slate-900/40 p-4">
+
+        <div
+            class="w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-2xl">
+
+            <!-- Header -->
+
+            <div class="flex items-center justify-between border-b border-slate-100 px-6 py-5">
+
+                <div>
+
+                    <h2 class="font-bold text-slate-800">
+                        تعديل الحفظ
+                    </h2>
+
+                    <p class="mt-1 text-xs text-slate-400">
+                        يمكنك تعديل السورة والآيات والتاريخ.
+                    </p>
+
+                </div>
+
+                <button
+                    id="close-edit-memorization"
+                    class="rounded-xl p-2 text-slate-400 transition hover:bg-slate-100">
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="1.7">
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
+                        />
+
+                    </svg>
+
+                </button>
+
+            </div>
+
+
+            <!-- Form -->
+
+            <form
+                id="edit-memorization-form"
+                class="p-6">
+
+                <div class="space-y-5">
+
+
+                    <!-- Surah -->
+
+                    <div>
+
+                        <label
+                            for="edit-memorization-surah"
+                            class="mb-2 block text-sm font-medium text-slate-600">
+
+                            السورة
+
+                        </label>
+
+                        <input
+                            id="edit-memorization-surah"
+                            type="text"
+                            required
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100">
+
+                    </div>
+
+
+                    <!-- Verses -->
+
+                    <div class="grid gap-4 sm:grid-cols-2">
+
+                        <div>
+
+                            <label
+                                for="edit-memorization-from-verse"
+                                class="mb-2 block text-sm font-medium text-slate-600">
+
+                                من الآية
+
+                            </label>
+
+                            <input
+                                id="edit-memorization-from-verse"
+                                type="number"
+                                min="1"
+                                required
+                                class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100">
+
+                        </div>
+
+
+                        <div>
+
+                            <label
+                                for="edit-memorization-to-verse"
+                                class="mb-2 block text-sm font-medium text-slate-600">
+
+                                إلى الآية
+
+                            </label>
+
+                            <input
+                                id="edit-memorization-to-verse"
+                                type="number"
+                                min="1"
+                                required
+                                class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100">
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Date -->
+
+                    <div>
+
+                        <label
+                            for="edit-memorization-date"
+                            class="mb-2 block text-sm font-medium text-slate-600">
+
+                            التاريخ
+
+                        </label>
+
+                        <input
+                            id="edit-memorization-date"
+                            type="date"
+                            required
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100">
+
+                    </div>
+
+                </div>
+
+
+                <!-- Error -->
+
+                <div
+                    id="edit-memorization-error"
+                    class="mt-5 hidden rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                </div>
+
+
+                <!-- Actions -->
+
+                <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+
+                    <button
+                        type="button"
+                        id="cancel-edit-memorization"
+                        class="rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">
+
+                        إلغاء
+
+                    </button>
+
+                    <button
+                        type="submit"
+                        id="save-edit-memorization-btn"
+                        class="rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800">
+
+                        حفظ التعديلات
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         Delete Confirmation Modal
+    ====================================================== -->
+
+    <div
+        id="delete-memorization-modal"
+        class="fixed inset-0 z-[80] hidden items-center justify-center bg-slate-900/40 p-4">
+
+        <div
+            class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+
+            <div
+                class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-red-50 text-red-600">
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.7">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 7h12M9 7V4h6v3m2 0v13H7V7m3 4v5m4-5v5"
+                    />
+
+                </svg>
+
+            </div>
+
+
+            <div class="mt-5 text-center">
+
+                <h2 class="font-bold text-slate-800">
+                    حذف سجل الحفظ؟
+                </h2>
+
+                <p class="mt-2 text-sm leading-6 text-slate-500">
+                    هل أنت متأكد أنك تريد حذف هذا السجل؟
+                    لا يمكن التراجع عن هذه العملية.
+                </p>
+
+            </div>
+
+
+            <div class="mt-6 grid grid-cols-2 gap-3">
+
+                <button
+                    id="cancel-delete-memorization"
+                    class="rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">
+
+                    إلغاء
+
+                </button>
+
+                <button
+                    id="confirm-delete-memorization"
+                    class="rounded-xl bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-700">
+
+                    حذف
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- JS -->
+
+    <script
+        type="module"
+        src="../../js/pages/admin/memorization.js">
+    </script>
+
+</body>
+
+</html>
