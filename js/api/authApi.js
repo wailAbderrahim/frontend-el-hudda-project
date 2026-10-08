@@ -40,8 +40,12 @@ export async function register(firstNameOrData, lastName, name, phone, placeOfBi
     return data;
 }
 
-export async function verifyEmail(token) {
-    const data = await apiRequest(`/auth/verify-email?token=${encodeURIComponent(token)}`, {
+export async function verifyEmail(token, email) {
+    let url = `/auth/verify-email?token=${encodeURIComponent(token)}`;
+    if (email && email.trim()) {
+        url += `&email=${encodeURIComponent(email.trim())}`;
+    }
+    const data = await apiRequest(url, {
         method: 'GET'
     });
     return data;
