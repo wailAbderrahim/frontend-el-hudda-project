@@ -1,414 +1,301 @@
+const API_BASE_URL = 'https://el-hudda-project.onrender.com/api'
 
-const nodemailer = require('nodemailer')
-require('dotenv').config()
+const loading = document.getElementById('verify-loading')
+const success = document.getElementById('verify-success')
+const error = document.getElementById('verify-error')
+const resendSection = document.getElementById('resend-section')
 
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    family: 4,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+const successMessage = document.getElementById('verify-success-message')
+const errorMessage = document.getElementById('verify-error-message')
+
+const resendForm = document.getElementById('resend-form')
+const resendEmail = document.getElementById('resend-email')
+const resendButton = document.getElementById('resend-submit-btn')
+
+const resendSuccessBox = document.getElementById('resend-success-box')
+const resendErrorBox = document.getElementById('resend-error-box')
+const resendSuccessMessage = document.getElementById('resend-success-message')
+const resendErrorMessage = document.getElementById('resend-error-message')
+
+
+/*
+|--------------------------------------------------------------------------
+| Helpers
+|--------------------------------------------------------------------------
+*/
+
+const showLoading = () => {
+    loading?.classList.remove('hidden')
+    success?.classList.add('hidden')
+    error?.classList.add('hidden')
+    resendSection?.classList.add('hidden')
+}
+
+const showSuccess = (message = 'تم تأكيد بريدك الإلكتروني بنجاح.') => {
+    loading?.classList.add('hidden')
+    error?.classList.add('hidden')
+    resendSection?.classList.add('hidden')
+
+    successMessage.textContent = message
+    success?.classList.remove('hidden')
+}
+
+const showError = (message) => {
+    loading?.classList.add('hidden')
+    success?.classList.add('hidden')
+
+    errorMessage.textContent =
+        message || 'تعذر تأكيد البريد الإلكتروني. يرجى المحاولة مرة أخرى.'
+
+    error?.classList.remove('hidden')
+    resendSection?.classList.remove('hidden')
+}
+
+const getArabicErrorMessage = (error) => {
+    if (!error) {
+        return 'حدث خطأ أثناء تأكيد البريد الإلكتروني.'
+    }
+
+    const message = String(error.message || '').toLowerCase()
+
+    if (message.includes('expired')) {
+        return 'انتهت صلاحية رابط التفعيل. يرجى طلب رابط جديد.'
+    }
+
+    if (
+        message.includes('invalid token') ||
+        message.includes('invalid verification token') ||
+        message.includes('invalid or expired')
+    ) {
+        return 'رابط التفعيل غير صالح أو انتهت صلاحيته. يرجى طلب رابط جديد.'
+    }
+
+    if (message.includes('already verified')) {
+        return 'هذا البريد الإلكتروني تم تأكيده مسبقًا.'
+    }
+
+    if (
+        message.includes('user not found') ||
+        message.includes('user not exist')
+    ) {
+        return 'لم يتم العثور على الحساب المرتبط بهذا البريد الإلكتروني.'
+    }
+
+    if (
+        message.includes('failed to fetch') ||
+        message.includes('network') ||
+        message.includes('fetch')
+    ) {
+        return 'تعذر الاتصال بالخادم. يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى.'
+    }
+
+    return 'تعذر تأكيد البريد الإلكتروني. يرجى طلب رابط تفعيل جديد.'
+}
+
+
+const fetchWithTimeout = async (url, options = {}, timeout = 15000) => {
+    const controller = new AbortController()
+
+    const timer = setTimeout(() => {
+        controller.abort()
+    }, timeout)
+
+    try {
+        const response = await fetch(url, {
+            ...options,
+            signal: controller.signal,
+            headers: {
+                'Content-Type': 'application/json',
+                ...(options.headers || {})
+            }
+        })
+
+        return response
+    } finally {
+        clearTimeout(timer)
+    }
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Verify Email
+|--------------------------------------------------------------------------
+*/
+
+const verifyEmail = async () => {
+    showLoading()
+
+    const params = new URLSearchParams(window.location.search)
+
+    const token = params.get('token')
+    const email = params.get('email')
+
+    /*
+     * تأكد من وجود البيانات في الرابط
+     */
+    if (!token) {
+        showError('رابط التفعيل غير صالح أو لا يحتوي على رمز التحقق.')
+        return
+    }
+
+    if (!email) {
+        showError('لم يتم العثور على البريد الإلكتروني المرتبط برابط التفعيل.')
+        return
+    }
+
+    try {
+        const response = await fetchWithTimeout(
+            `${API_BASE_URL}/auth/verify-email`,
+            {
+                method: 'POST',
+                body: JSON.stringify({
+                    token,
+                    email
+                })
+            }
+        )
+
+        let data = {}
+
+        try {
+            data = await response.json()
+        } catch {
+            data = {}
+        }
+
+        if (!response.ok) {
+            throw new Error(
+                data.message ||
+                data.error ||
+                'Verification failed'
+            )
+        }
+
+        showSuccess(
+            data.message ||
+            'تم تأكيد بريدك الإلكتروني بنجاح. يمكنك الآن تسجيل الدخول إلى حسابك.'
+        )
+
+    } catch (error) {
+        console.error('Email verification error:', error)
+
+        if (error.name === 'AbortError') {
+            showError(
+                'استغرق الاتصال بالخادم وقتًا طويلاً. يرجى المحاولة مرة أخرى.'
+            )
+            return
+        }
+
+        showError(getArabicErrorMessage(error))
+    }
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Resend Verification Email
+|--------------------------------------------------------------------------
+*/
+
+const resendVerification = async (email) => {
+    try {
+        const response = await fetchWithTimeout(
+            `${API_BASE_URL}/auth/resend-verification`,
+            {
+                method: 'POST',
+                body: JSON.stringify({
+                    email
+                })
+            }
+        )
+
+        let data = {}
+
+        try {
+            data = await response.json()
+        } catch {
+            data = {}
+        }
+
+        if (!response.ok) {
+            throw new Error(
+                data.message ||
+                data.error ||
+                'Failed to resend verification email'
+            )
+        }
+
+        return data
+
+    } catch (error) {
+        console.error('Resend verification error:', error)
+
+        if (error.name === 'AbortError') {
+            throw new Error(
+                'استغرق الاتصال بالخادم وقتًا طويلاً. يرجى المحاولة مرة أخرى.'
+            )
+        }
+
+        throw error
+    }
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Resend Form
+|--------------------------------------------------------------------------
+*/
+
+resendForm?.addEventListener('submit', async (event) => {
+    event.preventDefault()
+
+    const email = resendEmail.value.trim()
+
+    if (!email) {
+        resendErrorBox.classList.remove('hidden')
+        resendSuccessBox.classList.add('hidden')
+        resendErrorMessage.textContent =
+            'يرجى إدخال بريدك الإلكتروني.'
+        return
+    }
+
+    resendButton.disabled = true
+    resendButton.textContent = 'جاري الإرسال...'
+
+    resendSuccessBox.classList.add('hidden')
+    resendErrorBox.classList.add('hidden')
+
+    try {
+        const data = await resendVerification(email)
+
+        resendSuccessMessage.textContent =
+            data.message ||
+            'تم إرسال رابط تفعيل جديد إلى بريدك الإلكتروني. الرابط صالح لمدة 15 دقيقة.'
+
+        resendSuccessBox.classList.remove('hidden')
+
+        resendEmail.value = ''
+
+    } catch (error) {
+        resendErrorMessage.textContent =
+            getArabicErrorMessage(error)
+
+        resendErrorBox.classList.remove('hidden')
+    } finally {
+        resendButton.disabled = false
+        resendButton.textContent = 'إعادة إرسال رابط التفعيل'
     }
 })
 
-const getFrontendUrl = () => {
-    const raw = (process.env.FRONTEND_URL || process.env.CLIENT_URL || '')
-        .trim()
-        .replace(/\/+$/, '')
 
-    if (
-        raw &&
-        !raw.includes('localhost') &&
-        !raw.includes('127.0.0.1') &&
-        !raw.includes('onrender.com')
-    ) {
-        return raw
-    }
+/*
+|--------------------------------------------------------------------------
+| Auto Verify
+|--------------------------------------------------------------------------
+*/
 
-    return 'https://el-hudda.vercel.app'
-}
-
-/**
- * Send Arabic verification email
- * Token validity: 15 minutes
- */
-const sendVerificationEmail = async (email, token) => {
-    const frontendUrl = getFrontendUrl()
-
-    const verificationLink =
-        `${frontendUrl}/pages/auth/verify-email.html` +
-        `?token=${encodeURIComponent(token)}` +
-        `&email=${encodeURIComponent(email)}`
-
-    await transporter.sendMail({
-        from: `"الهدى للقرآن" <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject: 'تأكيد البريد الإلكتروني | مدرسة الهدى للقرآن الكريم',
-        html: `
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #f8fafc;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            direction: rtl;
-            text-align: right;
-            color: #1e293b;
-        }
-
-        .container {
-            max-width: 580px;
-            margin: 30px auto;
-            background: #ffffff;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-            border: 1px solid #e2e8f0;
-        }
-
-        .header {
-            background: #047857;
-            padding: 32px 24px;
-            text-align: center;
-            color: #ffffff;
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 800;
-        }
-
-        .header p {
-            margin: 8px 0 0;
-            font-size: 13px;
-            color: #a7f3d0;
-        }
-
-        .body {
-            padding: 32px 28px;
-            line-height: 1.8;
-        }
-
-        .greeting {
-            font-size: 16px;
-            font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 16px;
-        }
-
-        .text {
-            font-size: 14px;
-            color: #475569;
-            margin-bottom: 24px;
-        }
-
-        .btn-container {
-            text-align: center;
-            margin: 30px 0;
-        }
-
-        .btn {
-            display: inline-block;
-            background-color: #059669;
-            color: #ffffff !important;
-            text-decoration: none;
-            padding: 14px 36px;
-            font-size: 15px;
-            font-weight: 700;
-            border-radius: 12px;
-            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);
-        }
-
-        .notice {
-            background-color: #f0fdf4;
-            border-right: 4px solid #059669;
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-size: 13px;
-            color: #166534;
-            margin-bottom: 24px;
-        }
-
-        .fallback {
-            font-size: 12px;
-            color: #64748b;
-            word-break: break-all;
-            margin-top: 20px;
-            border-top: 1px dashed #cbd5e1;
-            padding-top: 16px;
-        }
-
-        .footer {
-            background-color: #f1f5f9;
-            padding: 20px;
-            text-align: center;
-            font-size: 12px;
-            color: #94a3b8;
-            border-top: 1px solid #e2e8f0;
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="container">
-
-        <div class="header">
-            <h1>مدرسة الهدى للقرآن الكريم</h1>
-            <p>المسجد العامر — نظام إدارة المدرسة القرآنية</p>
-        </div>
-
-        <div class="body">
-
-            <div class="greeting">
-                السلام عليكم ورحمة الله وبركاته،
-            </div>
-
-            <p class="text">
-                أهلاً ومرحباً بك في مدرسة الهدى للقرآن الكريم.
-                لقد تم إنشاء حساب جديد مرتبط بهذا البريد الإلكتروني.
-                لتأكيد حسابك وتفعيله، يرجى الضغط على الزر أدناه:
-            </p>
-
-            <div class="btn-container">
-                <a
-                    href="${verificationLink}"
-                    class="btn"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    تأكيد البريد الإلكتروني
-                </a>
-            </div>
-
-            <div class="notice">
-                ⏱️
-                <strong>ملاحظة:</strong>
-                صلاحية هذا الرابط هي
-                <strong>15 دقيقة</strong>
-                فقط من وقت استلام هذه الرسالة.
-            </div>
-
-            <p
-                class="text"
-                style="font-size: 13px; color: #64748b;"
-            >
-                إذا لم تكن أنت من أنشأ هذا الحساب أو طلبت هذا الإجراء،
-                يمكنك تجاهل هذه الرسالة بأمان دون اتخاذ أي خطوة.
-            </p>
-
-            <div class="fallback">
-                إذا واجهت مشكلة في الضغط على الزر،
-                يمكنك نسخ الرابط التالي ولصقه في المتصفح:
-                <br><br>
-
-                <a
-                    href="${verificationLink}"
-                    style="color: #059669;"
-                >
-                    ${verificationLink}
-                </a>
-            </div>
-
-        </div>
-
-        <div class="footer">
-            © 2026 مدرسة الهدى للقرآن الكريم — جميع الحقوق محفوظة
-        </div>
-
-    </div>
-
-</body>
-</html>
-        `
-    })
-}
-
-/**
- * Send Arabic password reset email
- * Token validity: 15 minutes
- */
-const sendResetPasswordEmail = async (email, token) => {
-    const frontendUrl = getFrontendUrl()
-
-    const resetLink =
-        `${frontendUrl}/pages/auth/reset-password.html` +
-        `?token=${encodeURIComponent(token)}`
-
-    await transporter.sendMail({
-        from: `"الهدى للقرآن" <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject: 'إعادة تعيين كلمة المرور | مدرسة الهدى للقرآن الكريم',
-        html: `
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-
-<head>
-    <meta charset="UTF-8">
-
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #f8fafc;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            direction: rtl;
-            text-align: right;
-            color: #1e293b;
-        }
-
-        .container {
-            max-width: 580px;
-            margin: 30px auto;
-            background: #ffffff;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-            border: 1px solid #e2e8f0;
-        }
-
-        .header {
-            background: #047857;
-            padding: 32px 24px;
-            text-align: center;
-            color: #ffffff;
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 800;
-        }
-
-        .body {
-            padding: 32px 28px;
-            line-height: 1.8;
-        }
-
-        .greeting {
-            font-size: 16px;
-            font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 16px;
-        }
-
-        .text {
-            font-size: 14px;
-            color: #475569;
-            margin-bottom: 24px;
-        }
-
-        .btn-container {
-            text-align: center;
-            margin: 30px 0;
-        }
-
-        .btn {
-            display: inline-block;
-            background-color: #059669;
-            color: #ffffff !important;
-            text-decoration: none;
-            padding: 14px 36px;
-            font-size: 15px;
-            font-weight: 700;
-            border-radius: 12px;
-            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);
-        }
-
-        .notice {
-            background-color: #fef2f2;
-            border-right: 4px solid #ef4444;
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-size: 13px;
-            color: #991b1b;
-            margin-bottom: 24px;
-        }
-
-        .footer {
-            background-color: #f1f5f9;
-            padding: 20px;
-            text-align: center;
-            font-size: 12px;
-            color: #94a3b8;
-            border-top: 1px solid #e2e8f0;
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="container">
-
-        <div class="header">
-            <h1>مدرسة الهدى للقرآن الكريم</h1>
-        </div>
-
-        <div class="body">
-
-            <div class="greeting">
-                السلام عليكم ورحمة الله وبركاته،
-            </div>
-
-            <p class="text">
-                لقد تلقينا طلباً لإعادة تعيين كلمة المرور الخاصة بحسابك
-                في مدرسة الهدى.
-                يمكنك تعيين كلمة مرور جديدة من خلال الضغط على الزر أدناه:
-            </p>
-
-            <div class="btn-container">
-                <a
-                    href="${resetLink}"
-                    class="btn"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    إعادة تعيين كلمة المرور
-                </a>
-            </div>
-
-            <div class="notice">
-                ⏱️
-                <strong>تنبيه أمان:</strong>
-                صلاحية هذا الرابط هي
-                <strong>15 دقيقة</strong>
-                فقط.
-            </div>
-
-            <p
-                class="text"
-                style="font-size: 13px; color: #64748b;"
-            >
-                إذا لم تكن قد طلبت إعادة تعيين كلمة المرور،
-                يرجى تجاهل هذه الرسالة،
-                فستبقى كلمة المرور الحالية آمنة كما هي.
-            </p>
-
-        </div>
-
-        <div class="footer">
-            © 2026 مدرسة الهدى للقرآن الكريم — جميع الحقوق محفوظة
-        </div>
-
-    </div>
-
-</body>
-</html>
-        `
-    })
-}
-
-module.exports = {
-    sendVerificationEmail,
-    sendResetPasswordEmail,
-    transporter
-}
-
+document.addEventListener('DOMContentLoaded', () => {
+    verifyEmail()
+})
