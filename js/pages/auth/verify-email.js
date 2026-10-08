@@ -1,154 +1,414 @@
-import { verifyEmail, resendVerification } from "../../api/authApi.js";
-import { getArabicErrorMessage } from "../../utils/errorHandler.js";
 
-const params = new URLSearchParams(window.location.search);
-const token = params.get('token');
-const emailParam = params.get('email');
+const nodemailer = require('nodemailer')
+require('dotenv').config()
 
-const verifyLoading = document.getElementById('verify-loading');
-const verifySuccess = document.getElementById('verify-success');
-const verifySuccessMessage = document.getElementById('verify-success-message');
-const verifyErr = document.getElementById('verify-error');
-const verifyErrorMessage = document.getElementById('verify-error-message');
-
-const resendSection = document.getElementById('resend-section');
-const resendForm = document.getElementById('resend-form');
-const resendEmailInput = document.getElementById('resend-email');
-const resendSubmitBtn = document.getElementById('resend-submit-btn');
-const resendSuccessBox = document.getElementById('resend-success-box');
-const resendSuccessMessage = document.getElementById('resend-success-message');
-const resendErrorBox = document.getElementById('resend-error-box');
-const resendErrorMessage = document.getElementById('resend-error-message');
-
-// Pre-fill email input if passed in URL
-if (emailParam && resendEmailInput) {
-    resendEmailInput.value = emailParam.trim();
-}
-
-// Initial mode determination
-if (token && token.trim()) {
-    // Mode A: Token verification
-    verifyLoading?.classList.remove('hidden');
-    verifySuccess?.classList.add('hidden');
-    verifyErr?.classList.add('hidden');
-    resendSection?.classList.add('hidden');
-    verify(token.trim());
-} else if (emailParam) {
-    // Mode B: Dedicated Resend Verification Page (email provided, no token)
-    verifyLoading?.classList.add('hidden');
-    verifySuccess?.classList.add('hidden');
-    verifyErr?.classList.add('hidden');
-    resendSection?.classList.remove('hidden');
-} else {
-    // Mode C: Missing token
-    verifyLoading?.classList.add('hidden');
-    verifySuccess?.classList.add('hidden');
-    verifyErr?.classList.remove('hidden');
-    if (verifyErrorMessage) {
-        verifyErrorMessage.textContent = 'رابط التحقق غير صالح أو ناقص. يمكنك طلب رابط تحقق جديد أدناه.';
+const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    family: 4,
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
     }
-    resendSection?.classList.remove('hidden');
-}
+})
 
-async function verify(tokenStr) {
-    try {
-        const res = await verifyEmail(tokenStr);
-        verifyLoading?.classList.add('hidden');
-        verifyErr?.classList.add('hidden');
-        resendSection?.classList.add('hidden');
-        verifySuccess?.classList.remove('hidden');
-        if (verifySuccessMessage) {
-            verifySuccessMessage.textContent = 'تم تأكيد بريدك الإلكتروني بنجاح. يمكنك الآن تسجيل الدخول.';
-        }
-    } catch (error) {
-        verifyLoading?.classList.add('hidden');
-        verifySuccess?.classList.add('hidden');
-        verifyErr?.classList.remove('hidden');
+const getFrontendUrl = () => {
+    const raw = (process.env.FRONTEND_URL || process.env.CLIENT_URL || '')
+        .trim()
+        .replace(/\/+$/, '')
 
-        const code = error.code || (error.data && error.data.code);
-        let message = 'رابط التحقق غير صالح. يمكنك طلب رابط تحقق جديد.';
-
-        if (code === 'VERIFICATION_TOKEN_EXPIRED') {
-            message = 'انتهت صلاحية رابط التحقق. يمكنك طلب رابط تحقق جديد.';
-        } else if (code === 'ALREADY_VERIFIED') {
-            message = 'تم تأكيد بريدك الإلكتروني مسبقًا. يمكنك تسجيل الدخول.';
-        } else if (code === 'TOKEN_REQUIRED' || code === 'MISSING_TOKEN') {
-            message = 'رابط التحقق غير صالح أو ناقص.';
-        } else {
-            message = getArabicErrorMessage(error);
-        }
-
-        if (verifyErrorMessage) {
-            verifyErrorMessage.textContent = message;
-        }
-
-        // Show resend section so user can immediately request a new token
-        resendSection?.classList.remove('hidden');
+    if (
+        raw &&
+        !raw.includes('localhost') &&
+        !raw.includes('127.0.0.1') &&
+        !raw.includes('onrender.com')
+    ) {
+        return raw
     }
+
+    return 'https://el-hudda.vercel.app'
 }
 
-// Setup Resend Form Handler
-if (resendForm) {
-    resendForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+/**
+ * Send Arabic verification email
+ * Token validity: 15 minutes
+ */
+const sendVerificationEmail = async (email, token) => {
+    const frontendUrl = getFrontendUrl()
 
-        const email = (resendEmailInput?.value || '').trim().toLowerCase();
-        if (!email) return;
+    const verificationLink =
+        `${frontendUrl}/pages/auth/verify-email.html` +
+        `?token=${encodeURIComponent(token)}` +
+        `&email=${encodeURIComponent(email)}`
 
-        // Hide prior alerts
-        resendSuccessBox?.classList.add('hidden');
-        resendErrorBox?.classList.add('hidden');
+    await transporter.sendMail({
+        from: `"الهدى للقرآن" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: 'تأكيد البريد الإلكتروني | مدرسة الهدى للقرآن الكريم',
+        html: `
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
 
-        // Disable button & show loading state
-        const originalText = resendSubmitBtn ? resendSubmitBtn.textContent : 'إعادة إرسال رابط التفعيل';
-        if (resendSubmitBtn) {
-            resendSubmitBtn.disabled = true;
-            resendSubmitBtn.textContent = 'جاري إرسال رابط التفعيل...';
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f8fafc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            direction: rtl;
+            text-align: right;
+            color: #1e293b;
         }
 
-        try {
-            const data = await resendVerification(email);
-
-            if (resendSuccessBox) {
-                if (resendSuccessMessage) {
-                    if (data.isAlreadyVerified || data.code === 'ALREADY_VERIFIED') {
-                        resendSuccessMessage.textContent = 'تم تأكيد بريدك الإلكتروني مسبقاً. يمكنك الانتقال إلى تسجيل الدخول.';
-                    } else {
-                        resendSuccessMessage.textContent = 'تم إرسال رابط تحقق جديد إلى بريدك الإلكتروني. الرابط صالح لمدة 15 دقيقة.';
-                    }
-                }
-                resendSuccessBox.classList.remove('hidden');
-            }
-
-            // Start 60-second cooldown timer
-            let cooldown = 60;
-            if (resendSubmitBtn) {
-                resendSubmitBtn.disabled = true;
-                resendSubmitBtn.textContent = `إعادة الإرسال بعد (${cooldown}) ثانية`;
-                const interval = setInterval(() => {
-                    cooldown--;
-                    if (cooldown > 0) {
-                        resendSubmitBtn.textContent = `إعادة الإرسال بعد (${cooldown}) ثانية`;
-                    } else {
-                        clearInterval(interval);
-                        resendSubmitBtn.disabled = false;
-                        resendSubmitBtn.textContent = originalText;
-                    }
-                }, 1000);
-            }
-
-        } catch (error) {
-            console.error('Resend verification error:', error);
-            if (resendErrorBox) {
-                if (resendErrorMessage) {
-                    resendErrorMessage.textContent = getArabicErrorMessage(error);
-                }
-                resendErrorBox.classList.remove('hidden');
-            }
-            if (resendSubmitBtn) {
-                resendSubmitBtn.disabled = false;
-                resendSubmitBtn.textContent = originalText;
-            }
+        .container {
+            max-width: 580px;
+            margin: 30px auto;
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
         }
-    });
+
+        .header {
+            background: #047857;
+            padding: 32px 24px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .header p {
+            margin: 8px 0 0;
+            font-size: 13px;
+            color: #a7f3d0;
+        }
+
+        .body {
+            padding: 32px 28px;
+            line-height: 1.8;
+        }
+
+        .greeting {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 16px;
+        }
+
+        .text {
+            font-size: 14px;
+            color: #475569;
+            margin-bottom: 24px;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #059669;
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 14px 36px;
+            font-size: 15px;
+            font-weight: 700;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);
+        }
+
+        .notice {
+            background-color: #f0fdf4;
+            border-right: 4px solid #059669;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #166534;
+            margin-bottom: 24px;
+        }
+
+        .fallback {
+            font-size: 12px;
+            color: #64748b;
+            word-break: break-all;
+            margin-top: 20px;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 16px;
+        }
+
+        .footer {
+            background-color: #f1f5f9;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+            <h1>مدرسة الهدى للقرآن الكريم</h1>
+            <p>المسجد العامر — نظام إدارة المدرسة القرآنية</p>
+        </div>
+
+        <div class="body">
+
+            <div class="greeting">
+                السلام عليكم ورحمة الله وبركاته،
+            </div>
+
+            <p class="text">
+                أهلاً ومرحباً بك في مدرسة الهدى للقرآن الكريم.
+                لقد تم إنشاء حساب جديد مرتبط بهذا البريد الإلكتروني.
+                لتأكيد حسابك وتفعيله، يرجى الضغط على الزر أدناه:
+            </p>
+
+            <div class="btn-container">
+                <a
+                    href="${verificationLink}"
+                    class="btn"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    تأكيد البريد الإلكتروني
+                </a>
+            </div>
+
+            <div class="notice">
+                ⏱️
+                <strong>ملاحظة:</strong>
+                صلاحية هذا الرابط هي
+                <strong>15 دقيقة</strong>
+                فقط من وقت استلام هذه الرسالة.
+            </div>
+
+            <p
+                class="text"
+                style="font-size: 13px; color: #64748b;"
+            >
+                إذا لم تكن أنت من أنشأ هذا الحساب أو طلبت هذا الإجراء،
+                يمكنك تجاهل هذه الرسالة بأمان دون اتخاذ أي خطوة.
+            </p>
+
+            <div class="fallback">
+                إذا واجهت مشكلة في الضغط على الزر،
+                يمكنك نسخ الرابط التالي ولصقه في المتصفح:
+                <br><br>
+
+                <a
+                    href="${verificationLink}"
+                    style="color: #059669;"
+                >
+                    ${verificationLink}
+                </a>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            © 2026 مدرسة الهدى للقرآن الكريم — جميع الحقوق محفوظة
+        </div>
+
+    </div>
+
+</body>
+</html>
+        `
+    })
 }
+
+/**
+ * Send Arabic password reset email
+ * Token validity: 15 minutes
+ */
+const sendResetPasswordEmail = async (email, token) => {
+    const frontendUrl = getFrontendUrl()
+
+    const resetLink =
+        `${frontendUrl}/pages/auth/reset-password.html` +
+        `?token=${encodeURIComponent(token)}`
+
+    await transporter.sendMail({
+        from: `"الهدى للقرآن" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: 'إعادة تعيين كلمة المرور | مدرسة الهدى للقرآن الكريم',
+        html: `
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f8fafc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            direction: rtl;
+            text-align: right;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 580px;
+            margin: 30px auto;
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .header {
+            background: #047857;
+            padding: 32px 24px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .body {
+            padding: 32px 28px;
+            line-height: 1.8;
+        }
+
+        .greeting {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 16px;
+        }
+
+        .text {
+            font-size: 14px;
+            color: #475569;
+            margin-bottom: 24px;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #059669;
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 14px 36px;
+            font-size: 15px;
+            font-weight: 700;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);
+        }
+
+        .notice {
+            background-color: #fef2f2;
+            border-right: 4px solid #ef4444;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #991b1b;
+            margin-bottom: 24px;
+        }
+
+        .footer {
+            background-color: #f1f5f9;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+            <h1>مدرسة الهدى للقرآن الكريم</h1>
+        </div>
+
+        <div class="body">
+
+            <div class="greeting">
+                السلام عليكم ورحمة الله وبركاته،
+            </div>
+
+            <p class="text">
+                لقد تلقينا طلباً لإعادة تعيين كلمة المرور الخاصة بحسابك
+                في مدرسة الهدى.
+                يمكنك تعيين كلمة مرور جديدة من خلال الضغط على الزر أدناه:
+            </p>
+
+            <div class="btn-container">
+                <a
+                    href="${resetLink}"
+                    class="btn"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    إعادة تعيين كلمة المرور
+                </a>
+            </div>
+
+            <div class="notice">
+                ⏱️
+                <strong>تنبيه أمان:</strong>
+                صلاحية هذا الرابط هي
+                <strong>15 دقيقة</strong>
+                فقط.
+            </div>
+
+            <p
+                class="text"
+                style="font-size: 13px; color: #64748b;"
+            >
+                إذا لم تكن قد طلبت إعادة تعيين كلمة المرور،
+                يرجى تجاهل هذه الرسالة،
+                فستبقى كلمة المرور الحالية آمنة كما هي.
+            </p>
+
+        </div>
+
+        <div class="footer">
+            © 2026 مدرسة الهدى للقرآن الكريم — جميع الحقوق محفوظة
+        </div>
+
+    </div>
+
+</body>
+</html>
+        `
+    })
+}
+
+module.exports = {
+    sendVerificationEmail,
+    sendResetPasswordEmail,
+    transporter
+}
+
