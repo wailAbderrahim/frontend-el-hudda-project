@@ -8,6 +8,7 @@ import {
 import { getUser, protectPage, logout } from "../../auth/auth.js"
 import { getStudentProgress } from "../../api/progressApi.js"
 import { initNotificationBell } from "../../components/notificationBell.js"
+import { parseBirthInfo, formatBirthDate } from "../../utils/birthUtils.js"
 
 protectPage("admin")
 
@@ -790,16 +791,23 @@ async function openUserModal(user) {
         user.educationLevel || '-'
 
 
+    const birthInfo = parseBirthInfo(user)
+
+    const modalBirthDateEl = document.getElementById('modal-birth-date')
+    if (modalBirthDateEl) {
+        modalBirthDateEl.textContent = formatBirthDate(birthInfo.dateOfBirth)
+    }
+
     document.getElementById(
         'modal-birth-place'
     ).textContent =
-        user.placeOfBirth || '-'
+        birthInfo.placeOfBirth || '-'
 
 
     document.getElementById(
         'modal-birth-municipality'
     ).textContent =
-        user.municipalityOfBirth || '-'
+        birthInfo.municipalityOfBirth || '-'
 
 
     /* =========================

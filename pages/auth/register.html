@@ -181,7 +181,28 @@
                             معلومات الميلاد
                         </h3>
 
-                        <div class="grid gap-4 sm:grid-cols-2">
+                        <div class="grid gap-4 sm:grid-cols-3">
+
+                            <!-- Date of Birth -->
+                            <div>
+
+                                <label
+                                    for="dateOfBirth"
+                                    class="mb-2 block text-sm font-medium text-slate-700"
+                                >
+                                    تاريخ الميلاد
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="dateOfBirth"
+                                    name="dateOfBirth"
+                                    required
+                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
+                                >
+
+                            </div>
+
 
                             <!-- Place of Birth -->
                             <div>
@@ -190,7 +211,7 @@
                                     for="placeOfBirth"
                                     class="mb-2 block text-sm font-medium text-slate-700"
                                 >
-                                    مكان الميلاد
+                                    مكان الميلاد (الولاية)
                                 </label>
 
                                 <input
@@ -198,7 +219,7 @@
                                     id="placeOfBirth"
                                     name="placeOfBirth"
                                     required
-                                    placeholder="مكان الميلاد"
+                                    placeholder="مكان / ولاية الميلاد"
                                     class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
                                 >
 

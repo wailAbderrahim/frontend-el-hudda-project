@@ -12,7 +12,7 @@ export async function login(email, password) {
     return data;
 }
 
-export async function register(firstNameOrData, lastName, name, phone, placeOfBirth, municipalityOfBirth, educationLevel, email, password) {
+export async function register(firstNameOrData, lastName, name, phone, placeOfBirth, municipalityOfBirth, educationLevel, email, password, dateOfBirth) {
     let payload;
     if (typeof firstNameOrData === 'object' && firstNameOrData !== null) {
         payload = firstNameOrData;
@@ -22,6 +22,7 @@ export async function register(firstNameOrData, lastName, name, phone, placeOfBi
             lastName,
             name: name || `${firstNameOrData || ''} ${lastName || ''}`.trim(),
             phone,
+            dateOfBirth,
             placeOfBirth,
             municipalityOfBirth,
             educationLevel,

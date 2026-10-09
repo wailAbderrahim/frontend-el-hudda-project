@@ -15,6 +15,7 @@ if (form) {
         const lastName = (document.getElementById('lastName')?.value || '').trim();
         const name = (document.getElementById('name')?.value || '').trim() || `${firstName} ${lastName}`.trim();
         const phone = (document.getElementById('phone')?.value || '').trim();
+        const dateOfBirth = (document.getElementById('dateOfBirth')?.value || '').trim();
         const placeOfBirth = (document.getElementById('placeOfBirth')?.value || '').trim();
         const municipalityOfBirth = (document.getElementById('municipalityOfBirth')?.value || '').trim();
         const educationLevel = document.getElementById('educationLevel')?.value || '';
@@ -34,7 +35,7 @@ if (form) {
         }
 
         // Frontend validation
-        if (!firstName || !lastName || !phone || !placeOfBirth || !municipalityOfBirth || !educationLevel || !email || !password) {
+        if (!firstName || !lastName || !phone || !dateOfBirth || !placeOfBirth || !municipalityOfBirth || !educationLevel || !email || !password) {
             if (errorBox) {
                 errorBox.textContent = 'يرجى ملء جميع الحقول المطلوبة والتأكد من صحة البيانات.';
                 errorBox.classList.remove('hidden');
@@ -72,6 +73,7 @@ if (form) {
                 lastName,
                 name,
                 phone,
+                dateOfBirth,
                 placeOfBirth,
                 municipalityOfBirth,
                 educationLevel,

@@ -1,5 +1,6 @@
 import { protectPage, logout } from "../../auth/auth.js"
 import { getProfile, updateProfile, changePassword } from "../../api/usersApi.js"
+import { parseBirthInfo, formatBirthDate, formatBirthPlaces } from "../../utils/birthUtils.js"
 
 // Restrict to teacher role
 protectPage("teacher")
@@ -27,6 +28,7 @@ const displayName = document.getElementById("display-name")
 const displayEmail = document.getElementById("display-email")
 const displayPhone = document.getElementById("display-phone")
 const displayEducation = document.getElementById("display-education")
+const displayBirthDate = document.getElementById("display-birth-date")
 const displayBirth = document.getElementById("display-birth")
 
 // Form Inputs
@@ -114,8 +116,9 @@ function populateProfileData(profile) {
     if (displayPhone) displayPhone.textContent = profile.phone || "—"
     if (displayEducation) displayEducation.textContent = profile.educationLevel || "—"
 
-    const birthInfo = [profile.placeOfBirth, profile.municipalityOfBirth].filter(Boolean).join(" - ")
-    if (displayBirth) displayBirth.textContent = birthInfo || "—"
+    const birthInfo = parseBirthInfo(profile)
+    if (displayBirthDate) displayBirthDate.textContent = formatBirthDate(birthInfo.dateOfBirth)
+    if (displayBirth) displayBirth.textContent = formatBirthPlaces(profile)
 
     // Edit Inputs
     if (inputName) inputName.value = profile.name || ""

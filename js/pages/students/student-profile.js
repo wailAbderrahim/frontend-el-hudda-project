@@ -1,6 +1,7 @@
 import { protectPage, logout } from "../../auth/auth.js"
 import { getProfile, updateProfile, changePassword } from "../../api/usersApi.js"
 import { getStudentProgress } from "../../api/progressApi.js"
+import { parseBirthInfo, formatBirthDate, formatBirthPlaces } from "../../utils/birthUtils.js"
 
 // Restrict to student role
 protectPage("student")
@@ -29,6 +30,7 @@ const displayStudentName = document.getElementById("display-student-name")
 const displayStudentEmail = document.getElementById("display-student-email")
 const displayStudentPhone = document.getElementById("display-student-phone")
 const displayStudentEducation = document.getElementById("display-student-education")
+const displayStudentBirthDate = document.getElementById("display-student-birth-date")
 const displayStudentBirth = document.getElementById("display-student-birth")
 
 // Halaqa Elements
@@ -136,8 +138,9 @@ function populateStudentData(profile, progress) {
     if (displayStudentPhone) displayStudentPhone.textContent = profile.phone || "—"
     if (displayStudentEducation) displayStudentEducation.textContent = profile.educationLevel || "—"
 
-    const birth = [profile.placeOfBirth, profile.municipalityOfBirth].filter(Boolean).join(" - ")
-    if (displayStudentBirth) displayStudentBirth.textContent = birth || "—"
+    const birthInfo = parseBirthInfo(profile)
+    if (displayStudentBirthDate) displayStudentBirthDate.textContent = formatBirthDate(birthInfo.dateOfBirth)
+    if (displayStudentBirth) displayStudentBirth.textContent = formatBirthPlaces(profile)
 
     // 3. Halaqa Card
     const halaqa = progress?.halaqa
