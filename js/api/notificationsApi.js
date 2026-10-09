@@ -60,3 +60,16 @@ export async function deleteNotification(id) {
     })
     return data
 }
+
+export async function deleteAllNotifications() {
+    const token = getToken()
+    const data = await apiRequest("/notifications", {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        }
+    })
+    return data
+}
+

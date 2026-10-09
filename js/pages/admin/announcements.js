@@ -7,6 +7,7 @@ import {
 } from "../../api/announcementsApi.js"
 
 import { getUser, protectPage } from "../../auth/auth.js"
+import { initNotificationBell } from "../../components/notificationBell.js"
 
 /* =========================================================
    Protection
@@ -42,6 +43,7 @@ async function initPage() {
     setupAdminInfo()
     setupSidebar()
     setupEvents()
+    initNotificationBell()
 
     await loadAnnouncements()
 }

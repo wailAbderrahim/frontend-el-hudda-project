@@ -8,6 +8,7 @@ import {
 
 import { getHalaqas } from "../../api/halaqaApi.js"
 import { getUser, protectPage, logout } from "../../auth/auth.js"
+import { initNotificationBell } from "../../components/notificationBell.js"
 
 protectPage("admin")
 
@@ -50,6 +51,7 @@ async function initPage() {
     setupAdminInfo()
     setupSidebar()
     setupEvents()
+    initNotificationBell()
 
     await Promise.all([
         loadMemorizations(),

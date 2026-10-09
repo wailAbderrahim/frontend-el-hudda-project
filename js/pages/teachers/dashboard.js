@@ -7,6 +7,7 @@ import { getEvaluations, createEvaluation, deleteEvaluation } from "../../api/ev
 import { getAnnouncements } from "../../api/announcementsApi.js"
 import { getNotifications, markAllAsRead } from "../../api/notificationsApi.js"
 import { getStudentProgress } from "../../api/progressApi.js"
+import { initNotificationBell } from "../../components/notificationBell.js"
 
 // Ensure access is restricted to teachers
 protectPage("teacher")
@@ -109,6 +110,7 @@ function getAttendanceStatusBadge(status) {
 document.addEventListener("DOMContentLoaded", async () => {
     setupNavigation()
     setupSidebar()
+    initNotificationBell()
     setupModals()
     setupFormHandlers()
     await loadInitialData()
@@ -240,14 +242,6 @@ function setupModals() {
     const btnOpenCreateEval = document.getElementById("btn-open-create-evaluation")
     if (btnQuickEval) btnQuickEval.addEventListener("click", () => openCreateEvaluationModal())
     if (btnOpenCreateEval) btnOpenCreateEval.addEventListener("click", () => openCreateEvaluationModal())
-
-    // Notifications modal open
-    if (notifBtn) {
-        notifBtn.addEventListener("click", () => {
-            openModal(modalNotifications)
-            renderNotificationsModal()
-        })
-    }
 
     const btnMarkAllRead = document.getElementById("btn-mark-all-read")
     if (btnMarkAllRead) {

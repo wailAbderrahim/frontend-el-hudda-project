@@ -10,6 +10,7 @@ import {
 
 import { getUsers } from "../../api/usersApi.js"
 import { getUser, protectPage, logout } from "../../auth/auth.js"
+import { initNotificationBell } from "../../components/notificationBell.js"
 
 protectPage("admin")
 
@@ -1994,6 +1995,7 @@ function setupSidebar() {
 ========================= */
 
 setupSidebar()
+initNotificationBell()
 setupModalLayers()
 loadHalaqas()
 loadUsers()

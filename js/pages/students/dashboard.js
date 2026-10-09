@@ -6,6 +6,7 @@ import { getEvaluations } from "../../api/evaluationsApi.js"
 import { getAttendances } from "../../api/attendanceApi.js"
 import { getAnnouncements } from "../../api/announcementsApi.js"
 import { getNotifications, markAllAsRead } from "../../api/notificationsApi.js"
+import { initNotificationBell } from "../../components/notificationBell.js"
 
 // Restrict to student role
 protectPage("student")
@@ -111,6 +112,7 @@ function getAttendanceStatusBadge(status) {
 document.addEventListener("DOMContentLoaded", async () => {
     setupNavigation()
     setupSidebar()
+    initNotificationBell()
     setupModals()
     setupFormHandlers()
     await loadInitialData()
@@ -220,13 +222,6 @@ function setupModals() {
     if (modalNotifications) {
         modalNotifications.addEventListener("click", (e) => {
             if (e.target === modalNotifications) closeModal(modalNotifications)
-        })
-    }
-
-    if (notifBtn) {
-        notifBtn.addEventListener("click", () => {
-            openModal(modalNotifications)
-            renderNotificationsModal()
         })
     }
 

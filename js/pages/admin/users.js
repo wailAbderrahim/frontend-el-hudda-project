@@ -7,6 +7,7 @@ import {
 
 import { getUser, protectPage, logout } from "../../auth/auth.js"
 import { getStudentProgress } from "../../api/progressApi.js"
+import { initNotificationBell } from "../../components/notificationBell.js"
 
 protectPage("admin")
 
@@ -1197,6 +1198,7 @@ function setupSidebar() {
 ========================= */
 
 setupSidebar()
+initNotificationBell()
 loadUsers()
 loadAdminInfo()
 

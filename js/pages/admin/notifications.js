@@ -3,10 +3,12 @@ import {
     getNotificationById,
     markAsRead,
     markAllAsRead,
-    deleteNotification
+    deleteNotification,
+    deleteAllNotifications
 } from "../../api/notificationsApi.js"
 
 import { getUser, protectPage } from "../../auth/auth.js"
+import { formatArabicRelativeTime } from "../../components/notificationBell.js"
 
 /* =========================================================
    Protection
@@ -196,6 +198,7 @@ function renderNotifications() {
         const typeInfo = getNotificationTypeInfo(notif.type)
         const unreadClass = !notif.isRead ? "bg-emerald-50/40" : "bg-white"
         const dateStr = formatDateTime(notif.createdAt)
+        const relTime = formatArabicRelativeTime(notif.createdAt)
 
         itemEl.className = `flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 transition hover:bg-slate-50 border-b border-slate-100 last:border-0 ${unreadClass}`
 
@@ -220,9 +223,11 @@ function renderNotifications() {
                         ${escapeHTML(notif.message)}
                     </p>
 
-                    <span class="mt-2 inline-block text-[11px] text-slate-400">
-                        ${dateStr}
-                    </span>
+                    <div class="mt-2 flex items-center gap-2 text-[11px] text-slate-400">
+                        <span class="font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded">${relTime}</span>
+                        <span>•</span>
+                        <span>${dateStr}</span>
+                    </div>
                 </div>
             </div>
 
@@ -277,6 +282,7 @@ function setupEvents() {
     $("notifs-type-filter")?.addEventListener("change", filterNotifications)
 
     $("mark-all-read-btn")?.addEventListener("click", handleMarkAllAsRead)
+    $("delete-all-btn")?.addEventListener("click", handleDeleteAllNotifications)
 
     $("notifications-list")?.addEventListener("click", (e) => {
         const btn = e.target.closest("button[data-action]")
@@ -337,6 +343,28 @@ async function handleMarkAllAsRead() {
     } catch (error) {
         console.error("Mark all read error:", error)
         showError(error.message || "تعذر تحديد الكل كمقروء.")
+    } finally {
+        if (btn) btn.disabled = false
+    }
+}
+
+async function handleDeleteAllNotifications() {
+    if (allNotifications.length === 0) return
+
+    const confirmed = window.confirm("هل أنت متأكد من رغبتك في مسح جميع الإشعارات؟ لا يمكن التراجع عن هذا الإجراء.")
+    if (!confirmed) return
+
+    const btn = $("delete-all-btn")
+    if (btn) btn.disabled = true
+
+    try {
+        await deleteAllNotifications()
+        allNotifications = []
+        renderStatistics()
+        filterNotifications()
+    } catch (error) {
+        console.error("Delete all notifications error:", error)
+        showError(error.message || "تعذر مسح جميع الإشعارات.")
     } finally {
         if (btn) btn.disabled = false
     }
