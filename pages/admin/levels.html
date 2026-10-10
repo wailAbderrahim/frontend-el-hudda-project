@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <title>إدارة المستويات | الهدى للقرآن</title>
+    <link rel="icon" type="image/jpeg" href="../../assets/images/logo.jpg" />
+</head>
+
+<body class="min-h-screen bg-slate-50 text-slate-800">
+
+    <!-- Mobile Overlay -->
+    <div
+        id="sidebar-overlay"
+        class="fixed inset-0 z-30 hidden bg-slate-900/40 lg:hidden">
+    </div>
+
+    <!-- Sidebar -->
+    <aside
+        id="sidebar"
+        class="fixed inset-y-0 right-0 z-40 flex w-72 translate-x-full flex-col border-l border-slate-200 bg-white transition-transform duration-300 lg:translate-x-0">
+
+        <!-- Brand -->
+        <div class="flex h-20 items-center gap-3 border-b border-slate-100 px-6">
+            <a href="./dashboard.html" class="flex items-center gap-3 group focus:outline-none">
+                <img
+                    src="../../assets/images/logo.jpg"
+                    alt="شعار مدرسة الهدى للقرآن"
+                    class="h-11 w-11 rounded-xl object-contain shadow-xs transition group-hover:scale-105"
+                >
+                <div>
+                    <h1 class="font-bold text-slate-800">
+                        الهدى للقرآن
+                    </h1>
+                    <p class="text-xs text-slate-400">
+                        لوحة الإدارة
+                    </p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 space-y-1 overflow-y-auto px-4 py-5">
+
+            <p class="mb-3 px-3 text-xs font-semibold text-slate-400">
+                القائمة الرئيسية
+            </p>
+
+            <!-- 1. Dashboard -->
+            <a
+                href="./dashboard.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l9-9 9 9M5 10v10h14V10" />
+                </svg>
+                <span>الرئيسية</span>
+            </a>
+
+            <!-- 2. Users -->
+            <a
+                href="./users.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+                </svg>
+                <span>إدارة المستخدمين</span>
+            </a>
+
+            <!-- 3. Halaqas -->
+            <a
+                href="./halaqas.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 19.5A2.5 2.5 0 016.5 17H20M4 19.5A2.5 2.5 0 011.5 17V5A2.5 2.5 0 014 2.5h12A2.5 2.5 0 0118.5 5v12M4 19.5V21h14" />
+                </svg>
+                <span>الحلقات</span>
+            </a>
+
+            <!-- 4. Levels (Active) -->
+            <a
+                href="./levels.html"
+                class="flex items-center gap-3 rounded-xl bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a7 7 0 01-14 0m14 0V8a7 7 0 00-14 0v3m14 0v3a7 7 0 01-14 0v-3" />
+                </svg>
+                <span>إدارة المستويات</span>
+            </a>
+
+            <!-- 5. Matn -->
+            <a
+                href="./matn.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5S19.832 5.477 21 6.253v13C19.832 18.477 18.246 18 16.5 18s-3.332-.477-4.5 1.253" />
+                </svg>
+                <span>إدارة المتون العلمية</span>
+            </a>
+
+            <!-- 6. Exams -->
+            <a
+                href="./exams.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <span>إدارة الامتحانات</span>
+            </a>
+
+            <!-- 7. Daily Evaluations -->
+            <a
+                href="./evaluations.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                </svg>
+                <span>التقييمات اليومية</span>
+            </a>
+
+            <!-- 8. Attendance -->
+            <a
+                href="./attendance.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3M4 11h16M5 21h14a1 1 0 001-1V6a1 1 0 00-1-1H5a1 1 0 00-1 1v14a1 1 0 001 1z" />
+                </svg>
+                <span>الحضور</span>
+            </a>
+
+            <!-- 9. Announcements -->
+            <a
+                href="./announcements.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                </svg>
+                <span>الإعلانات</span>
+            </a>
+
+            <!-- 10. Reports -->
+            <a
+                href="./reports.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span>التقارير</span>
+            </a>
+
+            <!-- 11. Notifications -->
+            <a
+                href="./notifications.html"
+                class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.5-2V9a6.5 6.5 0 00-13 0v6L4 17h5m6 0a3 3 0 01-6 0" />
+                </svg>
+                <span>الإشعارات</span>
+            </a>
+
+        </nav>
+
+        <!-- Sidebar Footer -->
+        <div class="border-t border-slate-100 p-4">
+            <button
+                id="logout-btn"
+                class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-red-600 transition hover:bg-red-50">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5m5 5H3" />
+                </svg>
+                <span>تسجيل الخروج</span>
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- Main -->
+    <div class="min-h-screen lg:mr-72">
+
+        <!-- Header -->
+        <header
+            class="sticky top-0 z-20 flex h-20 items-center justify-between border-b border-slate-200 bg-white/95 px-4 backdrop-blur sm:px-6 lg:px-8">
+
+            <!-- Mobile Menu -->
+            <button
+                id="menu-btn"
+                class="rounded-xl p-2 text-slate-600 hover:bg-slate-100 lg:hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+
+            <!-- Page Title -->
+            <div>
+                <h2 class="text-lg font-bold text-slate-800">
+                    إدارة المستويات وسجل الترقية
+                </h2>
+                <p class="hidden text-xs text-slate-400 sm:block">
+                    هيكلة السلّم التعليمي، شروط ومعايير الانتقال، متابعة وتأهيل وترقية الطلاب وسجل الترقيات
+                </p>
+            </div>
+
+            <!-- Header Actions -->
+            <div class="flex items-center gap-2 sm:gap-4">
+
+                <!-- Notifications Dropdown -->
+                <div class="relative" id="notif-container">
+                    <button
+                        id="notif-btn"
+                        type="button"
+                        class="relative rounded-xl p-2.5 text-slate-500 transition hover:bg-slate-100 hover:text-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                        aria-label="الإشعارات"
+                        aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.5-2V9a6.5 6.5 0 00-13 0v6L4 17h5m6 0a3 3 0 01-6 0" />
+                        </svg>
+                        <span
+                            id="notif-badge"
+                            class="hidden absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-emerald-600 px-1 text-[10px] font-bold text-white shadow-sm ring-2 ring-white">
+                            0
+                        </span>
+                    </button>
+
+                    <div
+                        id="notif-dropdown"
+                        class="hidden absolute left-0 mt-3 w-80 sm:w-96 rounded-2xl border border-slate-100 bg-white shadow-xl ring-1 ring-black/5 z-50">
+                        <div class="flex items-center justify-between border-b border-slate-100 px-4 py-3">
+                            <h3 class="font-bold text-slate-800 text-sm">الإشعارات</h3>
+                            <button id="mark-all-read" class="text-xs text-emerald-700 hover:text-emerald-800 font-medium">
+                                تحديد الكل كمقروء
+                            </button>
+                        </div>
+                        <div id="notif-list" class="max-h-80 overflow-y-auto divide-y divide-slate-50">
+                            <div class="p-6 text-center text-xs text-slate-400">لا توجد إشعارات حالياً</div>
+                        </div>
+                        <div class="border-t border-slate-100 p-2.5 text-center">
+                            <a href="./notifications.html" class="text-xs text-emerald-700 hover:text-emerald-800 font-semibold">
+                                عرض كل الإشعارات
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Profile -->
+                <div class="hidden items-center gap-3 border-r border-slate-200 pr-4 sm:flex">
+                    <div class="text-left">
+                        <p id="admin-name" class="text-sm font-bold text-slate-700">
+                            الإدارة
+                        </p>
+                        <p class="text-xs text-slate-400">
+                            مدير النظام
+                        </p>
+                    </div>
+                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 font-bold text-emerald-700">
+                        <span id="admin-avatar">أ</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- Content -->
+        <main class="space-y-6 p-4 sm:p-6 lg:p-8">
+
+            <!-- Error Box -->
+            <div
+                id="levels-error"
+                class="hidden rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-700">
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400">المستويات التعليمية</p>
+                            <h3 id="admin-levels-total" class="mt-2 text-2xl font-bold text-slate-800">0</h3>
+                        </div>
+                        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a7 7 0 01-14 0m14 0V8a7 7 0 00-14 0v3m14 0v3a7 7 0 01-14 0v-3" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400">الطلاب المسجلون بالمستويات</p>
+                            <h3 id="admin-levels-students-total" class="mt-2 text-2xl font-bold text-slate-800">0</h3>
+                        </div>
+                        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400">حركات الترقية المسجلة</p>
+                            <h3 id="admin-levels-promotions-total" class="mt-2 text-2xl font-bold text-emerald-700">0</h3>
+                        </div>
+                        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400">الطلاب المؤهلون للترقية</p>
+                            <h3 id="admin-levels-eligible-total" class="mt-2 text-2xl font-bold text-purple-700">0</h3>
+                        </div>
+                        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-50 text-purple-700">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =========================================================
+                 SECTION 1: Levels Ladder Table (سلّم المستويات)
+            ========================================================== -->
+            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                <div class="flex flex-col gap-3 border-b border-slate-100 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h3 class="font-bold text-slate-800">سلّم المستويات التعليمية</h3>
+                        <p class="text-xs text-slate-400">هيكلة المستويات بالمدرسة وشروط النجاح والانتقال ومتطلبات الحفظ</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button
+                            type="button"
+                            id="btn-admin-promote-student-direct"
+                            class="inline-flex items-center justify-center gap-2 rounded-xl bg-purple-700 px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition hover:bg-purple-800">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                            </svg>
+                            <span>ترقية طالب لمستوى</span>
+                        </button>
+                        <button
+                            type="button"
+                            id="btn-admin-add-level"
+                            class="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition hover:bg-emerald-800">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>
+                            <span>إضافة مستوى جديد</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="admin-levels-loading" class="hidden flex-col items-center justify-center py-16 text-slate-400">
+                    <svg class="h-8 w-8 animate-spin text-emerald-600" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                    </svg>
+                    <p class="mt-3 text-sm">جاري تحميل المستويات التعليمية...</p>
+                </div>
+
+                <div id="admin-levels-table-container" class="overflow-x-auto">
+                    <table class="w-full text-right text-sm">
+                        <thead class="bg-slate-50 text-xs font-semibold text-slate-500">
+                            <tr>
+                                <th class="px-6 py-4">الترتيب</th>
+                                <th class="px-6 py-4">المستوى والرمز</th>
+                                <th class="px-6 py-4">درجة النجاح الدنيا</th>
+                                <th class="px-6 py-4">متطلبات القرآن والمتون</th>
+                                <th class="px-6 py-4">الترقية التلقائية</th>
+                                <th class="px-6 py-4">الحالة</th>
+                                <th class="px-6 py-4 text-center">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-levels-table-body" class="divide-y divide-slate-100 text-slate-700">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="admin-levels-empty" class="hidden flex-col items-center justify-center py-12 text-slate-400">
+                    <p class="text-sm font-semibold text-slate-600">لا توجد مستويات تعليمية مضافة حتى الآن</p>
+                </div>
+            </div>
+
+            <!-- =========================================================
+                 SECTION 2: Students Current Levels & Eligibility
+            ========================================================== -->
+            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                <div class="border-b border-slate-100 px-6 py-4">
+                    <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-800">قائمة الطلاب ومستوياتهم الحالية وأهلية الترقية</h3>
+                            <p class="text-xs text-slate-400">تحديد المستوى الحالي لكل طالب وإمكانية ترقيته وتسجيل بيانات الانتقال</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <input
+                                id="admin-students-search"
+                                type="text"
+                                placeholder="بحث باسم الطالب أو الحلقة..."
+                                class="rounded-xl border border-slate-200 py-2 pr-3 pl-3 text-xs focus:border-emerald-600 focus:outline-none">
+                            <select
+                                id="admin-students-level-filter"
+                                class="rounded-xl border border-slate-200 py-2 px-3 text-xs text-slate-600 focus:border-emerald-600 focus:outline-none">
+                                <option value="">جميع المستويات</option>
+                            </select>
+                            <select
+                                id="admin-students-eligibility-filter"
+                                class="rounded-xl border border-slate-200 py-2 px-3 text-xs text-slate-600 focus:border-emerald-600 focus:outline-none">
+                                <option value="">جميع الطلاب</option>
+                                <option value="eligible">مؤهلون للترقية</option>
+                                <option value="assigned">مسجلون في مستوى</option>
+                                <option value="unassigned">غير محدد لهم مستوى</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="admin-students-table-container" class="overflow-x-auto">
+                    <table class="w-full text-right text-sm">
+                        <thead class="bg-slate-50 text-xs font-semibold text-slate-500">
+                            <tr>
+                                <th class="px-6 py-4">اسم الطالب</th>
+                                <th class="px-6 py-4">الحلقة القرآنية</th>
+                                <th class="px-6 py-4">المستوى الحالي</th>
+                                <th class="px-6 py-4">المستوى التالي المقترح</th>
+                                <th class="px-6 py-4">حالة الأهلية</th>
+                                <th class="px-6 py-4 text-center">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-students-table-body" class="divide-y divide-slate-100 text-slate-700">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="admin-students-empty" class="hidden flex-col items-center justify-center py-12 text-slate-400">
+                    <p class="text-sm font-semibold text-slate-600">لا يوجد طلاب مطابقون لمعايير البحث</p>
+                </div>
+            </div>
+
+            <!-- =========================================================
+                 SECTION 3: Promotions History Log (سجل الترقيات التاريخي)
+            ========================================================== -->
+            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                <div class="border-b border-slate-100 px-6 py-4">
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-800">سجل الترقيات والانتقال بين المستويات</h3>
+                            <p class="text-xs text-slate-400">سجل غير قابل للتعديل يوثق جميع حركات الترقية وتواريخها وأسبابها</p>
+                        </div>
+                        <input
+                            id="admin-promotions-search"
+                            type="text"
+                            placeholder="بحث باسم الطالب في سجل الترقيات..."
+                            class="rounded-xl border border-slate-200 py-2 pr-3 pl-3 text-xs focus:border-emerald-600 focus:outline-none">
+                    </div>
+                </div>
+
+                <div id="admin-promotions-table-container" class="overflow-x-auto">
+                    <table class="w-full text-right text-sm">
+                        <thead class="bg-slate-50 text-xs font-semibold text-slate-500">
+                            <tr>
+                                <th class="px-6 py-4">الطالب</th>
+                                <th class="px-6 py-4">الانتقال</th>
+                                <th class="px-6 py-4">تاريخ الترقية</th>
+                                <th class="px-6 py-4">سبب الترقية / الامتحان</th>
+                                <th class="px-6 py-4">القائم بالترقية</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-promotions-table-body" class="divide-y divide-slate-100 text-slate-700">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="admin-promotions-empty" class="hidden flex-col items-center justify-center py-12 text-slate-400">
+                    <p class="text-sm font-semibold text-slate-600">لا توجد سجلات ترقية مسجلة حتى الآن</p>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- =========================================================
+         Modal: Create / Edit Educational Level
+    ========================================================= -->
+    <div
+        id="modal-admin-level"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40 p-4 backdrop-blur-xs">
+        <div class="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-xl">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <h3 id="modal-level-title" class="text-lg font-bold text-slate-800">إضافة مستوى تعليمي جديد</h3>
+                <button
+                    type="button"
+                    id="btn-close-level-modal"
+                    class="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <form id="admin-level-form" class="mt-5 space-y-4">
+                <input type="hidden" id="level-id">
+                <div id="admin-level-error" class="hidden rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-600"></div>
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-slate-600">اسم المستوى *</label>
+                        <input
+                            id="level-name"
+                            type="text"
+                            required
+                            placeholder="مثال: المستوى التمهيدي"
+                            class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-emerald-600 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-slate-600">الترتيب الرقمي *</label>
+                        <input
+                            id="level-order"
+                            type="number"
+                            min="1"
+                            required
+                            placeholder="1"
+                            class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-emerald-600 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-slate-600">الدرجة الصغرى للنجاح (من 100) *</label>
+                        <input
+                            id="level-passing-score"
+                            type="number"
+                            min="0"
+                            max="100"
+                            required
+                            placeholder="60"
+                            class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-emerald-600 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-slate-600">عدد الامتحانات المطلوبة للترقية</label>
+                        <input
+                            id="level-required-exams"
+                            type="number"
+                            min="0"
+                            max="20"
+                            value="1"
+                            placeholder="1"
+                            class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-emerald-600 focus:outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="mb-1.5 block text-xs font-semibold text-slate-600">متطلبات وشروط الانتقال لهذا المستوى</label>
+                    <textarea
+                        id="level-requirements"
+                        rows="2"
+                        placeholder="مثال: حفظ جزء عم كاملاً، وضبط أحكام النون الساكنة والتنوين..."
+                        class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-emerald-600 focus:outline-none"></textarea>
+                </div>
+
+                <div>
+                    <label class="mb-1.5 block text-xs font-semibold text-slate-600">وصف وأهداف المستوى</label>
+                    <textarea
+                        id="level-desc"
+                        rows="2"
+                        placeholder="ملاحظات تفصيلية عن المنهج..."
+                        class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-emerald-600 focus:outline-none"></textarea>
+                </div>
+
+                <div class="flex items-center gap-6 pt-2">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input id="level-auto-promote" type="checkbox" class="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                        <span class="text-xs font-medium text-slate-700">ترقية الطالب تلقائياً عند اجتياز امتحان المستوى</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input id="level-is-active" type="checkbox" checked class="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                        <span class="text-xs font-medium text-slate-700">مستوى نشط ومتاح</span>
+                    </label>
+                </div>
+
+                <div class="mt-6 flex gap-3 border-t border-slate-100 pt-4">
+                    <button
+                        type="button"
+                        id="btn-cancel-level-modal"
+                        class="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50">
+                        إلغاء
+                    </button>
+                    <button
+                        type="submit"
+                        id="btn-submit-level"
+                        class="flex-1 rounded-xl bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-emerald-800 disabled:opacity-50">
+                        حفظ المستوى
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         Modal: Promote Student (ترقية طالب إلى مستوى)
+    ========================================================= -->
+    <div
+        id="modal-admin-promote-student"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40 p-4 backdrop-blur-xs">
+        <div class="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-xl">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800">ترقية وتعيين مستوى الطالب</h3>
+                    <p class="text-xs text-slate-400">توثيق حركة انتقال الطالب إلى المستوى الجديد مع ذكر السبب والملاحظات</p>
+                </div>
+                <button
+                    type="button"
+                    id="btn-close-promote-modal"
+                    class="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <form id="admin-promote-form" class="mt-5 space-y-4">
+                <div id="admin-promote-error" class="hidden rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-600"></div>
+
+                <div>
+                    <label class="mb-1.5 block text-xs font-semibold text-slate-600">اختر الطالب المراد ترقيته *</label>
+                    <select
+                        id="promote-student-select"
+                        required
+                        class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-emerald-600 focus:outline-none">
+                        <option value="">اختر الطالب من القائمة...</option>
+                    </select>
+                </div>
+
+                <div class="rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs">
+                    <span class="text-slate-400 block mb-1">المستوى الحالي للطالب:</span>
+                    <p id="promote-current-level-display" class="font-bold text-slate-700">غير محدد</p>
+                </div>
+
+                <div>
+                    <label class="mb-1.5 block text-xs font-semibold text-slate-600">المستوى الجديد المنقول إليه *</label>
+                    <select
+                        id="promote-new-level-select"
+                        required
+                        class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-emerald-600 focus:outline-none">
+                        <option value="">اختر المستوى الجديد...</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="mb-1.5 block text-xs font-semibold text-slate-600">سبب الترقية *</label>
+                    <select
+                        id="promote-reason-select"
+                        required
+                        class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-emerald-600 focus:outline-none">
+                        <option value="اجتياز امتحان المستوى">اجتياز امتحان المستوى بنجاح</option>
+                        <option value="إتمام متطلبات الحفظ والمراجعة">إتمام متطلبات الحفظ والمراجعة المقررة</option>
+                        <option value="تفوق استثنائي وتقييم ممتاز">تفوق استثنائي وتقييم مستمر ممتاز</option>
+                        <option value="قرار إداري وتعيين أولي">قرار إداري / تعيين أولي لمستوى الطالب</option>
+                        <option value="أخرى">سبب آخر (يحدد في الملاحظات)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="mb-1.5 block text-xs font-semibold text-slate-600">الامتحان المرتبط بالترقية (اختياري)</label>
+                    <select
+                        id="promote-exam-select"
+                        class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-emerald-600 focus:outline-none">
+                        <option value="">بدون ربط بامتحان معين</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="mb-1.5 block text-xs font-semibold text-slate-600">ملاحظات وتوصيات الإدارة للطالب</label>
+                    <textarea
+                        id="promote-notes"
+                        rows="2"
+                        placeholder="أي توصيات أو توجيهات للمعلم أو الطالب في المستوى الجديد..."
+                        class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-emerald-600 focus:outline-none"></textarea>
+                </div>
+
+                <div class="mt-6 flex gap-3 border-t border-slate-100 pt-4">
+                    <button
+                        type="button"
+                        id="btn-cancel-promote-modal"
+                        class="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50">
+                        إلغاء
+                    </button>
+                    <button
+                        type="submit"
+                        id="btn-submit-promote"
+                        class="flex-1 rounded-xl bg-purple-700 px-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-purple-800 disabled:opacity-50">
+                        تأكيد ترقية الطالب
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         Modal: Generic Delete Confirmation
+    ========================================================= -->
+    <div
+        id="modal-admin-generic-delete"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40 p-4 backdrop-blur-xs">
+        <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+            <div class="flex items-center gap-3">
+                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-100 text-red-600">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 id="generic-delete-title" class="text-base font-bold text-slate-800">تأكيد الحذف</h3>
+                    <p class="text-xs text-slate-400">هذا الإجراء لا يمكن التراجع عنه.</p>
+                </div>
+            </div>
+
+            <p id="generic-delete-message" class="mt-4 text-sm text-slate-600">هل أنت متأكد من رغبتك في الحذف؟</p>
+
+            <div id="generic-delete-error" class="mt-3 hidden rounded-xl border border-red-200 bg-red-50 p-2 text-xs font-semibold text-red-600"></div>
+
+            <div class="mt-6 grid grid-cols-2 gap-3">
+                <button
+                    type="button"
+                    id="generic-delete-cancel-btn"
+                    class="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50">
+                    إلغاء
+                </button>
+                <button
+                    type="button"
+                    id="generic-delete-confirm-btn"
+                    class="rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-50">
+                    تأكيد الحذف
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script
+        type="module"
+        src="../../js/pages/admin/levels.js">
+    </script>
+
+</body>
+
+</html>
+
