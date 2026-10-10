@@ -92,16 +92,14 @@ async function initPage() {
     setupAdminInfo()
     setupSidebar()
     setupEvents()
-    setupTabSwitching()
     setupExamsEvents()
     setupMatnEvents()
     setupLevelsEvents()
     initNotificationBell()
 
-    await Promise.all([
-        loadEvaluations(),
-        loadHalaqas()
-    ])
+    await loadHalaqas()
+
+    setupTabSwitching()
 }
 
 /* =========================================================
@@ -162,9 +160,26 @@ function setupTabSwitching() {
     tabBtns.forEach(btn => {
         btn.addEventListener("click", () => {
             const tab = btn.dataset.evalTab
-            if (tab) switchEvalTab(tab)
+            if (tab) {
+                switchEvalTab(tab)
+                try {
+                    const url = new URL(window.location)
+                    url.searchParams.set("tab", tab)
+                    window.history.replaceState({}, "", url)
+                } catch (_) {}
+            }
         })
     })
+
+    // Read initial tab from URL query (?tab=levels) or hash (#levels)
+    const urlParams = new URLSearchParams(window.location.search)
+    const initialTab = urlParams.get("tab") || window.location.hash.replace("#", "") || "daily"
+
+    if (["daily", "exams", "matn", "levels"].includes(initialTab)) {
+        switchEvalTab(initialTab)
+    } else {
+        switchEvalTab("daily")
+    }
 }
 
 function switchEvalTab(tabName) {
@@ -188,13 +203,15 @@ function switchEvalTab(tabName) {
     const activeSec = $(`section-${tabName}`)
     if (activeSec) activeSec.classList.remove("hidden")
 
-    // Lazy load data on switch
-    if (tabName === "exams" && allExams.length === 0) {
+    // Load data on switch
+    if (tabName === "exams") {
         loadAdminExams()
-    } else if (tabName === "matn" && allMatns.length === 0) {
+    } else if (tabName === "matn") {
         loadAdminMatns()
-    } else if (tabName === "levels" && allLevels.length === 0) {
+    } else if (tabName === "levels") {
         loadAdminLevels()
+    } else if (tabName === "daily") {
+        loadEvaluations()
     }
 }
 
