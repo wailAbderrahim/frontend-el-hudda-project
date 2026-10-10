@@ -104,7 +104,28 @@ export async function getExamAttempts(id) {
     })
 }
 
-export async function gradeAttempt(attemptId, gradeData) {
+export async function getAllExamAttempts(query = {}) {
+    const token = getToken()
+    const params = new URLSearchParams()
+    if (query.examId) params.append("examId", query.examId)
+    if (query.status) params.append("status", query.status)
+    const qs = params.toString() ? `?${params.toString()}` : ""
+    return await apiRequest(`/exams/all-attempts${qs}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        }
+    })
+}
+
+export async function gradeAttempt(idOrAttemptId, maybeAttemptIdOrData, maybeData) {
+    let attemptId = idOrAttemptId
+    let gradeData = maybeAttemptIdOrData
+    if (maybeData !== undefined) {
+        attemptId = maybeAttemptIdOrData
+        gradeData = maybeData
+    }
     const token = getToken()
     return await apiRequest(`/exams/attempts/${attemptId}/grade`, {
         method: "PUT",
