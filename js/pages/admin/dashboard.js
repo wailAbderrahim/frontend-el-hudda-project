@@ -337,6 +337,26 @@ async function loadDashboardStatsData() {
             stats.evaluations
         )
 
+        setValue(
+            "levels-count",
+            stats.levelsCount ?? 0
+        )
+
+        setValue(
+            "active-matn-count",
+            stats.activeMatnsCount ?? 0
+        )
+
+        setValue(
+            "exams-count",
+            stats.upcomingExamsCount ?? 0
+        )
+
+        setValue(
+            "pending-grading-count",
+            stats.pendingGradingExamsCount ?? 0
+        )
+
 
         /* ---------------------------------------------
            Overview

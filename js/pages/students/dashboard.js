@@ -7,6 +7,9 @@ import { getAttendances } from "../../api/attendanceApi.js"
 import { getAnnouncements } from "../../api/announcementsApi.js"
 import { getNotifications, markAllAsRead } from "../../api/notificationsApi.js"
 import { initNotificationBell } from "../../components/notificationBell.js"
+import { getLevels, getStudentLevelHistory } from "../../api/levelsApi.js"
+import { getMatns, getStudentMatnProgress } from "../../api/matnApi.js"
+import { getExams, startExamAttempt, saveExamProgress, submitExamAttempt, getStudentResults } from "../../api/examsApi.js"
 
 // Restrict to student role
 protectPage("student")
@@ -19,6 +22,23 @@ let evaluationsList = []
 let attendancesList = []
 let announcementsList = []
 let notificationsList = []
+
+// Level, Matn, Exams State
+let currentLevel = null
+let levelHistoryList = []
+let matnProgressList = []
+let availableExamsList = []
+let examResultsList = []
+
+// Active Exam Taking Engine State
+let activeExam = null
+let activeAttempt = null
+let currentQuestionIndex = 0
+let examTimerInterval = null
+let examRemainingSeconds = 0
+let userAnswers = {}
+let autoSaveDebounceTimer = null
+let periodicSaveInterval = null
 
 // DOM Elements
 const sidebar = document.getElementById("sidebar")
@@ -129,6 +149,10 @@ function setupNavigation() {
 
     const titles = {
         overview: { title: "بوابة الطالب", sub: "متابعة الحفظ والحضور والتقييمات" },
+        level: { title: "مستواي الدراسي وسجل الترقية", sub: "متابعة المستوى التعليمي الحالي وشروط الانتقال وسجل الترقيات" },
+        matn: { title: "حفظ المتون العلمية", sub: "متابعة حفظ المتون التجويدية والعلمية وملاحظات الشيخ المعلم" },
+        exams: { title: "امتحاناتي واختباراتي", sub: "الامتحانات المقررة الحضورية والإلكترونية وإجراؤها" },
+        results: { title: "نتائجي وتقارير الاختبارات", sub: "النتائج الرسمية المعتمدة وتوجيهات الأساتذة في الامتحانات" },
         memorization: { title: "حفظي وتسميعي", sub: "سجل السور والآيات التي قمت بتسميعها" },
         evaluations: { title: "تقييماتي", sub: "تقييمات وتوجيهات الشيخ المعلم" },
         attendance: { title: "سجلي في الحضور", sub: "سجل الالتزام بالحضور والغياب" },
@@ -267,15 +291,60 @@ async function loadInitialData() {
             if (profPhone) profPhone.value = currentUser.phone || ""
         }
 
-        // 1. Fetch Student Progress
+        // 1. Fetch Student Progress (includes populated teacher, currentLevel, matn, exams)
         try {
             const progressRes = await getStudentProgress(currentUser._id)
             studentProgress = progressRes?.data || progressRes
+            if (studentProgress?.currentLevel) {
+                currentLevel = studentProgress.currentLevel
+            }
+            if (studentProgress?.levelHistory && studentProgress.levelHistory.length > 0) {
+                levelHistoryList = studentProgress.levelHistory
+            }
         } catch (progErr) {
             console.warn("Could not fetch student progress summary:", progErr)
         }
 
-        // 2. Fetch Memorizations
+        // If level not yet loaded from progress, check currentUser
+        if (!currentLevel && currentUser?.currentLevel) {
+            currentLevel = currentUser.currentLevel
+        }
+
+        // Fetch level history if not populated
+        if (levelHistoryList.length === 0 && currentUser?._id) {
+            try {
+                const histRes = await getStudentLevelHistory(currentUser._id)
+                levelHistoryList = Array.isArray(histRes) ? histRes : histRes?.data || []
+            } catch (hErr) {
+                console.warn("Could not fetch level history:", hErr)
+            }
+        }
+
+        // 2. Fetch Matn Progress
+        try {
+            const matnRes = await getStudentMatnProgress(currentUser._id)
+            matnProgressList = Array.isArray(matnRes) ? matnRes : matnRes?.data || []
+        } catch (matnErr) {
+            console.warn("Could not fetch matn progress:", matnErr)
+        }
+
+        // 3. Fetch Available Exams
+        try {
+            const examsRes = await getExams()
+            availableExamsList = Array.isArray(examsRes) ? examsRes : examsRes?.data || []
+        } catch (exErr) {
+            console.warn("Could not fetch exams:", exErr)
+        }
+
+        // 4. Fetch Student Exam Results
+        try {
+            const resRes = await getStudentResults(currentUser._id)
+            examResultsList = Array.isArray(resRes) ? resRes : resRes?.data || []
+        } catch (rErr) {
+            console.warn("Could not fetch exam results:", rErr)
+        }
+
+        // 5. Fetch Memorizations
         try {
             const memRes = await getMemorization()
             memorizationsList = Array.isArray(memRes) ? memRes : memRes?.data || []
@@ -283,7 +352,7 @@ async function loadInitialData() {
             console.warn(memErr)
         }
 
-        // 3. Fetch Evaluations
+        // 6. Fetch Evaluations
         try {
             const evalRes = await getEvaluations()
             evaluationsList = Array.isArray(evalRes) ? evalRes : evalRes?.data || []
@@ -291,7 +360,7 @@ async function loadInitialData() {
             console.warn(evalErr)
         }
 
-        // 4. Fetch Attendances
+        // 7. Fetch Attendances
         try {
             const attRes = await getAttendances()
             attendancesList = Array.isArray(attRes) ? attRes : attRes?.data || []
@@ -299,7 +368,7 @@ async function loadInitialData() {
             console.warn(attErr)
         }
 
-        // 5. Fetch Announcements
+        // 8. Fetch Announcements
         try {
             const annRes = await getAnnouncements()
             announcementsList = Array.isArray(annRes) ? annRes : annRes?.data || []
@@ -307,15 +376,20 @@ async function loadInitialData() {
             console.warn(annErr)
         }
 
-        // 6. Notifications
+        // 9. Notifications
         await loadNotifications()
 
         // Render Everything
         renderOverview()
+        renderLevelTab()
+        renderMatnTab()
+        renderExamsTab()
+        renderResultsTab()
         renderMemorizationTab()
         renderEvaluationsTab()
         renderAttendanceTab()
         renderAnnouncementsTab()
+        setupExamModalHandlers()
 
     } catch (err) {
         console.error("Error loading student data:", err)
@@ -340,14 +414,22 @@ async function loadNotifications() {
    TAB 1: OVERVIEW RENDERING
 =================================================== */
 function renderOverview() {
-    // Halaqa & Teacher display
+    // Halaqa & Teacher display with full safeguard against raw ObjectIds
     const halaqa = studentProgress?.halaqa
     if (halaqa) {
         if (halaqaNameDisplay) halaqaNameDisplay.textContent = halaqa.name || "حلقة غير مسماة"
         if (halaqaScheduleDisplay) halaqaScheduleDisplay.textContent = halaqa.schedule || "غير محدد"
         if (teacherNameDisplay) {
             const t = halaqa.teacher
-            teacherNameDisplay.textContent = t ? (t.name || "الشيخ المعلم") : "لم يحدد"
+            let tName = "لم يحدد"
+            if (t && typeof t === "object") {
+                tName = t.name || `${t.firstName || ""} ${t.lastName || ""}`.trim() || "الشيخ المعلم"
+            } else if (typeof t === "string" && t.length > 0 && !/^[0-9a-fA-F]{24}$/.test(t)) {
+                tName = t
+            } else if (typeof t === "string" && /^[0-9a-fA-F]{24}$/.test(t)) {
+                tName = "الشيخ المعلم"
+            }
+            teacherNameDisplay.textContent = tName
         }
     } else {
         if (halaqaNameDisplay) halaqaNameDisplay.textContent = "غير ملتحق بحلقة حالياً"
@@ -386,6 +468,54 @@ function renderOverview() {
 
     if (statAverageEvalEl) statAverageEvalEl.textContent = `${Number(evScore).toFixed(1)} / 10`
     if (statEvalCountEl) statEvalCountEl.textContent = `${evTotal} تقييم مسجل`
+
+    // Current Level Card
+    const statCurrentLevelEl = document.getElementById("stat-current-level")
+    const statLevelPassingEl = document.getElementById("stat-level-passing")
+    if (statCurrentLevelEl) {
+        statCurrentLevelEl.textContent = currentLevel?.name || "المستوى التمهيدي"
+    }
+    if (statLevelPassingEl) {
+        statLevelPassingEl.textContent = `نسبة النجاح المطلوبة: ${currentLevel?.passingScore || 60}%`
+    }
+
+    // Matn Card
+    const statMatnCountEl = document.getElementById("stat-matn-count")
+    const statMatnDetailEl = document.getElementById("stat-matn-detail")
+    const activeMatnCount = matnProgressList.length
+    if (statMatnCountEl) statMatnCountEl.textContent = activeMatnCount
+    if (statMatnDetailEl) {
+        const masteredCount = matnProgressList.filter((m) => m.status === "mastered").length
+        statMatnDetailEl.textContent = `${masteredCount} متقن من ${activeMatnCount} متن`
+    }
+
+    // Available Exams Card
+    const statExamsAvailableEl = document.getElementById("stat-exams-available")
+    const statExamsDetailEl = document.getElementById("stat-exams-detail")
+    if (statExamsAvailableEl) statExamsAvailableEl.textContent = availableExamsList.length
+    if (statExamsDetailEl) {
+        const onlineCount = availableExamsList.filter((e) => e.format === "online").length
+        statExamsDetailEl.textContent = `${onlineCount} إلكتروني عن بُعد`
+    }
+
+    // Latest Result Card
+    const statLatestResultEl = document.getElementById("stat-latest-result")
+    const statLatestResultBadgeEl = document.getElementById("stat-latest-result-badge")
+    if (examResultsList.length > 0) {
+        const latest = examResultsList[0]
+        const pct = latest.percentage ?? (latest.totalScore ? Math.round((latest.score / latest.totalScore) * 100) : 0)
+        if (statLatestResultEl) statLatestResultEl.textContent = `${pct}%`
+        if (statLatestResultBadgeEl) {
+            statLatestResultBadgeEl.textContent = latest.isPassed ? "ناجح ومجتاز ✓" : "يحتاج إعادة وتكثيف"
+            statLatestResultBadgeEl.className = `mt-1 text-xs font-semibold ${latest.isPassed ? "text-emerald-700" : "text-rose-600"}`
+        }
+    } else {
+        if (statLatestResultEl) statLatestResultEl.textContent = "-"
+        if (statLatestResultBadgeEl) {
+            statLatestResultBadgeEl.textContent = "لا توجد نتائج معلنة بعد"
+            statLatestResultBadgeEl.className = "mt-1 text-xs text-slate-400"
+        }
+    }
 
     // Overview recent memorization table
     const overviewMemBody = document.getElementById("overview-memorization-body")
@@ -625,4 +755,710 @@ function setupFormHandlers() {
             }
         })
     }
+}
+
+/* ===================================================
+   TAB: LEVEL (مستواي الدراسي وسجل الترقية)
+=================================================== */
+function renderLevelTab() {
+    const levelNameEl = document.getElementById("student-current-level-name")
+    const levelBadgeEl = document.getElementById("student-level-order-badge")
+    const levelDescEl = document.getElementById("student-current-level-desc")
+    const levelPassingEl = document.getElementById("student-level-passing-score")
+    const levelExamsReqEl = document.getElementById("student-level-exams-req")
+    const requirementsListEl = document.getElementById("student-level-requirements-list")
+    const nextLevelTitleEl = document.getElementById("student-next-level-title")
+    const historyBodyEl = document.getElementById("student-level-history-body")
+
+    if (currentLevel) {
+        if (levelNameEl) levelNameEl.textContent = currentLevel.name || "المستوى التعليمي"
+        if (levelBadgeEl) levelBadgeEl.textContent = `المستوى ${currentLevel.order || 1}`
+        if (levelDescEl) levelDescEl.textContent = currentLevel.requirements || "مستوى تعليمي يهدف لترسيخ حفظ وتلاوة كتاب الله والمتون الأساسية."
+        if (levelPassingEl) levelPassingEl.textContent = `${currentLevel.passingScore || 60}%`
+        if (levelExamsReqEl) levelExamsReqEl.textContent = `امتحانات مطلوبة: ${currentLevel.requiredExamsCount || 1}`
+
+        if (requirementsListEl) {
+            requirementsListEl.innerHTML = `
+                <div class="flex items-start gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0"></span>
+                    <span>الحصول على معدل لا يقل عن ${currentLevel.passingScore || 60}% في الامتحانات المقررة.</span>
+                </div>
+                <div class="flex items-start gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0"></span>
+                    <span>اجتياز عدد ${currentLevel.requiredExamsCount || 1} امتحان/امتحانات معتمدة للمستوى.</span>
+                </div>
+                ${currentLevel.requirements ? `
+                <div class="flex items-start gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0"></span>
+                    <span>${currentLevel.requirements}</span>
+                </div>` : ""}
+            `
+        }
+
+        if (nextLevelTitleEl) {
+            nextLevelTitleEl.textContent = currentLevel.nextLevel?.name || "المستوى الأعلى التالي"
+        }
+    } else {
+        if (levelNameEl) levelNameEl.textContent = "المستوى التمهيدي"
+        if (levelPassingEl) levelPassingEl.textContent = "60%"
+        if (nextLevelTitleEl) nextLevelTitleEl.textContent = "المستوى الأول"
+    }
+
+    if (historyBodyEl) {
+        if (levelHistoryList.length === 0) {
+            historyBodyEl.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-xs text-slate-400">لا توجد سجلات ترقية سابقة. أنت حالياً مسجل في مستواك الأولي.</td></tr>`
+        } else {
+            historyBodyEl.innerHTML = levelHistoryList.map((h) => `
+                <tr class="hover:bg-slate-50/50">
+                    <td class="px-4 py-3 text-xs text-slate-500">${h.previousLevel?.name || "المستوى الأولي"}</td>
+                    <td class="px-4 py-3 text-xs font-bold text-emerald-700">${h.newLevel?.name || "-"}</td>
+                    <td class="px-4 py-3 text-xs text-slate-500">${formatDate(h.changeDate)}</td>
+                    <td class="px-4 py-3 text-xs text-slate-600">${h.reason || "اجتياز متطلبات المستوى"}</td>
+                    <td class="px-4 py-3 text-xs text-slate-400">${h.notes || "-"}</td>
+                </tr>
+            `).join("")
+        }
+    }
+}
+
+/* ===================================================
+   TAB: MATN (حفظ المتون العلمية)
+=================================================== */
+function renderMatnTab() {
+    const gridEl = document.getElementById("student-matn-grid")
+    if (!gridEl) return
+
+    if (matnProgressList.length === 0) {
+        gridEl.innerHTML = `
+            <div class="col-span-full rounded-2xl border border-slate-200 bg-white p-8 text-center text-slate-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-10 w-10 text-slate-300 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5S19.832 5.477 21 6.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253" />
+                </svg>
+                <p class="text-sm font-semibold text-slate-700">لم يتم تسجيل متون علمية لك بعد</p>
+                <p class="text-xs text-slate-400 mt-1">يقوم الشيخ المعلم بتحديد المتون العلمية ومتابعة حفظك وتسميعها في الحلقة.</p>
+            </div>`
+        return
+    }
+
+    const statusBadgeMap = {
+        mastered: { label: "متقن ومجاز", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+        memorizing: { label: "قيد الحفظ", cls: "bg-blue-50 text-blue-700 border-blue-200" },
+        needs_revision: { label: "يحتاج مراجعة وتكرار", cls: "bg-amber-50 text-amber-700 border-amber-200" },
+        not_started: { label: "لم يبدأ بعد", cls: "bg-slate-100 text-slate-600 border-slate-200" }
+    }
+
+    gridEl.innerHTML = matnProgressList.map((m) => {
+        const badge = statusBadgeMap[m.status] || statusBadgeMap.memorizing
+        const pct = m.progressPercentage || 0
+        const teacherName = m.teacher?.name || `${m.teacher?.firstName || ""} ${m.teacher?.lastName || ""}`.trim() || "الشيخ المعلم"
+
+        return `
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs transition hover:shadow-md space-y-4">
+                <div class="flex items-start justify-between gap-2">
+                    <div>
+                        <span class="inline-block rounded-lg px-2 py-0.5 text-[11px] font-bold border ${badge.cls}">
+                            ${badge.label}
+                        </span>
+                        <h4 class="mt-2 text-base font-bold text-slate-800">${m.matn?.name || "متن علمي"}</h4>
+                    </div>
+                    ${m.masteryGrade ? `
+                        <span class="rounded-xl bg-purple-50 px-2.5 py-1 text-xs font-extrabold text-purple-700 border border-purple-100" title="درجة الإتقان">
+                            ${m.masteryGrade}
+                        </span>` : ""}
+                </div>
+
+                <!-- Progress Bar -->
+                <div>
+                    <div class="flex justify-between text-xs text-slate-500 mb-1.5 font-medium">
+                        <span>نسبة الإنجاز</span>
+                        <span class="font-bold text-slate-800">${pct}%</span>
+                    </div>
+                    <div class="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                        <div class="h-full rounded-full bg-emerald-600 transition-all duration-500" style="width: ${pct}%"></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+                    <div>
+                        <span class="text-slate-400 block">الباب / الفصل</span>
+                        <span class="font-semibold text-slate-700">${m.section || "الأبواب الأولى"}</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 block">آخر تسميع</span>
+                        <span class="font-semibold text-slate-700">${formatDate(m.recitationDate)}</span>
+                    </div>
+                </div>
+
+                ${m.notes ? `
+                <div class="rounded-xl bg-slate-50 p-2.5 text-xs text-slate-600 border border-slate-100">
+                    <span class="font-bold text-slate-700 block mb-0.5 text-[11px]">ملاحظات الشيخ ${teacherName}:</span>
+                    <p class="text-[11px] text-slate-600">${m.notes}</p>
+                </div>` : ""}
+            </div>
+        `
+    }).join("")
+}
+
+/* ===================================================
+   TAB: EXAMS (امتحاناتي واختباراتي)
+=================================================== */
+function renderExamsTab() {
+    const bodyEl = document.getElementById("student-exams-body")
+    if (!bodyEl) return
+
+    if (availableExamsList.length === 0) {
+        bodyEl.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-xs text-slate-400">لا توجد امتحانات مقررة متاحة لك حالياً.</td></tr>`
+        return
+    }
+
+    const typeLabels = {
+        quran: "قرآن كريم",
+        matn: "متن علمي",
+        level: "ترقية مستوى",
+        periodic: "دوري / فصلي"
+    }
+
+    bodyEl.innerHTML = availableExamsList.map((exam) => {
+        const typeLabel = typeLabels[exam.type] || exam.type
+        const isOnline = exam.format === "online"
+
+        // Check if student has already submitted this exam
+        const existingResult = examResultsList.find((r) => r.exam?._id === exam._id || r.exam === exam._id)
+        const isSubmitted = existingResult && existingResult.status !== "in_progress" && existingResult.status !== "not_started"
+        const isPublished = exam.isResultsPublished || existingResult?.status === "published"
+
+        let actionBtn = ""
+        let statusBadge = ""
+
+        if (isPublished) {
+            statusBadge = '<span class="inline-flex rounded-lg bg-emerald-50 px-2 py-0.5 text-xs font-bold text-emerald-700">تم إعلان النتيجة</span>'
+            actionBtn = `<button type="button" data-switch-tab="results" class="rounded-xl bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700 hover:bg-emerald-100 transition">عرض النتيجة</button>`
+        } else if (isSubmitted) {
+            statusBadge = '<span class="inline-flex rounded-lg bg-amber-50 px-2 py-0.5 text-xs font-bold text-amber-700">تم التسليم - قيد التصحيح</span>'
+            actionBtn = `<span class="text-xs text-slate-400">بانتظار رصد الدرجة</span>`
+        } else if (isOnline) {
+            statusBadge = '<span class="inline-flex rounded-lg bg-blue-50 px-2 py-0.5 text-xs font-bold text-blue-700">متاح إلكترونياً</span>'
+            actionBtn = `<button type="button" class="btn-start-exam rounded-xl bg-emerald-700 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-emerald-800 transition" data-exam-id="${exam._id}">بدء الامتحان الآن</button>`
+        } else {
+            statusBadge = '<span class="inline-flex rounded-lg bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-600">حضوري بالمدرسة</span>'
+            actionBtn = `<span class="text-xs text-slate-500">يُجرى في مقر الحلقة</span>`
+        }
+
+        return `
+            <tr class="hover:bg-slate-50/50">
+                <td class="px-6 py-4">
+                    <p class="font-bold text-slate-800 text-sm">${exam.title}</p>
+                    <p class="text-xs text-slate-400 line-clamp-1">${exam.instructions || ""}</p>
+                </td>
+                <td class="px-6 py-4">
+                    <span class="font-medium text-xs text-slate-700">${typeLabel}</span>
+                    <span class="block text-[11px] text-slate-400">${isOnline ? "إلكتروني عن بُعد" : "حضوري"}</span>
+                </td>
+                <td class="px-6 py-4">
+                    <span class="font-bold text-xs text-slate-800">${exam.durationMinutes} دقيقة</span>
+                    <span class="block text-[11px] text-slate-400">${exam.totalScore} درجة (النجاح: ${exam.passingScore})</span>
+                </td>
+                <td class="px-6 py-4 text-xs text-slate-500">
+                    ${exam.startDate ? formatDate(exam.startDate) : "-"} إلى ${exam.endDate ? formatDate(exam.endDate) : "-"}
+                </td>
+                <td class="px-6 py-4">
+                    ${statusBadge}
+                </td>
+                <td class="px-6 py-4 text-center">
+                    ${actionBtn}
+                </td>
+            </tr>
+        `
+    }).join("")
+
+    // Hook up start exam buttons
+    bodyEl.querySelectorAll(".btn-start-exam").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            const examId = btn.dataset.examId
+            startOnlineExam(examId)
+        })
+    })
+
+    // Hook up switch tab buttons
+    bodyEl.querySelectorAll("[data-switch-tab]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            if (window.switchTab) window.switchTab(btn.dataset.switchTab)
+        })
+    })
+}
+
+/* ===================================================
+   TAB: RESULTS (نتائجي وتقارير الدرجات)
+=================================================== */
+function renderResultsTab() {
+    const bodyEl = document.getElementById("student-results-body")
+    if (!bodyEl) return
+
+    if (examResultsList.length === 0) {
+        bodyEl.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-xs text-slate-400">لا توجد نتائج معلنة بعد. فور اعتماد درجات امتحاناتك ستظهر هنا بالتفصيل.</td></tr>`
+        return
+    }
+
+    bodyEl.innerHTML = examResultsList.map((res) => {
+        const examTitle = res.exam?.title || "امتحان"
+        const examType = res.exam?.type || "عام"
+        const score = res.score ?? 0
+        const total = res.totalScore ?? res.exam?.totalScore ?? 100
+        const pct = res.percentage ?? Math.round((score / total) * 100)
+        const isPassed = res.isPassed
+
+        return `
+            <tr class="hover:bg-slate-50/50">
+                <td class="px-6 py-4 font-bold text-slate-800 text-sm">
+                    ${examTitle}
+                </td>
+                <td class="px-6 py-4 text-xs text-slate-600">
+                    ${examType}
+                </td>
+                <td class="px-6 py-4 font-extrabold text-sm text-slate-800">
+                    ${score} <span class="text-xs font-normal text-slate-400">/ ${total}</span>
+                </td>
+                <td class="px-6 py-4 font-bold text-sm ${isPassed ? 'text-emerald-700' : 'text-rose-600'}">
+                    ${pct}%
+                </td>
+                <td class="px-6 py-4">
+                    <span class="inline-flex rounded-lg px-2.5 py-1 text-xs font-bold ${isPassed ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'}">
+                        ${isPassed ? 'ناجح ومجتاز ✓' : 'لم يجتز'}
+                    </span>
+                </td>
+                <td class="px-6 py-4 text-xs text-slate-500 max-w-xs truncate">
+                    ${res.teacherNotes || "لا توجد ملاحظات إضافية"}
+                </td>
+                <td class="px-6 py-4 text-center">
+                    <button type="button" class="btn-view-result rounded-xl border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition" data-attempt-id="${res._id}">
+                        عرض التفاصيل
+                    </button>
+                </td>
+            </tr>
+        `
+    }).join("")
+
+    bodyEl.querySelectorAll(".btn-view-result").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            const attemptId = btn.dataset.attemptId
+            const attempt = examResultsList.find((r) => r._id === attemptId)
+            if (attempt) viewExamResultDetails(attempt)
+        })
+    })
+}
+
+/* ===================================================
+   ONLINE EXAM ENGINE & MODALS
+=================================================== */
+const modalTakeExam = document.getElementById("modal-take-exam")
+const modalConfirmSubmit = document.getElementById("modal-confirm-submit")
+const modalViewResult = document.getElementById("modal-view-result")
+
+function setupExamModalHandlers() {
+    const btnSubmitTrigger = document.getElementById("btn-submit-exam-trigger")
+    if (btnSubmitTrigger) {
+        btnSubmitTrigger.addEventListener("click", () => {
+            promptConfirmSubmit()
+        })
+    }
+
+    const btnCancelSubmit = document.getElementById("btn-cancel-submit")
+    if (btnCancelSubmit) {
+        btnCancelSubmit.addEventListener("click", () => {
+            closeModal(modalConfirmSubmit)
+        })
+    }
+
+    const btnFinalConfirm = document.getElementById("btn-final-confirm-submit")
+    if (btnFinalConfirm) {
+        btnFinalConfirm.addEventListener("click", async () => {
+            await finalSubmitExam()
+        })
+    }
+
+    const btnPrev = document.getElementById("btn-prev-question")
+    if (btnPrev) {
+        btnPrev.addEventListener("click", () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--
+                renderActiveQuestion()
+            }
+        })
+    }
+
+    const btnNext = document.getElementById("btn-next-question")
+    if (btnNext) {
+        btnNext.addEventListener("click", () => {
+            if (activeExam?.questions && currentQuestionIndex < activeExam.questions.length - 1) {
+                currentQuestionIndex++
+                renderActiveQuestion()
+            }
+        })
+    }
+}
+
+async function startOnlineExam(examId) {
+    try {
+        showAlert("جاري تحضير الامتحان وتأكيد البداية...", "success")
+        const startRes = await startExamAttempt(examId)
+        const data = startRes?.data || startRes
+
+        activeExam = data.exam
+        activeAttempt = data.attempt
+        currentQuestionIndex = 0
+        userAnswers = {}
+
+        // Populate initial answers if any from prior progress
+        if (activeAttempt?.answers && Array.isArray(activeAttempt.answers)) {
+            activeAttempt.answers.forEach((ans) => {
+                const qId = ans.question?._id || ans.question
+                if (qId) userAnswers[qId] = ans.answerText
+            })
+        }
+
+        // Set titles
+        const titleEl = document.getElementById("exam-modal-title")
+        const instEl = document.getElementById("exam-modal-instructions")
+        if (titleEl) titleEl.textContent = activeExam.title
+        if (instEl) instEl.textContent = activeExam.instructions || "يرجى الإجابة بدقة وتركيز قبل انتهاء الوقت المخصص."
+
+        // Initialize Timer
+        const totalDurationSec = (activeExam.durationMinutes || 30) * 60
+        const spentSec = activeAttempt?.durationSpentSeconds || 0
+        examRemainingSeconds = Math.max(10, totalDurationSec - spentSec)
+
+        startExamTimer()
+        startPeriodicAutoSave()
+
+        // Open modal
+        openModal(modalTakeExam)
+
+        // Render first question
+        renderActiveQuestion()
+
+    } catch (err) {
+        console.error("Failed to start online exam:", err)
+        showAlert("تعذر بدء الامتحان: " + err.message, "error")
+    }
+}
+
+function startExamTimer() {
+    clearInterval(examTimerInterval)
+    const timerDisplay = document.getElementById("exam-timer-display")
+    const timerContainer = document.getElementById("exam-timer-container")
+
+    function updateDisplay() {
+        const mins = Math.floor(examRemainingSeconds / 60)
+        const secs = examRemainingSeconds % 60
+        const str = `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`
+        if (timerDisplay) timerDisplay.textContent = str
+
+        if (examRemainingSeconds <= 300) {
+            timerContainer?.classList.remove("bg-slate-800")
+            timerContainer?.classList.add("bg-rose-700", "animate-pulse")
+        } else {
+            timerContainer?.classList.remove("bg-rose-700", "animate-pulse")
+            timerContainer?.classList.add("bg-slate-800")
+        }
+    }
+
+    updateDisplay()
+
+    examTimerInterval = setInterval(async () => {
+        examRemainingSeconds--
+        updateDisplay()
+
+        if (examRemainingSeconds <= 0) {
+            clearInterval(examTimerInterval)
+            clearInterval(periodicSaveInterval)
+            alert("انتهى وقت الامتحان! سيتم تسليم إجاباتك تلقائياً الآن.")
+            await finalSubmitExam(true)
+        }
+    }, 1000)
+}
+
+function startPeriodicAutoSave() {
+    clearInterval(periodicSaveInterval)
+    periodicSaveInterval = setInterval(() => {
+        saveExamProgressOnServer()
+    }, 30000)
+}
+
+function renderActiveQuestion() {
+    if (!activeExam || !activeExam.questions || activeExam.questions.length === 0) return
+
+    const questions = activeExam.questions
+    const q = questions[currentQuestionIndex]
+    const qId = q._id
+
+    // Question Progress badge
+    const qProgressEl = document.getElementById("exam-question-progress")
+    if (qProgressEl) qProgressEl.textContent = `سؤال ${currentQuestionIndex + 1} من ${questions.length}`
+
+    // Palette
+    const paletteEl = document.getElementById("exam-palette-container")
+    if (paletteEl) {
+        paletteEl.innerHTML = questions.map((item, idx) => {
+            const isAns = userAnswers[item._id] !== undefined && userAnswers[item._id] !== ""
+            const isCurrent = idx === currentQuestionIndex
+            let cls = "h-8 w-8 rounded-xl text-xs font-bold flex items-center justify-center transition "
+            if (isCurrent) {
+                cls += "bg-emerald-700 text-white shadow-sm ring-2 ring-emerald-600 ring-offset-1"
+            } else if (isAns) {
+                cls += "bg-emerald-100 text-emerald-800 border border-emerald-300"
+            } else {
+                cls += "bg-slate-100 text-slate-600 hover:bg-slate-200"
+            }
+            return `<button type="button" class="btn-palette-goto ${cls}" data-q-index="${idx}">${idx + 1}</button>`
+        }).join("")
+
+        paletteEl.querySelectorAll(".btn-palette-goto").forEach((btn) => {
+            btn.addEventListener("click", () => {
+                currentQuestionIndex = parseInt(btn.dataset.qIndex, 10)
+                renderActiveQuestion()
+            })
+        })
+    }
+
+    // Active question card
+    const cardEl = document.getElementById("exam-active-question-card")
+    if (!cardEl) return
+
+    const currentAns = userAnswers[qId] || ""
+
+    let inputHtml = ""
+
+    if (q.type === "mcq" && q.options && q.options.length > 0) {
+        inputHtml = `
+            <div class="space-y-2.5 pt-2">
+                ${q.options.map((opt) => `
+                    <label class="flex items-center gap-3 rounded-xl border border-slate-200 p-3.5 transition hover:bg-slate-50 cursor-pointer ${currentAns === opt ? 'bg-emerald-50 border-emerald-300 ring-1 ring-emerald-500' : ''}">
+                        <input type="radio" name="exam_q_${qId}" value="${opt}" class="h-4 w-4 text-emerald-600 focus:ring-emerald-500" ${currentAns === opt ? 'checked' : ''}>
+                        <span class="text-sm font-medium text-slate-700">${opt}</span>
+                    </label>
+                `).join("")}
+            </div>
+        `
+    } else if (q.type === "true_false") {
+        inputHtml = `
+            <div class="grid grid-cols-2 gap-3 pt-2">
+                <label class="flex items-center justify-center gap-3 rounded-xl border border-slate-200 p-4 transition hover:bg-slate-50 cursor-pointer ${currentAns === 'صح' ? 'bg-emerald-50 border-emerald-300 ring-1 ring-emerald-500' : ''}">
+                    <input type="radio" name="exam_q_${qId}" value="صح" class="h-4 w-4 text-emerald-600 focus:ring-emerald-500" ${currentAns === 'صح' ? 'checked' : ''}>
+                    <span class="text-sm font-bold text-slate-800">صحيح (صح)</span>
+                </label>
+                <label class="flex items-center justify-center gap-3 rounded-xl border border-slate-200 p-4 transition hover:bg-slate-50 cursor-pointer ${currentAns === 'خطأ' ? 'bg-rose-50 border-rose-300 ring-1 ring-rose-500' : ''}">
+                    <input type="radio" name="exam_q_${qId}" value="خطأ" class="h-4 w-4 text-rose-600 focus:ring-rose-500" ${currentAns === 'خطأ' ? 'checked' : ''}>
+                    <span class="text-sm font-bold text-slate-800">خاطئ (خطأ)</span>
+                </label>
+            </div>
+        `
+    } else if (q.type === "short_answer") {
+        inputHtml = `
+            <div class="pt-2">
+                <input type="text" id="exam_input_${qId}" value="${currentAns}" placeholder="اكتب إجابتك هنا باختصار..." class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 focus:border-emerald-600 focus:bg-white focus:outline-none">
+            </div>
+        `
+    } else if (q.type === "essay" || q.type === "oral_recitation") {
+        inputHtml = `
+            <div class="pt-2 space-y-2">
+                <textarea id="exam_input_${qId}" rows="4" placeholder="${q.type === 'oral_recitation' ? 'ملاحظات حول التسميع الشفوي أو استفسارات للمعلم...' : 'اكتب إجابتك بالتفصيل هنا...'}" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-800 focus:border-emerald-600 focus:bg-white focus:outline-none">${currentAns}</textarea>
+                ${q.type === 'oral_recitation' ? '<p class="text-[11px] text-amber-700 bg-amber-50 rounded-lg p-2">هذا السؤال مخصص للتسميع الشفوي الحضوري أو المباشر مع الشيخ المعلم.</p>' : ''}
+            </div>
+        `
+    }
+
+    cardEl.innerHTML = `
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="rounded-lg bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-800">
+                السؤال رقم ${currentQuestionIndex + 1}
+            </span>
+            <span class="text-xs font-bold text-slate-500">
+                ${q.points || 1} درجة
+            </span>
+        </div>
+        <div class="py-2">
+            <h4 class="text-base font-bold text-slate-800 leading-relaxed">${q.questionText}</h4>
+        </div>
+        ${inputHtml}
+    `
+
+    // Hook inputs
+    const radios = cardEl.querySelectorAll(`input[name="exam_q_${qId}"]`)
+    radios.forEach((r) => {
+        r.addEventListener("change", () => {
+            userAnswers[qId] = r.value
+            renderActiveQuestion()
+            debounceAutoSave()
+        })
+    })
+
+    const textInput = document.getElementById(`exam_input_${qId}`)
+    if (textInput) {
+        textInput.addEventListener("input", () => {
+            userAnswers[qId] = textInput.value
+            debounceAutoSave()
+        })
+    }
+
+    // Prev & Next Buttons state
+    const btnPrev = document.getElementById("btn-prev-question")
+    const btnNext = document.getElementById("btn-next-question")
+    if (btnPrev) btnPrev.disabled = currentQuestionIndex === 0
+    if (btnNext) {
+        if (currentQuestionIndex === questions.length - 1) {
+            btnNext.textContent = "تسليم الامتحان"
+            btnNext.onclick = promptConfirmSubmit
+        } else {
+            btnNext.textContent = "التالي"
+            btnNext.onclick = () => {
+                currentQuestionIndex++
+                renderActiveQuestion()
+            }
+        }
+    }
+}
+
+function debounceAutoSave() {
+    clearTimeout(autoSaveDebounceTimer)
+    autoSaveDebounceTimer = setTimeout(() => {
+        saveExamProgressOnServer()
+    }, 1500)
+}
+
+async function saveExamProgressOnServer() {
+    if (!activeExam || !activeExam._id) return
+    const statusEl = document.getElementById("exam-autosave-status")
+    try {
+        const formatted = Object.keys(userAnswers).map((qId) => ({
+            questionId: qId,
+            answerText: userAnswers[qId]
+        }))
+
+        await saveExamProgress(activeExam._id, formatted)
+        const now = new Date()
+        const timeStr = now.toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit", second: "2-digit" })
+        if (statusEl) {
+            statusEl.innerHTML = `<span class="h-2 w-2 rounded-full bg-emerald-500"></span><span>تم الحفظ تلقائياً بنجاح (${timeStr})</span>`
+        }
+    } catch (err) {
+        console.warn("Auto-save warning:", err)
+        if (statusEl) {
+            statusEl.innerHTML = `<span class="h-2 w-2 rounded-full bg-amber-500"></span><span>فشل الحفظ التلقائي، جاري إعادة المحاولة...</span>`
+        }
+    }
+}
+
+function promptConfirmSubmit() {
+    if (!activeExam || !activeExam.questions) return
+    const answeredCount = Object.keys(userAnswers).filter((k) => userAnswers[k] && userAnswers[k].trim() !== "").length
+    const totalCount = activeExam.questions.length
+    const unanswered = totalCount - answeredCount
+
+    const warningEl = document.getElementById("confirm-unanswered-warning")
+    if (warningEl) {
+        if (unanswered > 0) {
+            warningEl.innerHTML = `<span class="text-amber-700 font-bold block mb-1">تنبيه: لديك ${unanswered} أسئلة لم تجب عليها بعد!</span>هل ترغب في تسليم الامتحان الآن نهائياً؟`
+        } else {
+            warningEl.textContent = "لقد أجبت على جميع الأسئلة. هل أنت متأكد من تسليم الامتحان نهائياً؟"
+        }
+    }
+
+    openModal(modalConfirmSubmit)
+}
+
+async function finalSubmitExam(isAuto = false) {
+    if (!activeExam || !activeExam._id) return
+
+    try {
+        clearInterval(examTimerInterval)
+        clearInterval(periodicSaveInterval)
+
+        const formatted = Object.keys(userAnswers).map((qId) => ({
+            questionId: qId,
+            answerText: userAnswers[qId]
+        }))
+
+        showAlert("جاري رصد وتسليم إجاباتك...", "success")
+
+        await submitExamAttempt(activeExam._id, formatted)
+
+        closeModal(modalConfirmSubmit)
+        closeModal(modalTakeExam)
+
+        showAlert("تم تسليم الامتحان بنجاح تام! بارك الله في جهودك.", "success")
+
+        // Reload data and switch to results tab
+        await loadInitialData()
+        if (window.switchTab) window.switchTab("results")
+
+    } catch (err) {
+        console.error("Submission failed:", err)
+        showAlert("فشل تسليم الامتحان: " + err.message, "error")
+    }
+}
+
+function viewExamResultDetails(attempt) {
+    if (!attempt) return
+
+    const titleEl = document.getElementById("result-modal-title")
+    const bannerEl = document.getElementById("result-modal-score-banner")
+    const breakdownEl = document.getElementById("result-modal-breakdown")
+
+    const examTitle = attempt.exam?.title || "امتحان"
+    if (titleEl) titleEl.textContent = `نتيجة: ${examTitle}`
+
+    const score = attempt.score ?? 0
+    const total = attempt.totalScore ?? attempt.exam?.totalScore ?? 100
+    const pct = attempt.percentage ?? Math.round((score / total) * 100)
+    const isPassed = attempt.isPassed
+
+    if (bannerEl) {
+        bannerEl.className = `rounded-2xl border p-5 text-center ${isPassed ? 'border-emerald-200 bg-emerald-50/60' : 'border-rose-200 bg-rose-50/60'}`
+        bannerEl.innerHTML = `
+            <span class="inline-block rounded-xl px-3 py-1 text-xs font-extrabold ${isPassed ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
+                ${isPassed ? 'ناجح ومجتاز ✓' : 'لم يحقق نسبة النجاح'}
+            </span>
+            <h3 class="mt-2 text-3xl font-black ${isPassed ? 'text-emerald-800' : 'text-rose-800'}">${score} <span class="text-sm font-semibold text-slate-500">/ ${total}</span></h3>
+            <p class="text-xs font-bold text-slate-600 mt-1">النسبة المئوية: ${pct}%</p>
+            ${attempt.teacherNotes ? `
+                <div class="mt-3 rounded-xl bg-white p-3 text-xs text-slate-700 border border-slate-100 text-right">
+                    <span class="font-bold block text-slate-800 mb-0.5">توجيهات وملاحظات المصحح:</span>
+                    <p>${attempt.teacherNotes}</p>
+                </div>` : ''}
+        `
+    }
+
+    if (breakdownEl) {
+        if (!attempt.answers || attempt.answers.length === 0) {
+            breakdownEl.innerHTML = `<p class="py-4 text-center text-xs text-slate-400">لا توجد تفاصيل إجابات متاحة لهذا الامتحان.</p>`
+        } else {
+            breakdownEl.innerHTML = attempt.answers.map((ans, idx) => {
+                const qText = ans.question?.questionText || `السؤال رقم ${idx + 1}`
+                const qPoints = ans.question?.points || 1
+                const awarded = ans.awardedScore ?? (ans.isCorrect ? qPoints : 0)
+
+                return `
+                    <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4 space-y-2 text-xs">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-slate-800 text-sm">سؤال ${idx + 1}: ${qText}</span>
+                            <span class="font-extrabold text-xs ${awarded > 0 ? 'text-emerald-700' : 'text-rose-600'}">
+                                ${awarded} / ${qPoints} درجة
+                            </span>
+                        </div>
+                        <div class="rounded-xl bg-white p-2.5 border border-slate-100 text-slate-700">
+                            <span class="text-slate-400 block text-[11px]">إجابتك:</span>
+                            <p class="font-medium mt-0.5">${ans.answerText || "(لم تجب)"}</p>
+                        </div>
+                        ${ans.teacherFeedback ? `
+                            <div class="rounded-xl bg-indigo-50/60 p-2 text-indigo-900 border border-indigo-100">
+                                <span class="font-bold block text-[11px]">ملاحظة المصحح:</span>
+                                <p>${ans.teacherFeedback}</p>
+                            </div>` : ''}
+                    </div>
+                `
+            }).join("")
+        }
+    }
+
+    openModal(modalViewResult)
 }

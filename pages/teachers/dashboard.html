@@ -96,6 +96,26 @@
                 <span>الإعلانات</span>
             </button>
 
+            <button type="button" data-tab="matn"
+                class="nav-tab flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5S19.832 5.477 21 6.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253" />
+                </svg>
+                <span>حفظ المتون</span>
+            </button>
+
+            <button type="button" data-tab="exams"
+                class="nav-tab flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                </svg>
+                <span>الامتحانات والتصحيح</span>
+            </button>
+
             <button type="button" data-tab="profile"
                 class="nav-tab flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -247,12 +267,28 @@
                                 </svg>
                                 <span>إضافة تقييم</span>
                             </button>
+                            <button id="btn-quick-matn"
+                                class="inline-flex items-center gap-2 rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-800">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                                </svg>
+                                <span>تسجيل متن</span>
+                            </button>
+                            <button id="btn-quick-exam"
+                                class="inline-flex items-center gap-2 rounded-xl bg-purple-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-purple-800">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                                </svg>
+                                <span>إنشاء امتحان</span>
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Stats Cards Grid -->
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-semibold text-slate-400">حلقاتي</span>
@@ -311,6 +347,36 @@
                         </div>
                         <p id="stat-today-memorization" class="mt-3 text-3xl font-extrabold text-slate-800">0</p>
                         <p class="mt-1 text-xs text-slate-400">جلسة تسميع مسجلة</p>
+                    </div>
+
+                    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold text-slate-400">حفظ المتون</span>
+                            <span class="rounded-xl bg-teal-50 p-2.5 text-teal-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" stroke-width="1.8">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5S19.832 5.477 21 6.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253" />
+                                </svg>
+                            </span>
+                        </div>
+                        <p id="stat-active-matn-count" class="mt-3 text-3xl font-extrabold text-teal-700">0</p>
+                        <p class="mt-1 text-xs text-slate-400">سجل إنجاز في المتون</p>
+                    </div>
+
+                    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold text-slate-400">بانتظار التصحيح</span>
+                            <span class="rounded-xl bg-rose-50 p-2.5 text-rose-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" stroke-width="1.8">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                                </svg>
+                            </span>
+                        </div>
+                        <p id="stat-pending-grading-count" class="mt-3 text-3xl font-extrabold text-rose-600">0</p>
+                        <p class="mt-1 text-xs text-slate-400">محاولة امتحان بانتظار الاعتماد</p>
                     </div>
                 </div>
 
@@ -575,6 +641,107 @@
                         <tbody id="evaluations-table-body" class="divide-y divide-slate-100 text-slate-700">
                             <tr>
                                 <td colspan="6" class="py-8 text-center text-xs text-slate-400">جاري تحميل التقييمات...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- TAB: MATN (تسجيل ومتابعة حفظ المتون للطلاب) -->
+            <!-- ========================================== -->
+            <section id="tab-matn" class="tab-content hidden space-y-6">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800">متابعة وتسجيل حفظ المتون العلمية</h2>
+                        <p class="text-xs text-slate-400">تسجيل تقدم طلاب حلقاتك في المتون التجويدية والمنظومات المعتمدة</p>
+                    </div>
+                    <button id="btn-open-create-matn-progress" type="button"
+                        class="inline-flex items-center gap-2 rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-800">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span>تسجيل متن لطالب</span>
+                    </button>
+                </div>
+
+                <!-- Filters -->
+                <div class="flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                    <select id="filter-matn-halaqa"
+                        class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-700 focus:border-emerald-600 focus:outline-none">
+                        <option value="">كل الحلقات</option>
+                    </select>
+                    <select id="filter-matn-status"
+                        class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-700 focus:border-emerald-600 focus:outline-none">
+                        <option value="">كل الحالات</option>
+                        <option value="memorizing">قيد الحفظ</option>
+                        <option value="needs_revision">يحتاج مراجعة</option>
+                        <option value="mastered">متقن ومجاز</option>
+                        <option value="not_started">لم يبدأ</option>
+                    </select>
+                    <input type="text" id="filter-matn-search" placeholder="بحث باسم الطالب أو المتن..."
+                        class="w-full sm:w-64 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700 focus:border-emerald-600 focus:outline-none">
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                    <table class="w-full text-right text-sm">
+                        <thead class="border-b border-slate-100 bg-slate-50/50 text-xs font-semibold text-slate-400">
+                            <tr>
+                                <th class="px-6 py-4">الطالب</th>
+                                <th class="px-6 py-4">المتن العلمي</th>
+                                <th class="px-6 py-4">الباب / الفصل</th>
+                                <th class="px-6 py-4">نسبة الإنجاز</th>
+                                <th class="px-6 py-4">الحالة</th>
+                                <th class="px-6 py-4">درجة الإتقان</th>
+                                <th class="px-6 py-4">تاريخ التسميع</th>
+                                <th class="px-6 py-4 text-center">إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teacher-matn-table-body" class="divide-y divide-slate-100 text-slate-700">
+                            <tr>
+                                <td colspan="8" class="py-8 text-center text-xs text-slate-400">جاري تحميل سجلات المتون...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- TAB: EXAMS (إدارة وتصحيح الامتحانات) -->
+            <!-- ========================================== -->
+            <section id="tab-exams" class="tab-content hidden space-y-6">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800">إدارة وتصحيح الامتحانات</h2>
+                        <p class="text-xs text-slate-400">إنشاء الامتحانات لطلاب حلقاتك وتصحيح الإجابات ورصد الدرجات وإعلان النتائج</p>
+                    </div>
+                    <button id="btn-open-create-exam" type="button"
+                        class="inline-flex items-center gap-2 rounded-xl bg-purple-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-purple-800">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span>إنشاء امتحان جديد</span>
+                    </button>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                    <table class="w-full text-right text-sm">
+                        <thead class="border-b border-slate-100 bg-slate-50/50 text-xs font-semibold text-slate-400">
+                            <tr>
+                                <th class="px-6 py-4">عنوان الامتحان</th>
+                                <th class="px-6 py-4">الحلقة / الفئة</th>
+                                <th class="px-6 py-4">النوع والصيغة</th>
+                                <th class="px-6 py-4">المدة والدرجة</th>
+                                <th class="px-6 py-4">المحاولات والتصحيح</th>
+                                <th class="px-6 py-4">حالة النتائج</th>
+                                <th class="px-6 py-4 text-center">إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teacher-exams-table-body" class="divide-y divide-slate-100 text-slate-700">
+                            <tr>
+                                <td colspan="7" class="py-8 text-center text-xs text-slate-400">جاري تحميل قائمة الامتحانات...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -890,6 +1057,221 @@
             <div class="mt-4 flex justify-between border-t border-slate-100 pt-3">
                 <button id="btn-mark-all-read" class="text-xs font-semibold text-emerald-700 hover:underline">تحديد الكل كمقروء</button>
                 <button type="button" class="btn-close-modal rounded-xl border border-slate-200 px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Record Matn Progress -->
+    <div id="modal-matn-progress" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40 p-4 backdrop-blur-sm">
+        <div class="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl">
+            <div class="mb-4 flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 id="modal-matn-title" class="text-base font-bold text-slate-800">تسجيل حفظ متن لطالب</h3>
+                <button type="button" class="btn-close-modal text-slate-400 hover:text-slate-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+            <form id="form-matn-progress" class="space-y-4">
+                <input type="hidden" id="modal-matn-progress-id" value="">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="mb-1 block text-xs font-semibold text-slate-600">الحلقة</label>
+                        <select id="modal-matn-halaqa" required
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-emerald-600 focus:bg-white focus:outline-none">
+                            <option value="">اختر الحلقة</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-semibold text-slate-600">الطالب</label>
+                        <select id="modal-matn-student" required
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-emerald-600 focus:bg-white focus:outline-none">
+                            <option value="">اختر الطالب</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="mb-1 block text-xs font-semibold text-slate-600">المتن العلمي</label>
+                    <select id="modal-matn-select" required
+                        class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-emerald-600 focus:bg-white focus:outline-none">
+                        <option value="">اختر المتن</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="mb-1 block text-xs font-semibold text-slate-600">الباب / الفصل الحالي</label>
+                        <input type="text" id="modal-matn-section" placeholder="مثال: باب أحكام النون الساكنة" required
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-emerald-600 focus:bg-white focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-semibold text-slate-600">نسبة الإنجاز (0-100%)</label>
+                        <input type="number" id="modal-matn-pct" min="0" max="100" value="0" required
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-emerald-600 focus:bg-white focus:outline-none">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="mb-1 block text-xs font-semibold text-slate-600">حالة الحفظ</label>
+                        <select id="modal-matn-status" required
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-emerald-600 focus:bg-white focus:outline-none">
+                            <option value="memorizing">قيد الحفظ</option>
+                            <option value="needs_revision">يحتاج مراجعة</option>
+                            <option value="mastered">متقن ومجاز</option>
+                            <option value="not_started">لم يبدأ</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-semibold text-slate-600">درجة الإتقان (اختياري)</label>
+                        <input type="text" id="modal-matn-grade" placeholder="مثال: ممتاز، 9.5/10"
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-emerald-600 focus:bg-white focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="mb-1 block text-xs font-semibold text-slate-600">تاريخ التسميع</label>
+                    <input type="date" id="modal-matn-date" required
+                        class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-emerald-600 focus:bg-white focus:outline-none">
+                </div>
+                <div>
+                    <label class="mb-1 block text-xs font-semibold text-slate-600">ملاحظات وتوجيهات المعلم</label>
+                    <textarea id="modal-matn-notes" rows="2" placeholder="ملاحظات حول ضبط الأبيات ومخارج الحروف..."
+                        class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-emerald-600 focus:bg-white focus:outline-none"></textarea>
+                </div>
+                <div class="pt-2 flex justify-end gap-2">
+                    <button type="button" class="btn-close-modal rounded-xl border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">إلغاء</button>
+                    <button type="submit" class="rounded-xl bg-teal-700 px-4 py-2 text-xs font-semibold text-white hover:bg-teal-800">حفظ سجل المتن</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Create / Edit Exam -->
+    <div id="modal-create-exam" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-2 sm:p-4 backdrop-blur-sm overflow-y-auto">
+        <div class="w-full max-w-3xl rounded-3xl bg-white p-6 shadow-2xl space-y-4 max-h-[95vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div>
+                    <h3 id="modal-exam-form-title" class="text-base font-bold text-slate-800">إنشاء امتحان جديد</h3>
+                    <p class="text-xs text-slate-400">تحديد البيانات الأساسية والأسئلة للامتحان</p>
+                </div>
+                <button type="button" class="btn-close-modal text-slate-400 hover:text-slate-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+            <form id="form-create-exam" class="space-y-4">
+                <div>
+                    <label class="mb-1 block text-xs font-semibold text-slate-600">عنوان الامتحان</label>
+                    <input type="text" id="modal-exam-title" placeholder="مثال: امتحان الجزء الثلاثين وحفظ تحفة الأطفال" required
+                        class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-emerald-600 focus:bg-white focus:outline-none">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="mb-1 block text-xs font-semibold text-slate-600">نوع الامتحان</label>
+                        <select id="modal-exam-type" required
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-emerald-600 focus:bg-white focus:outline-none">
+                            <option value="quran">قرآن كريم</option>
+                            <option value="matn">متن علمي</option>
+                            <option value="level">ترقية مستوى</option>
+                            <option value="periodic">دوري / فصلي</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-semibold text-slate-600">صيغة الامتحان</label>
+                        <select id="modal-exam-format" required
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-emerald-600 focus:bg-white focus:outline-none">
+                            <option value="online">إلكتروني عن بُعد</option>
+                            <option value="in_person">حضوري بالمدرسة</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-semibold text-slate-600">الحلقة المستهدفة</label>
+                        <select id="modal-exam-target-halaqa"
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-emerald-600 focus:bg-white focus:outline-none">
+                            <option value="">جميع طلاب حلقاتي</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div>
+                        <label class="mb-1 block text-xs font-semibold text-slate-600">المدة (بالدقائق)</label>
+                        <input type="number" id="modal-exam-duration" min="5" max="300" value="30" required
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-emerald-600 focus:bg-white focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-semibold text-slate-600">مجموع الدرجات</label>
+                        <input type="number" id="modal-exam-total-score" min="1" max="1000" value="20" required
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-emerald-600 focus:bg-white focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-semibold text-slate-600">علامة النجاح</label>
+                        <input type="number" id="modal-exam-passing-score" min="1" max="1000" value="12" required
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-emerald-600 focus:bg-white focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-semibold text-slate-600">تاريخ البدء</label>
+                        <input type="date" id="modal-exam-start-date"
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-emerald-600 focus:bg-white focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="mb-1 block text-xs font-semibold text-slate-600">تعليمات وتوجيهات الامتحان</label>
+                    <textarea id="modal-exam-instructions" rows="2" placeholder="تعليمات للطلاب قبل بدء الامتحان..."
+                        class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 focus:border-emerald-600 focus:bg-white focus:outline-none"></textarea>
+                </div>
+
+                <!-- Questions Builder Section -->
+                <div class="border-t border-slate-100 pt-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-slate-800">أسئلة الامتحان</span>
+                        <button type="button" id="btn-add-question-builder" class="rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700 hover:bg-emerald-100 transition">
+                            + إضافة سؤال
+                        </button>
+                    </div>
+                    <div id="exam-questions-builder-list" class="space-y-3 max-h-64 overflow-y-auto pr-1">
+                        <!-- Dynamic questions rows inserted here -->
+                    </div>
+                </div>
+
+                <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
+                    <button type="button" class="btn-close-modal rounded-xl border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">إلغاء</button>
+                    <button type="submit" class="rounded-xl bg-purple-700 px-5 py-2 text-xs font-bold text-white hover:bg-purple-800 shadow-sm">حفظ ونشر الامتحان</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Grade Exam Attempts -->
+    <div id="modal-grade-exam" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-2 sm:p-4 backdrop-blur-sm overflow-y-auto">
+        <div class="w-full max-w-4xl rounded-3xl bg-white p-6 shadow-2xl space-y-4 max-h-[95vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div>
+                    <h3 id="grade-modal-exam-title" class="text-base font-bold text-slate-800">تصحيح ورصد درجات الامتحان</h3>
+                    <p id="grade-modal-exam-subtitle" class="text-xs text-slate-400">تصحيح إجابات الطلاب ورصد العلامات</p>
+                </div>
+                <button type="button" class="btn-close-modal text-slate-400 hover:text-slate-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Attempts Navigation / List -->
+            <div id="attempts-selector-container" class="flex flex-wrap gap-2 border-b border-slate-100 pb-3">
+                <!-- Attempt badges -->
+            </div>
+
+            <!-- Single Attempt Grading Form -->
+            <div id="active-attempt-grading-container" class="space-y-4">
+                <p class="py-8 text-center text-xs text-slate-400">اختر طالباً من القائمة أعلاه لبدء مراجعة وتصحيح إجاباته.</p>
+            </div>
+
+            <div class="flex justify-between border-t border-slate-100 pt-3">
+                <button type="button" id="btn-publish-current-exam-results" class="rounded-xl bg-emerald-700 px-4 py-2 text-xs font-bold text-white hover:bg-emerald-800 shadow-xs">
+                    إعلان ونشر النتائج رسمياً لجميع الطلاب
+                </button>
+                <button type="button" class="btn-close-modal rounded-xl bg-slate-800 px-4 py-2 text-xs font-semibold text-white hover:bg-slate-900">
+                    إغلاق
+                </button>
             </div>
         </div>
     </div>

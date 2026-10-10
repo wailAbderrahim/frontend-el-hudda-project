@@ -9,12 +9,14 @@ import { getUser, protectPage, logout } from "../../auth/auth.js"
 import { getStudentProgress } from "../../api/progressApi.js"
 import { initNotificationBell } from "../../components/notificationBell.js"
 import { parseBirthInfo, formatBirthDate } from "../../utils/birthUtils.js"
+import { getLevels, assignStudentLevel } from "../../api/levelsApi.js"
 
 protectPage("admin")
 
 
 let allUsers = []
 let selectedUser = null
+let allLevels = []
 
 
 /* =========================
@@ -512,15 +514,104 @@ function renderStudentProgress(progress) {
         halaqa?.name || 'غير معين'
 
 
+    let teacherDisplayName = 'غير معين'
+    const t = halaqa?.teacher
+    if (t && typeof t === 'object') {
+        teacherDisplayName = t.name || `${t.firstName || ''} ${t.lastName || ''}`.trim() || 'غير معين'
+    } else if (typeof t === 'string' && !/^[0-9a-fA-F]{24}$/.test(t)) {
+        teacherDisplayName = t
+    }
+
     document.getElementById(
         'progress-halaqa-teacher'
-    ).textContent =
+    ).textContent = teacherDisplayName
 
-        halaqa?.teacher?.name ||
-        halaqa?.teacher?.firstName ||
-        halaqa?.teacher ||
-        'غير معين'
+    /* =========================
+       Current Educational Level
+    ========================= */
 
+    const curLevel = progress.currentLevel
+    const lvlNameEl = document.getElementById('progress-current-level')
+    const lvlBadgeEl = document.getElementById('progress-level-badge')
+    if (lvlNameEl) {
+        lvlNameEl.textContent = curLevel ? `${curLevel.name} (المستوى ${curLevel.order})` : 'غير محدد'
+    }
+    if (lvlBadgeEl) {
+        lvlBadgeEl.textContent = curLevel?.passingScore ? `درجة النجاح: ${curLevel.passingScore}` : 'المستوى —'
+    }
+
+    const lvlSelect = document.getElementById('progress-assign-level-select')
+    if (lvlSelect) {
+        lvlSelect.innerHTML = `<option value="">اختر المستوى التعليمي</option>` +
+            allLevels.map(lvl => `<option value="${lvl._id}" ${curLevel?._id === lvl._id ? 'selected' : ''}>${lvl.name} (المستوى ${lvl.order})</option>`).join('')
+    }
+
+    const histContainer = document.getElementById('progress-level-history-container')
+    const histList = document.getElementById('progress-level-history-list')
+    const history = progress.levelHistory || []
+    if (history.length > 0 && histContainer && histList) {
+        histContainer.classList.remove('hidden')
+        histList.innerHTML = history.map(h => `
+            <div class="flex items-center justify-between rounded-lg bg-white/70 px-2.5 py-1 text-[10px] text-slate-600 border border-purple-50">
+                <span>${h.fromLevel ? h.fromLevel.name : 'البداية'} ➔ <strong class="text-purple-800">${h.toLevel?.name || 'مستوى'}</strong> (${h.reason || 'ترقية'})</span>
+                <span class="text-slate-400">${formatDate(h.promotedAt || h.createdAt)}</span>
+            </div>
+        `).join('')
+    } else if (histContainer) {
+        histContainer.classList.add('hidden')
+    }
+
+    // Matn Progress
+    const matnListEl = document.getElementById('progress-matn-list')
+    const matns = progress.matnProgress || []
+    if (matnListEl) {
+        if (matns.length === 0) {
+            matnListEl.innerHTML = `<p class="text-slate-400 py-2 text-center text-[11px]">لا توجد متون مسجلة</p>`
+        } else {
+            matnListEl.innerHTML = matns.map(m => `
+                <div class="rounded-xl border border-teal-100 bg-white p-2 text-xs">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-teal-800">${m.matn?.title || 'متن'}</span>
+                        <span class="font-bold text-teal-600">${m.completionPercentage || 0}%</span>
+                    </div>
+                    <div class="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+                        <div class="h-full rounded-full bg-teal-600" style="width: ${m.completionPercentage || 0}%"></div>
+                    </div>
+                    <div class="mt-1 flex items-center justify-between text-[10px] text-slate-500">
+                        <span>الباب: ${m.section || '—'}</span>
+                        <span>الدرجة: ${m.masteryGrade || '—'}</span>
+                    </div>
+                </div>
+            `).join('')
+        }
+    }
+
+    // Exam Attempts
+    const examsListEl = document.getElementById('progress-exams-list')
+    const exams = progress.examAttempts || []
+    if (examsListEl) {
+        if (exams.length === 0) {
+            examsListEl.innerHTML = `<p class="text-slate-400 py-2 text-center text-[11px]">لا توجد امتحانات مسجلة</p>`
+        } else {
+            examsListEl.innerHTML = exams.map(ea => {
+                const passBadge = ea.isPassed
+                    ? '<span class="rounded-md bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-800">ناجح</span>'
+                    : '<span class="rounded-md bg-rose-100 px-1.5 py-0.5 text-[10px] font-bold text-rose-800">راسب</span>'
+                return `
+                    <div class="flex items-center justify-between rounded-xl border border-indigo-100 bg-white p-2 text-xs">
+                        <div>
+                            <p class="font-bold text-slate-800">${ea.exam?.title || 'امتحان'}</p>
+                            <span class="text-[10px] text-slate-400">${formatDate(ea.submittedAt || ea.createdAt)}</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-bold text-indigo-700">${ea.totalScoreAwarded || 0}/${ea.exam?.totalScore || 20}</span>
+                            ${passBadge}
+                        </div>
+                    </div>
+                `
+            }).join('')
+        }
+    }
 
     /* =========================
        Attendance
@@ -1202,6 +1293,46 @@ function setupSidebar() {
 
 
 /* =========================
+   Educational Levels
+========================= */
+
+async function loadLevels() {
+    try {
+        const res = await getLevels()
+        allLevels = Array.isArray(res) ? res : res?.data || []
+    } catch (e) {
+        console.error("Error loading levels in users.js:", e)
+        allLevels = []
+    }
+}
+
+const btnAssignLevel = document.getElementById('btn-progress-assign-level')
+if (btnAssignLevel) {
+    btnAssignLevel.addEventListener('click', async () => {
+        if (!selectedUser || selectedUser.role !== 'student') return
+        const newLevelId = document.getElementById('progress-assign-level-select')?.value
+        const reason = document.getElementById('progress-assign-level-reason')?.value?.trim() || "ترقية معتمدة من الإدارة"
+        if (!newLevelId) {
+            alert("يرجى اختيار المستوى التعليمي أولاً")
+            return
+        }
+        try {
+            await assignStudentLevel({
+                studentId: selectedUser._id,
+                newLevelId,
+                reason
+            })
+            alert("تم تعيين / ترقية مستوى الطالب بنجاح")
+            const updated = await getStudentProgress(selectedUser._id)
+            renderStudentProgress(updated)
+        } catch (err) {
+            alert("فشل ترقية المستوى: " + err.message)
+        }
+    })
+}
+
+
+/* =========================
    Initial Load
 ========================= */
 
@@ -1209,4 +1340,5 @@ setupSidebar()
 initNotificationBell()
 loadUsers()
 loadAdminInfo()
+loadLevels()
 

@@ -504,19 +504,62 @@
 
         <main class="space-y-6 p-4 sm:p-6 lg:p-8">
 
-            <!-- Error Box -->
+            <!-- Sub-tabs navigation for Evaluations Hub -->
+            <div class="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-3">
+                <button
+                    type="button"
+                    data-eval-tab="daily"
+                    class="eval-tab-btn flex items-center gap-2 rounded-xl bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>التقييمات اليومية</span>
+                </button>
 
+                <button
+                    type="button"
+                    data-eval-tab="exams"
+                    class="eval-tab-btn flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    <span>الامتحانات والاختبارات</span>
+                </button>
+
+                <button
+                    type="button"
+                    data-eval-tab="matn"
+                    class="eval-tab-btn flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5S19.832 5.477 21 6.253v13C19.832 18.477 18.246 18 16.5 18s-3.332-.477-4.5 1.253" />
+                    </svg>
+                    <span>المتون العلمية</span>
+                </button>
+
+                <button
+                    type="button"
+                    data-eval-tab="levels"
+                    class="eval-tab-btn flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a7 7 0 01-14 0m14 0V8a7 7 0 00-14 0v3m14 0v3a7 7 0 01-14 0v-3" />
+                    </svg>
+                    <span>المستويات وسجل الترقية</span>
+                </button>
+            </div>
+
+            <!-- Error Box -->
             <div
                 id="evaluations-error"
                 class="hidden rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-700">
             </div>
 
+            <!-- =========================================================
+                 SECTION 1: Daily Evaluations (التقييمات اليومية)
+            ========================================================== -->
+            <div id="section-daily" class="admin-eval-section space-y-6">
 
-            <!-- =========================
-                 Statistics
-            ========================== -->
-
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <!-- Statistics -->
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 
                 <!-- Total Evaluations -->
 
@@ -936,8 +979,439 @@
                 </div>
 
             </div>
+            <!-- END SECTION 1: Daily Evaluations -->
 
-        </main>
+            <!-- =========================================================
+                 SECTION 2: Exams & Tests (الامتحانات والاختبارات)
+            ========================================================== -->
+            <div id="section-exams" class="admin-eval-section hidden space-y-6">
+
+                <!-- Exams Statistics -->
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-slate-400">إجمالي الامتحانات</p>
+                                <h3 id="admin-exams-total" class="mt-2 text-2xl font-bold text-slate-800">0</h3>
+                            </div>
+                            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-slate-400">امتحانات جارية / معلنة</p>
+                                <h3 id="admin-exams-active" class="mt-2 text-2xl font-bold text-slate-800">0</h3>
+                            </div>
+                            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-slate-400">بانتظار التصحيح</p>
+                                <h3 id="admin-exams-pending-grading" class="mt-2 text-2xl font-bold text-amber-600">0</h3>
+                            </div>
+                            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-50 text-amber-700">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-slate-400">نتائج منشورة</p>
+                                <h3 id="admin-exams-published" class="mt-2 text-2xl font-bold text-slate-800">0</h3>
+                            </div>
+                            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-50 text-purple-700">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exams Filter & Search -->
+                <div class="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:flex-row lg:items-center lg:justify-between">
+                    <div class="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
+                        <div class="relative flex-1">
+                            <input
+                                id="admin-exams-search"
+                                type="text"
+                                placeholder="ابحث بعنوان الامتحان أو المعلم..."
+                                class="w-full rounded-xl border border-slate-200 py-2.5 pr-10 pl-4 text-sm focus:border-emerald-600 focus:outline-none">
+                            <svg class="absolute top-3 right-3 h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+
+                        <select
+                            id="admin-exams-type-filter"
+                            class="rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-600 focus:border-emerald-600 focus:outline-none">
+                            <option value="">جميع أنواع الامتحانات</option>
+                            <option value="quran">امتحان قرآن</option>
+                            <option value="matn">امتحان متون علمية</option>
+                            <option value="level">امتحان انتقال المستوى</option>
+                            <option value="periodic">امتحان دوري / فصلي</option>
+                        </select>
+
+                        <select
+                            id="admin-exams-format-filter"
+                            class="rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-600 focus:border-emerald-600 focus:outline-none">
+                            <option value="">جميع الأنماط</option>
+                            <option value="online">عن بُعد (إلكتروني)</option>
+                            <option value="in_person">حضوري</option>
+                        </select>
+
+                        <select
+                            id="admin-exams-status-filter"
+                            class="rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-600 focus:border-emerald-600 focus:outline-none">
+                            <option value="">جميع الحالات</option>
+                            <option value="draft">مسودة</option>
+                            <option value="scheduled">مجدول</option>
+                            <option value="ongoing">جارٍ حالياً</option>
+                            <option value="completed">منتهٍ</option>
+                            <option value="graded">تم التصحيح</option>
+                            <option value="published">أُعلنت النتائج</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Exams Table Card -->
+                <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                    <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+                        <h3 class="font-bold text-slate-800">سجل الامتحانات والاختبارات بالمدرسة</h3>
+                        <span class="text-xs text-slate-400">
+                            عرض <strong id="admin-exams-filtered-count" class="text-slate-700">0</strong> امتحان
+                        </span>
+                    </div>
+
+                    <div id="admin-exams-loading" class="hidden flex-col items-center justify-center py-16 text-slate-400">
+                        <svg class="h-8 w-8 animate-spin text-emerald-600" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                        </svg>
+                        <p class="mt-3 text-sm">جاري تحميل بيانات الامتحانات...</p>
+                    </div>
+
+                    <div id="admin-exams-table-container" class="overflow-x-auto">
+                        <table class="w-full text-right text-sm">
+                            <thead class="bg-slate-50 text-xs font-semibold text-slate-500">
+                                <tr>
+                                    <th class="px-6 py-4">عنوان الامتحان</th>
+                                    <th class="px-6 py-4">الهدف والمجال</th>
+                                    <th class="px-6 py-4">النوع والنمط</th>
+                                    <th class="px-6 py-4">الدرجة والمدة</th>
+                                    <th class="px-6 py-4">المعلم المشرف</th>
+                                    <th class="px-6 py-4">الحالة والنتائج</th>
+                                    <th class="px-6 py-4 text-center">الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-exams-table-body" class="divide-y divide-slate-100 text-slate-700">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="admin-exams-empty" class="hidden flex-col items-center justify-center py-16 text-slate-400">
+                        <svg class="h-12 w-12 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        <p class="mt-4 text-base font-semibold text-slate-600">لا توجد امتحانات مسجلة</p>
+                        <p class="mt-1 text-xs text-slate-400">لم يتم إنشاء أي امتحان يطابق معايير البحث.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- END SECTION 2: Exams -->
+
+            <!-- =========================================================
+                 SECTION 3: Mutun Memorization (المتون العلمية)
+            ========================================================== -->
+            <div id="section-matn" class="admin-eval-section hidden space-y-6">
+
+                <!-- Matn Statistics -->
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-slate-400">إجمالي المتون المعتمدة</p>
+                                <h3 id="admin-matn-total" class="mt-2 text-2xl font-bold text-slate-800">0</h3>
+                            </div>
+                            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5S19.832 5.477 21 6.253v13C19.832 18.477 18.246 18 16.5 18s-3.332-.477-4.5 1.253" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-slate-400">إجمالي الفصول والأبواب</p>
+                                <h3 id="admin-matn-chapters-total" class="mt-2 text-2xl font-bold text-slate-800">0</h3>
+                            </div>
+                            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a7 7 0 01-14 0m14 0V8a7 7 0 00-14 0v3m14 0v3a7 7 0 01-14 0v-3" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-slate-400">سجلات متابعة حفظ الطلاب</p>
+                                <h3 id="admin-matn-progress-total" class="mt-2 text-2xl font-bold text-purple-700">0</h3>
+                            </div>
+                            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-50 text-purple-700">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Matn Catalog Card -->
+                <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                    <div class="flex flex-col gap-3 border-b border-slate-100 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-800">دليل المتون العلمية المعتمدة</h3>
+                            <p class="text-xs text-slate-400">قائمة المتون المقررة في المنهج التعليمي مع تقسيم الفصول والأبيات</p>
+                        </div>
+                        <button
+                            type="button"
+                            id="btn-admin-add-matn"
+                            class="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition hover:bg-emerald-800">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>
+                            <span>إضافة متن جديد</span>
+                        </button>
+                    </div>
+
+                    <div id="admin-matn-table-container" class="overflow-x-auto">
+                        <table class="w-full text-right text-sm">
+                            <thead class="bg-slate-50 text-xs font-semibold text-slate-500">
+                                <tr>
+                                    <th class="px-6 py-4">اسم المتن والوصف</th>
+                                    <th class="px-6 py-4">المستوى المرتبط</th>
+                                    <th class="px-6 py-4">الفصول والأبيات</th>
+                                    <th class="px-6 py-4">الحالة</th>
+                                    <th class="px-6 py-4 text-center">الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-matn-table-body" class="divide-y divide-slate-100 text-slate-700">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="admin-matn-empty" class="hidden flex-col items-center justify-center py-12 text-slate-400">
+                        <p class="text-sm font-semibold text-slate-600">لا توجد متون علمية مضافة حتى الآن</p>
+                    </div>
+                </div>
+
+                <!-- Student Matn Memorization Tracking Card -->
+                <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                    <div class="border-b border-slate-100 px-6 py-4">
+                        <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                            <div>
+                                <h3 class="font-bold text-slate-800">سجل متابعة حفظ المتون للطلاب بالمدرسة</h3>
+                                <p class="text-xs text-slate-400">متابعة إنجاز الطلاب في حفظ المتون وتسميع الأبواب والدرجات المسجلة</p>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <input
+                                    id="admin-matn-student-search"
+                                    type="text"
+                                    placeholder="بحث باسم الطالب..."
+                                    class="rounded-xl border border-slate-200 py-2 pr-3 pl-3 text-xs focus:border-emerald-600 focus:outline-none">
+                                <select
+                                    id="admin-matn-filter-matn"
+                                    class="rounded-xl border border-slate-200 py-2 px-3 text-xs text-slate-600 focus:border-emerald-600 focus:outline-none">
+                                    <option value="">جميع المتون</option>
+                                </select>
+                                <select
+                                    id="admin-matn-filter-status"
+                                    class="rounded-xl border border-slate-200 py-2 px-3 text-xs text-slate-600 focus:border-emerald-600 focus:outline-none">
+                                    <option value="">جميع الحالات</option>
+                                    <option value="in_progress">قيد الحفظ</option>
+                                    <option value="completed">متمم</option>
+                                    <option value="reviewed">مراجع ومتقن</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="admin-student-matn-table-container" class="overflow-x-auto">
+                        <table class="w-full text-right text-sm">
+                            <thead class="bg-slate-50 text-xs font-semibold text-slate-500">
+                                <tr>
+                                    <th class="px-6 py-4">الطالب والحلقة</th>
+                                    <th class="px-6 py-4">المتن والباب</th>
+                                    <th class="px-6 py-4">نسبة الإنجاز والدرجة</th>
+                                    <th class="px-6 py-4">الحالة</th>
+                                    <th class="px-6 py-4">تاريخ التسميع</th>
+                                    <th class="px-6 py-4">المعلم المشرف</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-student-matn-table-body" class="divide-y divide-slate-100 text-slate-700">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="admin-student-matn-empty" class="hidden flex-col items-center justify-center py-12 text-slate-400">
+                        <p class="text-sm font-semibold text-slate-600">لا توجد سجلات تسميع للمتون مطابقة للبحث</p>
+                    </div>
+                </div>
+
+            </div>
+            <!-- END SECTION 3: Matn -->
+
+            <!-- =========================================================
+                 SECTION 4: Educational Levels (المستويات التعليمية وسجل الترقية)
+            ========================================================== -->
+            <div id="section-levels" class="admin-eval-section hidden space-y-6">
+
+                <!-- Levels Statistics -->
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-slate-400">المستويات التعليمية</p>
+                                <h3 id="admin-levels-total" class="mt-2 text-2xl font-bold text-slate-800">0</h3>
+                            </div>
+                            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a7 7 0 01-14 0m14 0V8a7 7 0 00-14 0v3m14 0v3a7 7 0 01-14 0v-3" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-slate-400">الطلاب المسجلون بالمستويات</p>
+                                <h3 id="admin-levels-students-total" class="mt-2 text-2xl font-bold text-slate-800">0</h3>
+                            </div>
+                            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-slate-400">حركات الترقية المسجلة</p>
+                                <h3 id="admin-levels-promotions-total" class="mt-2 text-2xl font-bold text-emerald-700">0</h3>
+                            </div>
+                            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Levels List Card -->
+                <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                    <div class="flex flex-col gap-3 border-b border-slate-100 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-800">سلّم المستويات التعليمية</h3>
+                            <p class="text-xs text-slate-400">هيكلة المستويات بالمدرسة وشروط النجاح والانتقال ومتطلبات الحفظ</p>
+                        </div>
+                        <button
+                            type="button"
+                            id="btn-admin-add-level"
+                            class="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition hover:bg-emerald-800">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>
+                            <span>إضافة مستوى جديد</span>
+                        </button>
+                    </div>
+
+                    <div id="admin-levels-table-container" class="overflow-x-auto">
+                        <table class="w-full text-right text-sm">
+                            <thead class="bg-slate-50 text-xs font-semibold text-slate-500">
+                                <tr>
+                                    <th class="px-6 py-4">الترتيب</th>
+                                    <th class="px-6 py-4">المستوى والرمز</th>
+                                    <th class="px-6 py-4">درجة النجاح الدنيا</th>
+                                    <th class="px-6 py-4">متطلبات القرآن والمتون</th>
+                                    <th class="px-6 py-4">الترقية التلقائية</th>
+                                    <th class="px-6 py-4">الحالة</th>
+                                    <th class="px-6 py-4 text-center">الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-levels-table-body" class="divide-y divide-slate-100 text-slate-700">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="admin-levels-empty" class="hidden flex-col items-center justify-center py-12 text-slate-400">
+                        <p class="text-sm font-semibold text-slate-600">لا توجد مستويات تعليمية مضافة حتى الآن</p>
+                    </div>
+                </div>
+
+                <!-- Promotions History Card -->
+                <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                    <div class="border-b border-slate-100 px-6 py-4">
+                        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                            <div>
+                                <h3 class="font-bold text-slate-800">سجل الترقيات والانتقال بين المستويات</h3>
+                                <p class="text-xs text-slate-400">سجل غير قابل للتعديل يوثق جميع حركات الترقية وتواريخها وأسبابها</p>
+                            </div>
+                            <input
+                                id="admin-promotions-search"
+                                type="text"
+                                placeholder="بحث باسم الطالب..."
+                                class="rounded-xl border border-slate-200 py-2 pr-3 pl-3 text-xs focus:border-emerald-600 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div id="admin-promotions-table-container" class="overflow-x-auto">
+                        <table class="w-full text-right text-sm">
+                            <thead class="bg-slate-50 text-xs font-semibold text-slate-500">
+                                <tr>
+                                    <th class="px-6 py-4">الطالب</th>
+                                    <th class="px-6 py-4">الانتقال</th>
+                                    <th class="px-6 py-4">تاريخ الترقية</th>
+                                    <th class="px-6 py-4">سبب الترقية / الامتحان</th>
+                                    <th class="px-6 py-4">القائم بالترقية</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-promotions-table-body" class="divide-y divide-slate-100 text-slate-700">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="admin-promotions-empty" class="hidden flex-col items-center justify-center py-12 text-slate-400">
+                        <p class="text-sm font-semibold text-slate-600">لا توجد سجلات ترقية حتى الآن</p>
+                    </div>
+                </div>
+
+            </div>
+            <!-- END SECTION 4: Levels -->
 
     </div>
 
@@ -1510,6 +1984,389 @@
 
         </div>
 
+    </div>
+
+    <!-- =========================================================
+         Modal: Create / Edit Level (إضافة / تعديل مستوى تعليمي)
+    ========================================================= -->
+    <div
+        id="modal-admin-level"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40 p-4 backdrop-blur-xs">
+        <div class="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-xl">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <h3 id="modal-level-title" class="text-lg font-bold text-slate-800">إضافة مستوى تعليمي جديد</h3>
+                <button
+                    type="button"
+                    id="btn-close-level-modal"
+                    class="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <form id="admin-level-form" class="mt-5 space-y-4">
+                <input type="hidden" id="level-id">
+                <div id="admin-level-error" class="hidden rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-600"></div>
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-slate-600">اسم المستوى *</label>
+                        <input
+                            id="level-name"
+                            type="text"
+                            required
+                            placeholder="مثال: المستوى التمهيدي"
+                            class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-emerald-600 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-slate-600">الترتيب الرقمي *</label>
+                        <input
+                            id="level-order"
+                            type="number"
+                            min="1"
+                            required
+                            placeholder="1"
+                            class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-emerald-600 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-slate-600">رمز المستوى (اختياري)</label>
+                        <input
+                            id="level-code"
+                            type="text"
+                            placeholder="مثال: LVL-1"
+                            class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-emerald-600 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-slate-600">الدرجة الصغرى للنجاح (من 100) *</label>
+                        <input
+                            id="level-passing-score"
+                            type="number"
+                            min="0"
+                            max="100"
+                            required
+                            placeholder="60"
+                            class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-emerald-600 focus:outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="mb-1.5 block text-xs font-semibold text-slate-600">متطلبات حفظ القرآن في هذا المستوى</label>
+                    <input
+                        id="level-quran-req"
+                        type="text"
+                        placeholder="مثال: حفظ جزء عم كاملاً مع التجويد العملي"
+                        class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-emerald-600 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="mb-1.5 block text-xs font-semibold text-slate-600">متطلبات المتون العلمية في هذا المستوى</label>
+                    <input
+                        id="level-matn-req"
+                        type="text"
+                        placeholder="مثال: تحفة الأطفال كاملة مع ضبط الأحكام"
+                        class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-emerald-600 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="mb-1.5 block text-xs font-semibold text-slate-600">وصف وأهداف المستوى</label>
+                    <textarea
+                        id="level-desc"
+                        rows="2"
+                        placeholder="ملاحظات تفصيلية عن المنهج..."
+                        class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-emerald-600 focus:outline-none"></textarea>
+                </div>
+
+                <div class="flex items-center gap-6 pt-2">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input id="level-auto-promote" type="checkbox" class="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                        <span class="text-xs font-medium text-slate-700">ترقية الطالب تلقائياً عند اجتياز امتحان المستوى</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input id="level-is-active" type="checkbox" checked class="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                        <span class="text-xs font-medium text-slate-700">مستوى نشط ومتاح</span>
+                    </label>
+                </div>
+
+                <div class="mt-6 flex gap-3 border-t border-slate-100 pt-4">
+                    <button
+                        type="button"
+                        id="btn-cancel-level-modal"
+                        class="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50">
+                        إلغاء
+                    </button>
+                    <button
+                        type="submit"
+                        id="btn-submit-level"
+                        class="flex-1 rounded-xl bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-emerald-800 disabled:opacity-50">
+                        حفظ المستوى
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         Modal: Create / Edit Matn (إضافة / تعديل متن علمي)
+    ========================================================= -->
+    <div
+        id="modal-admin-matn"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40 p-4 backdrop-blur-xs">
+        <div class="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl bg-white p-6 shadow-xl">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <h3 id="modal-matn-title" class="text-lg font-bold text-slate-800">إضافة متن علمي جديد</h3>
+                <button
+                    type="button"
+                    id="btn-close-matn-modal"
+                    class="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <form id="admin-matn-form" class="mt-5 space-y-4">
+                <input type="hidden" id="matn-id">
+                <div id="admin-matn-error" class="hidden rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-600"></div>
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-slate-600">اسم المتن العلمي *</label>
+                        <input
+                            id="matn-name"
+                            type="text"
+                            required
+                            placeholder="مثال: تحفة الأطفال والغلِمان"
+                            class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-emerald-600 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-slate-600">المستوى المرتبط به (اختياري)</label>
+                        <select
+                            id="matn-level-select"
+                            class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-emerald-600 focus:outline-none">
+                            <option value="">بدون تقييد بمستوى معين</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="mb-1.5 block text-xs font-semibold text-slate-600">وصف المتن وأهميته</label>
+                    <textarea
+                        id="matn-desc"
+                        rows="2"
+                        placeholder="نبذة موجزة عن المتن وموضوعاته..."
+                        class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-emerald-600 focus:outline-none"></textarea>
+                </div>
+
+                <!-- Chapters Builder -->
+                <div class="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <div>
+                            <span class="text-xs font-bold text-slate-700">فصول وأبواب المتن</span>
+                            <p class="text-[11px] text-slate-400">حدد تقسيم الأبواب لتمكين المعلمين والطلاب من متابعة التسميع بدقة</p>
+                        </div>
+                        <button
+                            type="button"
+                            id="btn-add-matn-chapter-row"
+                            class="rounded-lg bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800 hover:bg-emerald-200 transition">
+                            + إضافة باب
+                        </button>
+                    </div>
+
+                    <div id="matn-chapters-list" class="space-y-2 max-h-48 overflow-y-auto">
+                        <!-- Chapter rows dynamically inserted -->
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-2">
+                    <input id="matn-is-active" type="checkbox" checked class="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                    <label for="matn-is-active" class="text-xs font-medium text-slate-700">متن معتمد ونشط للدراسة</label>
+                </div>
+
+                <div class="mt-6 flex gap-3 border-t border-slate-100 pt-4">
+                    <button
+                        type="button"
+                        id="btn-cancel-matn-modal"
+                        class="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50">
+                        إلغاء
+                    </button>
+                    <button
+                        type="submit"
+                        id="btn-submit-matn"
+                        class="flex-1 rounded-xl bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-emerald-800 disabled:opacity-50">
+                        حفظ المتن
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         Modal: Admin View Exam Attempts & Publish Results
+    ========================================================= -->
+    <div
+        id="modal-admin-exam-attempts"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40 p-4 backdrop-blur-xs">
+        <div class="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-2xl bg-white p-6 shadow-xl">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div>
+                    <h3 id="attempts-modal-title" class="text-lg font-bold text-slate-800">إجابات ونتائج الامتحان</h3>
+                    <p id="attempts-modal-subtitle" class="text-xs text-slate-400">—</p>
+                </div>
+                <button
+                    type="button"
+                    id="btn-close-attempts-modal"
+                    class="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div id="attempts-modal-stats" class="my-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <!-- Stat items dynamically filled -->
+            </div>
+
+            <div class="flex items-center justify-between my-3">
+                <span class="text-xs font-bold text-slate-700">قائمة إجابات الطلاب:</span>
+                <button
+                    type="button"
+                    id="btn-admin-publish-modal-results"
+                    class="hidden rounded-xl bg-purple-600 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-purple-700 transition">
+                    إعلان ونشر النتائج لجميع الطلاب
+                </button>
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-slate-200">
+                <table class="w-full text-right text-xs">
+                    <thead class="bg-slate-50 font-semibold text-slate-600">
+                        <tr>
+                            <th class="px-4 py-3">الطالب</th>
+                            <th class="px-4 py-3">تاريخ الإرسال</th>
+                            <th class="px-4 py-3">الحالة</th>
+                            <th class="px-4 py-3">الدرجة</th>
+                            <th class="px-4 py-3">النسبة المئوية</th>
+                            <th class="px-4 py-3 text-center">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-attempts-table-body" class="divide-y divide-slate-100 text-slate-700">
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="admin-attempts-empty" class="hidden flex-col items-center justify-center py-10 text-slate-400">
+                <p class="text-sm font-semibold text-slate-600">لا توجد إجابات مقدمة لهذا الامتحان بعد</p>
+            </div>
+
+            <div class="mt-6 flex justify-end border-t border-slate-100 pt-4">
+                <button
+                    type="button"
+                    id="btn-close-attempts-modal-footer"
+                    class="rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50">
+                    إغلاق
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         Modal: Grade Single Exam Attempt (تصحيح إجابة طالب)
+    ========================================================= -->
+    <div
+        id="modal-admin-grade-attempt"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40 p-4 backdrop-blur-xs">
+        <div class="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-6 shadow-xl">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800">مراجعة وتصحيح إجابة الطالب</h3>
+                    <p id="grade-student-display" class="text-xs text-slate-400">—</p>
+                </div>
+                <button
+                    type="button"
+                    id="btn-close-grade-modal"
+                    class="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <form id="admin-grade-attempt-form" class="mt-4 space-y-4">
+                <input type="hidden" id="grade-attempt-id">
+                <div id="admin-grade-error" class="hidden rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-600"></div>
+
+                <div id="grade-questions-container" class="space-y-4 max-h-[50vh] overflow-y-auto px-1">
+                    <!-- Questions & answers dynamically inserted -->
+                </div>
+
+                <div class="border-t border-slate-100 pt-3">
+                    <label class="mb-1 block text-xs font-semibold text-slate-600">ملاحظات وتوجيهات للطالب</label>
+                    <textarea
+                        id="grade-feedback"
+                        rows="2"
+                        placeholder="أحسنت مع التنبيه على..."
+                        class="w-full rounded-xl border border-slate-200 p-2.5 text-sm focus:border-emerald-600 focus:outline-none"></textarea>
+                </div>
+
+                <div class="flex gap-3 border-t border-slate-100 pt-4">
+                    <button
+                        type="button"
+                        id="btn-cancel-grade-modal"
+                        class="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50">
+                        إلغاء
+                    </button>
+                    <button
+                        type="submit"
+                        id="btn-save-grade"
+                        class="flex-1 rounded-xl bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-emerald-800 disabled:opacity-50">
+                        اعتماد الدرجة والتصحيح
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         Modal: Generic Delete Confirmation (تأكيد الحذف العام)
+    ========================================================= -->
+    <div
+        id="modal-admin-generic-delete"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40 p-4 backdrop-blur-xs">
+        <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+            <div class="flex items-center gap-3">
+                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-100 text-red-600">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 id="generic-delete-title" class="text-base font-bold text-slate-800">تأكيد الحذف</h3>
+                    <p class="text-xs text-slate-400">هذا الإجراء لا يمكن التراجع عنه.</p>
+                </div>
+            </div>
+
+            <p id="generic-delete-message" class="mt-4 text-sm text-slate-600">هل أنت متأكد من رغبتك في الحذف؟</p>
+
+            <div id="generic-delete-error" class="mt-3 hidden rounded-xl border border-red-200 bg-red-50 p-2 text-xs font-semibold text-red-600"></div>
+
+            <div class="mt-6 grid grid-cols-2 gap-3">
+                <button
+                    type="button"
+                    id="generic-delete-cancel-btn"
+                    class="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50">
+                    إلغاء
+                </button>
+                <button
+                    type="button"
+                    id="generic-delete-confirm-btn"
+                    class="rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-50">
+                    تأكيد الحذف
+                </button>
+            </div>
+        </div>
     </div>
 
 
