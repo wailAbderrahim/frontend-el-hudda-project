@@ -929,7 +929,7 @@ function renderExamsTab() {
     const bodyEl = document.getElementById("student-exams-body")
     if (!bodyEl) return
 
-    if (availableExamsList.length === 0) {
+    if (!Array.isArray(availableExamsList) || availableExamsList.length === 0) {
         bodyEl.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-xs text-slate-400">لا توجد امتحانات مقررة متاحة لك حالياً.</td></tr>`
         return
     }
@@ -944,11 +944,19 @@ function renderExamsTab() {
     bodyEl.innerHTML = availableExamsList.map((exam) => {
         const typeLabel = typeLabels[exam.type] || exam.type
         const isOnline = exam.format === "online"
+        const examId = String(exam._id || exam.id || "")
 
         // Check if student has already submitted this exam
+        const existingResult = Array.isArray(examResultsList)
+            ? examResultsList.find(r => {
+                const rExamId = String(r.exam?._id || r.exam?.id || r.exam || "")
+                return Boolean(rExamId && rExamId === examId)
+            })
+            : null
+
         const myAtt = exam.myAttempt
         const isSubmitted = (myAtt && ['submitted', 'grading', 'graded', 'approved', 'published'].includes(myAtt.status)) || (existingResult && ['submitted', 'grading', 'graded', 'approved', 'published'].includes(existingResult.status))
-        const isPublished = myAtt?.status === "published" || existingResult?.status === "published"
+        const isPublished = (myAtt && myAtt.status === "published") || (existingResult && existingResult.status === "published")
 
         let actionBtn = ""
         let statusBadge = ""
@@ -961,7 +969,7 @@ function renderExamsTab() {
             actionBtn = `<span class="text-xs text-slate-400">بانتظار رصد الدرجة</span>`
         } else if (isOnline) {
             statusBadge = '<span class="inline-flex rounded-lg bg-blue-50 px-2 py-0.5 text-xs font-bold text-blue-700">متاح إلكترونياً</span>'
-            actionBtn = `<button type="button" class="btn-start-exam rounded-xl bg-emerald-700 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-emerald-800 transition" data-exam-id="${exam._id}">بدء الامتحان الآن</button>`
+            actionBtn = `<button type="button" class="btn-start-exam rounded-xl bg-emerald-700 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-emerald-800 transition" data-exam-id="${examId}">بدء الامتحان الآن</button>`
         } else {
             statusBadge = '<span class="inline-flex rounded-lg bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-600">حضوري بالمدرسة</span>'
             actionBtn = `<span class="text-xs text-slate-500">يُجرى في مقر الحلقة</span>`
@@ -1017,7 +1025,7 @@ function renderResultsTab() {
     const bodyEl = document.getElementById("student-results-body")
     if (!bodyEl) return
 
-    if (examResultsList.length === 0) {
+    if (!Array.isArray(examResultsList) || examResultsList.length === 0) {
         bodyEl.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-xs text-slate-400">لا توجد نتائج معلنة بعد. فور اعتماد درجات امتحاناتك ستظهر هنا بالتفصيل.</td></tr>`
         return
     }

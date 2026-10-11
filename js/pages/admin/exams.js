@@ -1186,7 +1186,7 @@ function openGradeModal(attemptId) {
                 <p class="text-xs text-slate-500 mb-2">لا توجد تفاصيل إجابات إلكترونية مسجلة (امتحان حضوري أو تسميع).</p>
                 <div class="flex items-center justify-center gap-2">
                     <label class="text-xs font-bold text-slate-700">الدرجة الممنوحة:</label>
-                    <input type="number" id="grade-direct-score" min="0" max="${attempt.exam?.totalScore || 20}" step="0.5" value="${attempt.totalScore || 0}" class="w-24 rounded-lg border border-slate-200 p-1.5 text-center font-bold text-emerald-700 text-sm focus:border-emerald-600 focus:outline-none" required>
+                    <input type="number" id="grade-direct-score" min="0" max="${attempt.exam?.totalScore || 20}" step="0.5" value="${typeof attempt.score === 'number' ? attempt.score : 0}" class="w-24 rounded-lg border border-slate-200 p-1.5 text-center font-bold text-emerald-700 text-sm focus:border-emerald-600 focus:outline-none" required>
                     <span class="text-xs text-slate-400">/ ${attempt.exam?.totalScore || 20}</span>
                 </div>
             </div>
