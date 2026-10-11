@@ -131,6 +131,21 @@
             </div>
 
             <div class="flex items-center gap-3">
+                <!-- Notifications Dropdown -->
+                <div class="relative" id="notif-container">
+                    <button id="notif-btn" type="button" title="الإشعارات"
+                        class="relative rounded-xl p-2.5 text-slate-500 transition hover:bg-slate-100 hover:text-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                        aria-label="الإشعارات"
+                        aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="1.7">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15 17h5l-1.5-2V9a6.5 6.5 0 00-13 0v6L4 17h5m6 0a3 3 0 01-6 0" />
+                        </svg>
+                        <span id="notif-badge" class="hidden absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-emerald-600 px-1 text-[10px] font-bold text-white shadow-sm ring-2 ring-white">0</span>
+                    </button>
+                </div>
+
                 <div class="text-left hidden sm:block">
                     <p id="student-name-header" class="text-sm font-semibold text-slate-800">جاري التحميل...</p>
                     <p class="text-xs text-slate-400">طالب قرآن كريم</p>
@@ -224,6 +239,74 @@
                         <div class="bg-white rounded-xl border border-slate-200/80 p-4">
                             <span class="text-xs text-slate-400 block mb-1">موعد التسميع الأسبوعي</span>
                             <span id="halaqa-schedule-val" class="font-bold text-slate-700 text-sm">—</span>
+                        </div>
+                </div>
+
+                <!-- 2.5. Educational Level & Promotion History Card -->
+                <div class="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-base">المستوى التعليمي والمنهج الدراسي</h4>
+                                <p class="text-xs text-slate-500">المستوى الحالي المسجل في المدرسة وسجل الانتقال والترقيات</p>
+                            </div>
+                        </div>
+                        <div id="student-current-level-badge" class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3.5 py-1 text-xs font-bold text-emerald-700">
+                            <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                            <span id="level-name-val">جاري التحميل...</span>
+                        </div>
+                    </div>
+
+                    <!-- Level Details Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                            <span class="text-xs text-slate-400 block mb-1">ترتيب المستوى في المدرسة</span>
+                            <span id="level-order-val" class="font-bold text-slate-800 text-sm">—</span>
+                        </div>
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                            <span class="text-xs text-slate-400 block mb-1">درجة النجاح والانتقال للمستوى التالي</span>
+                            <span id="level-passing-val" class="font-bold text-emerald-700 text-sm">—</span>
+                        </div>
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                            <span class="text-xs text-slate-400 block mb-1">حالة الترقية</span>
+                            <span id="level-status-val" class="font-bold text-slate-700 text-sm">مستوى حالي معتمد</span>
+                        </div>
+                    </div>
+
+                    <!-- Level Requirements / Description -->
+                    <div class="rounded-xl bg-slate-50/70 p-4 border border-slate-100 text-xs text-slate-600">
+                        <span class="font-bold text-slate-700 block mb-1">متطلبات المنهج والترقية:</span>
+                        <p id="level-requirements-val" class="leading-relaxed text-slate-600">—</p>
+                    </div>
+
+                    <!-- Promotion History Section -->
+                    <div class="pt-4 border-t border-slate-100">
+                        <div class="flex items-center justify-between mb-3">
+                            <h5 class="text-sm font-bold text-slate-800">سجل ترقيات المستويات السابقة</h5>
+                            <span id="student-level-history-count" class="text-xs font-semibold text-slate-400">0 عمليات سابقة</span>
+                        </div>
+                        <div class="overflow-x-auto rounded-xl border border-slate-100">
+                            <table class="w-full text-right text-xs">
+                                <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-100">
+                                    <tr>
+                                        <th class="py-2.5 px-3">من مستوى</th>
+                                        <th class="py-2.5 px-3">إلى مستوى</th>
+                                        <th class="py-2.5 px-3">التاريخ</th>
+                                        <th class="py-2.5 px-3">السبب / الامتحان</th>
+                                        <th class="py-2.5 px-3">المعتمد</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="student-level-history-body" class="divide-y divide-slate-100">
+                                    <tr>
+                                        <td colspan="5" class="py-4 text-center text-slate-400">جاري تحميل سجل الترقيات...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

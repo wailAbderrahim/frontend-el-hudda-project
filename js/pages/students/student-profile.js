@@ -2,6 +2,8 @@ import { protectPage, logout } from "../../auth/auth.js"
 import { getProfile, updateProfile, changePassword } from "../../api/usersApi.js"
 import { getStudentProgress } from "../../api/progressApi.js"
 import { parseBirthInfo, formatBirthDate, formatBirthPlaces } from "../../utils/birthUtils.js"
+import { getStudentLevelHistory } from "../../api/levelsApi.js"
+import { initNotificationBell } from "../../components/notificationBell.js"
 
 // Restrict to student role
 protectPage("student")
@@ -50,6 +52,14 @@ const metricMemLast = document.getElementById("metric-mem-last")
 const metricEvalAvg = document.getElementById("metric-eval-avg")
 const metricEvalTotal = document.getElementById("metric-eval-total")
 const metricEvalLast = document.getElementById("metric-eval-last")
+
+// Level Elements
+const levelNameVal = document.getElementById("level-name-val")
+const levelOrderVal = document.getElementById("level-order-val")
+const levelPassingVal = document.getElementById("level-passing-val")
+const levelRequirementsVal = document.getElementById("level-requirements-val")
+const studentLevelHistoryCount = document.getElementById("student-level-history-count")
+const studentLevelHistoryBody = document.getElementById("student-level-history-body")
 
 // Form Inputs
 const inputStudName = document.getElementById("input-stud-name")
@@ -191,12 +201,78 @@ function populateStudentData(profile, progress) {
         }
     }
 
+    // 4.5. Level Data & History
+    const lvl = profile.currentLevel
+    if (lvl) {
+        if (levelNameVal) levelNameVal.textContent = lvl.name || "مستوى غير مسمى"
+        if (levelOrderVal) levelOrderVal.textContent = lvl.order ? `المستوى ${lvl.order}` : "—"
+        if (levelPassingVal) levelPassingVal.textContent = lvl.passingScore ? `${lvl.passingScore}%` : "—"
+        if (levelRequirementsVal) levelRequirementsVal.textContent = lvl.requirements || "لا توجد متطلبات خاصة إضافية مسجلة لهذا المستوى"
+    } else {
+        if (levelNameVal) levelNameVal.textContent = "المستوى التمهيدي / لم يُحدد بعد"
+        if (levelOrderVal) levelOrderVal.textContent = "—"
+        if (levelPassingVal) levelPassingVal.textContent = "—"
+        if (levelRequirementsVal) levelRequirementsVal.textContent = "بانتظار تحديد المستوى التعليمي من قبل إدارة المدرسة أو الشيخ المشرف"
+    }
+
+    if (profile._id) {
+        loadLevelHistory(profile._id)
+    }
+
     // 5. Fill Edit Form
     if (inputStudName) inputStudName.value = profile.name || ""
     if (inputStudFirstName) inputStudFirstName.value = profile.firstName || ""
     if (inputStudLastName) inputStudLastName.value = profile.lastName || ""
     if (inputStudPhone) inputStudPhone.value = profile.phone || ""
     if (inputStudEmail) inputStudEmail.value = profile.email || ""
+}
+
+async function loadLevelHistory(studentId) {
+    if (!studentLevelHistoryBody) return
+    try {
+        const history = await getStudentLevelHistory(studentId)
+        const list = Array.isArray(history) ? history : (history?.data || [])
+
+        if (studentLevelHistoryCount) {
+            studentLevelHistoryCount.textContent = `${list.length} عمليات سابقة`
+        }
+
+        if (list.length === 0) {
+            studentLevelHistoryBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="py-6 text-center text-slate-400">
+                        لا يوجد سجل ترقيات سابق بعد (هذا هو المستوى الحالي المسجل للطالب)
+                    </td>
+                </tr>
+            `
+            return
+        }
+
+        studentLevelHistoryBody.innerHTML = list.map(item => {
+            const prevName = item.previousLevel?.name || "البداية / تمهيدي"
+            const newName = item.newLevel?.name || "—"
+            const dateStr = item.changeDate ? new Date(item.changeDate).toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' }) : "—"
+            const reason = item.reason || (item.exam ? `اجتياز: ${item.exam.title || 'امتحان ترقية'}` : "ترقية معتمدة")
+            const changedBy = item.changedBy?.name || "الإدارة"
+
+            return `
+                <tr class="hover:bg-slate-50/60 transition">
+                    <td class="py-3 px-3 text-slate-600 font-medium">${prevName}</td>
+                    <td class="py-3 px-3 font-bold text-emerald-700">${newName}</td>
+                    <td class="py-3 px-3 text-slate-500">${dateStr}</td>
+                    <td class="py-3 px-3 text-slate-700">${reason}</td>
+                    <td class="py-3 px-3 text-slate-500">${changedBy}</td>
+                </tr>
+            `
+        }).join("")
+    } catch (err) {
+        console.warn("Could not load student level history:", err)
+        studentLevelHistoryBody.innerHTML = `
+            <tr>
+                <td colspan="5" class="py-4 text-center text-slate-400">تعذر تحميل سجل الترقيات</td>
+            </tr>
+        `
+    }
 }
 
 /* ===================================================
@@ -332,4 +408,5 @@ function setupFormHandlers() {
 =================================================== */
 setupSidebar()
 setupFormHandlers()
+initNotificationBell()
 loadStudentProfile()

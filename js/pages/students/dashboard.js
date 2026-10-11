@@ -1111,8 +1111,10 @@ async function startOnlineExam(examId) {
         // Populate initial answers if any from prior progress
         if (activeAttempt?.answers && Array.isArray(activeAttempt.answers)) {
             activeAttempt.answers.forEach((ans) => {
-                const qId = ans.question?._id || ans.question
-                if (qId) userAnswers[qId] = ans.answerText
+                const qId = String(ans.questionId || ans.question?._id || ans.question || (ans.questionIndex !== undefined ? `q_${ans.questionIndex}` : ""))
+                const val = ans.answer !== undefined ? ans.answer : (ans.answerText !== undefined ? ans.answerText : "")
+                if (qId) userAnswers[qId] = val
+                if (typeof ans.questionIndex === "number") userAnswers[`idx_${ans.questionIndex}`] = val
             })
         }
 
@@ -1189,7 +1191,7 @@ function renderActiveQuestion() {
 
     const questions = activeExam.questions
     const q = questions[currentQuestionIndex]
-    const qId = q._id
+    const qId = String(q._id || q.id || currentQuestionIndex)
 
     // Question Progress badge
     const qProgressEl = document.getElementById("exam-question-progress")
@@ -1199,7 +1201,9 @@ function renderActiveQuestion() {
     const paletteEl = document.getElementById("exam-palette-container")
     if (paletteEl) {
         paletteEl.innerHTML = questions.map((item, idx) => {
-            const isAns = userAnswers[item._id] !== undefined && userAnswers[item._id] !== ""
+            const itemKey = String(item._id || item.id || idx)
+            const isAns = (userAnswers[itemKey] !== undefined && userAnswers[itemKey] !== "") ||
+                          (userAnswers[`idx_${idx}`] !== undefined && userAnswers[`idx_${idx}`] !== "")
             const isCurrent = idx === currentQuestionIndex
             let cls = "h-8 w-8 rounded-xl text-xs font-bold flex items-center justify-center transition "
             if (isCurrent) {
@@ -1224,11 +1228,11 @@ function renderActiveQuestion() {
     const cardEl = document.getElementById("exam-active-question-card")
     if (!cardEl) return
 
-    const currentAns = userAnswers[qId] || ""
+    const currentAns = userAnswers[qId] !== undefined ? userAnswers[qId] : (userAnswers[`idx_${currentQuestionIndex}`] || "")
 
     let inputHtml = ""
 
-    if (q.type === "mcq" && q.options && q.options.length > 0) {
+    if ((q.type === "mcq" || q.type === "single_choice" || q.type === "multiple_choice") && q.options && q.options.length > 0) {
         inputHtml = `
             <div class="space-y-2.5 pt-2">
                 ${q.options.map((opt) => `
@@ -1277,7 +1281,7 @@ function renderActiveQuestion() {
             </span>
         </div>
         <div class="py-2">
-            <h4 class="text-base font-bold text-slate-800 leading-relaxed">${q.questionText}</h4>
+            <h4 class="text-base font-bold text-slate-800 leading-relaxed">${q.text || q.questionText || ""}</h4>
         </div>
         ${inputHtml}
     `
@@ -1329,10 +1333,18 @@ async function saveExamProgressOnServer() {
     if (!activeExam || !activeExam._id) return
     const statusEl = document.getElementById("exam-autosave-status")
     try {
-        const formatted = Object.keys(userAnswers).map((qId) => ({
-            questionId: qId,
-            answerText: userAnswers[qId]
-        }))
+        const formatted = (activeExam?.questions || []).map((item, idx) => {
+            const itemKey = String(item._id || item.id || idx)
+            const answerVal = userAnswers[itemKey] !== undefined
+                ? userAnswers[itemKey]
+                : (userAnswers[`idx_${idx}`] !== undefined ? userAnswers[`idx_${idx}`] : "")
+            return {
+                questionIndex: idx,
+                questionId: itemKey,
+                answer: answerVal,
+                answerText: answerVal
+            }
+        })
 
         await saveExamProgress(activeExam._id, formatted)
         const now = new Date()
@@ -1373,10 +1385,18 @@ async function finalSubmitExam(isAuto = false) {
         clearInterval(examTimerInterval)
         clearInterval(periodicSaveInterval)
 
-        const formatted = Object.keys(userAnswers).map((qId) => ({
-            questionId: qId,
-            answerText: userAnswers[qId]
-        }))
+        const formatted = (activeExam?.questions || []).map((item, idx) => {
+            const itemKey = String(item._id || item.id || idx)
+            const answerVal = userAnswers[itemKey] !== undefined
+                ? userAnswers[itemKey]
+                : (userAnswers[`idx_${idx}`] !== undefined ? userAnswers[`idx_${idx}`] : "")
+            return {
+                questionIndex: idx,
+                questionId: itemKey,
+                answer: answerVal,
+                answerText: answerVal
+            }
+        })
 
         showAlert("جاري رصد وتسليم إجاباتك...", "success")
 

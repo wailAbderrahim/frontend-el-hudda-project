@@ -88,12 +88,33 @@ export function getNotificationMeta(type) {
                 iconBg: "bg-amber-100 text-amber-700",
                 icon: `<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5S19.832 5.477 21 6.253v13C19.832 18.477 18.246 18 16.5 18s-3.332-.477-4.5 1.253"/></svg>`
             }
+        case "exam":
+            return {
+                label: "امتحان",
+                tagClass: "bg-indigo-50 text-indigo-700",
+                iconBg: "bg-indigo-100 text-indigo-700",
+                icon: `<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>`
+            }
+        case "level":
+            return {
+                label: "ترقية مستوى",
+                tagClass: "bg-purple-50 text-purple-700",
+                iconBg: "bg-purple-100 text-purple-700",
+                icon: `<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 11H5m14 0a7 7 0 01-14 0m14 0V8a7 7 0 00-14 0v3m14 0v3a7 7 0 01-14 0v-3"/></svg>`
+            }
+        case "matn":
+            return {
+                label: "متن علمي",
+                tagClass: "bg-teal-50 text-teal-700",
+                iconBg: "bg-teal-100 text-teal-700",
+                icon: `<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5S19.832 5.477 21 6.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253"/></svg>`
+            }
         case "system":
         default:
             return {
                 label: "تنبيه نظام",
-                tagClass: "bg-purple-50 text-purple-700",
-                iconBg: "bg-purple-100 text-purple-700",
+                tagClass: "bg-slate-100 text-slate-700",
+                iconBg: "bg-slate-200 text-slate-700",
                 icon: `<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 17h5l-1.5-2V9a6.5 6.5 0 00-13 0v6L4 17h5m6 0a3 3 0 01-6 0"/></svg>`
             }
     }
