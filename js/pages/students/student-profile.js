@@ -202,17 +202,22 @@ function populateStudentData(profile, progress) {
     }
 
     // 4.5. Level Data & History
-    const lvl = profile.currentLevel
+    const lvl = profile.currentLevel || progress?.currentLevel || progress?.student?.currentLevel
     if (lvl) {
-        if (levelNameVal) levelNameVal.textContent = lvl.name || "مستوى غير مسمى"
-        if (levelOrderVal) levelOrderVal.textContent = lvl.order ? `المستوى ${lvl.order}` : "—"
-        if (levelPassingVal) levelPassingVal.textContent = lvl.passingScore ? `${lvl.passingScore}%` : "—"
-        if (levelRequirementsVal) levelRequirementsVal.textContent = lvl.requirements || "لا توجد متطلبات خاصة إضافية مسجلة لهذا المستوى"
+        const lvlName = typeof lvl === "object" ? (lvl.name || "المستوى التمهيدي") : "المستوى التمهيدي"
+        const lvlOrder = typeof lvl === "object" && lvl.order ? `المستوى ${lvl.order}` : "المستوى 1"
+        const lvlPassing = typeof lvl === "object" && lvl.passingScore ? `${lvl.passingScore}%` : "60%"
+        const lvlReqs = typeof lvl === "object" ? (lvl.requirements || "حفظ وتثبيت المقرر القرآني وإتقان مبادئ التجويد.") : "حفظ وتثبيت المقرر القرآني وإتقان مبادئ التجويد."
+
+        if (levelNameVal) levelNameVal.textContent = lvlName
+        if (levelOrderVal) levelOrderVal.textContent = lvlOrder
+        if (levelPassingVal) levelPassingVal.textContent = lvlPassing
+        if (levelRequirementsVal) levelRequirementsVal.textContent = lvlReqs
     } else {
-        if (levelNameVal) levelNameVal.textContent = "المستوى التمهيدي / لم يُحدد بعد"
-        if (levelOrderVal) levelOrderVal.textContent = "—"
-        if (levelPassingVal) levelPassingVal.textContent = "—"
-        if (levelRequirementsVal) levelRequirementsVal.textContent = "بانتظار تحديد المستوى التعليمي من قبل إدارة المدرسة أو الشيخ المشرف"
+        if (levelNameVal) levelNameVal.textContent = "المستوى التمهيدي"
+        if (levelOrderVal) levelOrderVal.textContent = "المستوى 1"
+        if (levelPassingVal) levelPassingVal.textContent = "60%"
+        if (levelRequirementsVal) levelRequirementsVal.textContent = "حفظ وتثبيت المقرر القرآني وإتقان مبادئ التجويد."
     }
 
     if (profile._id) {

@@ -1453,9 +1453,11 @@ function viewExamResultDetails(attempt) {
             breakdownEl.innerHTML = `<p class="py-4 text-center text-xs text-slate-400">لا توجد تفاصيل إجابات متاحة لهذا الامتحان.</p>`
         } else {
             breakdownEl.innerHTML = attempt.answers.map((ans, idx) => {
-                const qText = ans.question?.questionText || `السؤال رقم ${idx + 1}`
-                const qPoints = ans.question?.points || 1
-                const awarded = ans.awardedScore ?? (ans.isCorrect ? qPoints : 0)
+                const qText = ans.questionText || ans.question?.questionText || `السؤال رقم ${idx + 1}`
+                const qPoints = ans.points || ans.question?.points || 10
+                const awarded = typeof ans.score === 'number' ? ans.score : (typeof ans.awardedScore === 'number' ? ans.awardedScore : (ans.isCorrect ? qPoints : 0))
+                const studentAnswer = ans.answerText !== undefined && ans.answerText !== '' ? ans.answerText : (ans.answer !== undefined && ans.answer !== '' ? String(ans.answer) : "(لم تجب)")
+                const feedbackText = ans.feedback || ans.teacherFeedback || ""
 
                 return `
                     <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4 space-y-2 text-xs">
@@ -1467,12 +1469,12 @@ function viewExamResultDetails(attempt) {
                         </div>
                         <div class="rounded-xl bg-white p-2.5 border border-slate-100 text-slate-700">
                             <span class="text-slate-400 block text-[11px]">إجابتك:</span>
-                            <p class="font-medium mt-0.5">${ans.answerText || "(لم تجب)"}</p>
+                            <p class="font-medium mt-0.5">${studentAnswer}</p>
                         </div>
-                        ${ans.teacherFeedback ? `
+                        ${feedbackText ? `
                             <div class="rounded-xl bg-indigo-50/60 p-2 text-indigo-900 border border-indigo-100">
                                 <span class="font-bold block text-[11px]">ملاحظة المصحح:</span>
-                                <p>${ans.teacherFeedback}</p>
+                                <p>${feedbackText}</p>
                             </div>` : ''}
                     </div>
                 `

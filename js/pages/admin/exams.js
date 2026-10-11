@@ -740,7 +740,7 @@ async function handleSaveAdminExam(e) {
             passingScore,
             startDate: startDate ? new Date(startDate).toISOString() : new Date().toISOString(),
             instructions,
-            status: publishNow ? "scheduled" : "draft",
+            status: publishNow ? "active" : "draft",
             questions: examBuilderQuestions
         }
 
@@ -1167,34 +1167,50 @@ function openGradeModal(attemptId) {
     } else {
         const itemsToRender = examQuestions.length > 0 ? examQuestions : answers
         itemsToRender.forEach((q, idx) => {
-            const studentAns = answers.find(a => (a.questionId && a.questionId === q._id) || a.questionIndex === idx) || answers[idx]
-            const studentVal = studentAns ? (studentAns.answer !== undefined ? studentAns.answer : studentAns.selectedOption) : "—"
-            const awardedScore = studentAns?.score !== undefined ? studentAns.score : (q.score || 2)
+            const studentAns = answers.find(a =>
+                (a.questionId && (String(a.questionId) === String(q._id) || String(a.questionId) === String(q.id))) ||
+                a.questionIndex === idx
+            ) || answers[idx] || q
+
+            const studentVal = studentAns ? (studentAns.answer !== undefined ? studentAns.answer : (studentAns.answerText !== undefined ? studentAns.answerText : studentAns.selectedOption)) : "—"
+            const awardedScore = (studentAns && typeof studentAns.score === 'number') ? studentAns.score : (studentAns?.awardedScore !== undefined ? studentAns.awardedScore : 0)
+            const maxScore = q.points || q.score || studentAns?.points || 10
+            const qTitle = q.text || q.questionText || studentAns?.questionText || `السؤال رقم ${idx + 1}`
+            const qType = q.type || studentAns?.questionType || 'single_choice'
+            const qOptions = Array.isArray(q.options) && q.options.length > 0 ? q.options : (studentAns?.options || [])
 
             const qBox = document.createElement("div")
             qBox.className = "rounded-xl border border-slate-200 bg-slate-50 p-3 space-y-2 text-xs"
 
-            let studentDisplay = escapeHTML(String(studentVal))
-            if (q.type === "multiple_choice" && Array.isArray(q.options) && typeof studentVal === "number") {
-                studentDisplay = escapeHTML(q.options[studentVal] || studentVal)
-            } else if (q.type === "true_false") {
-                studentDisplay = studentVal === true || studentVal === "true" ? "صحيح" : "خطأ"
+            let studentDisplay = escapeHTML(String(studentVal !== undefined && studentVal !== null ? studentVal : "—"))
+            if ((qType === "multiple_choice" || qType === "single_choice" || qType === "mcq") && Array.isArray(qOptions) && qOptions.length > 0) {
+                const optIdx = parseInt(studentVal, 10)
+                if (!isNaN(optIdx) && qOptions[optIdx] !== undefined) {
+                    studentDisplay = escapeHTML(`${qOptions[optIdx]} (الخيار ${optIdx + 1})`)
+                }
+            } else if (qType === "true_false") {
+                studentDisplay = (studentVal === true || studentVal === "true" || studentVal === "صح") ? "صحيح (صح)" : (studentVal === false || studentVal === "false" || studentVal === "خطأ" ? "خاطئ (خطأ)" : escapeHTML(String(studentVal)))
             }
+
+            const modelAnswer = q.correctAnswer || studentAns?.correctAnswer
+            const rubric = q.rubric || studentAns?.rubric
 
             qBox.innerHTML = `
                 <div class="flex items-center justify-between border-b border-slate-100 pb-1.5">
-                    <span class="font-bold text-slate-700">س ${idx + 1}: ${escapeHTML(q.text || `سؤال ${idx + 1}`)}</span>
-                    <span class="text-slate-400">الدرجة القصوى: ${q.score || 2}</span>
+                    <span class="font-bold text-slate-800 text-sm">س ${idx + 1}: ${escapeHTML(qTitle)}</span>
+                    <span class="font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-lg border border-purple-100">الدرجة القصوى: ${maxScore}</span>
                 </div>
-                <div class="bg-white rounded-lg p-2 border border-slate-100">
-                    <span class="text-slate-400 block text-[11px] mb-0.5">إجابة الطالب:</span>
-                    <p class="font-semibold text-slate-800">${studentDisplay}</p>
+                <div class="bg-white rounded-lg p-2.5 border border-slate-100 space-y-1">
+                    <span class="text-slate-400 block text-[11px]">إجابة الطالب المقدمة:</span>
+                    <p class="font-bold text-slate-800 text-sm leading-relaxed">${studentDisplay}</p>
+                    ${modelAnswer ? `<p class="text-[11px] text-emerald-700 mt-1 bg-emerald-50/60 p-1.5 rounded-md border border-emerald-100">الإجابة النموذجية المعتمدة: <span class="font-bold">${escapeHTML(String(modelAnswer))}</span></p>` : ''}
+                    ${rubric ? `<p class="text-[11px] text-slate-500 mt-0.5">معيار التقييم: ${escapeHTML(String(rubric))}</p>` : ''}
                 </div>
                 <div class="flex items-center justify-between pt-1">
-                    <label class="font-semibold text-slate-600">درجة هذا السؤال:</label>
-                    <div class="flex items-center gap-1">
-                        <input type="number" min="0" max="${q.score || 10}" step="0.5" data-question-score-idx="${idx}" data-question-id="${q._id || ''}" value="${awardedScore}" class="w-20 rounded-lg border border-slate-200 px-2 py-1 text-center font-bold text-emerald-700 focus:border-emerald-600 focus:outline-none" required>
-                        <span class="text-slate-400">/ ${q.score || 2}</span>
+                    <label class="font-semibold text-slate-700">درجة هذا السؤال:</label>
+                    <div class="flex items-center gap-1.5">
+                        <input type="number" min="0" max="${maxScore}" step="0.5" data-question-score-idx="${idx}" data-question-id="${q.id || q._id || studentAns?.questionId || ''}" value="${awardedScore}" class="w-20 rounded-lg border border-slate-200 px-2 py-1 text-center font-bold text-emerald-700 focus:border-emerald-600 focus:outline-none bg-white" required>
+                        <span class="text-slate-500 font-bold">/ ${maxScore}</span>
                     </div>
                 </div>
             `

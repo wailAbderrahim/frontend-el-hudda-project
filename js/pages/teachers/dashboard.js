@@ -1538,41 +1538,56 @@ window.selectAttemptForGrading = function(attemptId) {
 
         <div class="space-y-4">
             ${questions.map((q, qIdx) => {
-                const ans = answers.find((a) => a.questionId?.toString() === q._id?.toString()) || {}
-                const studentVal = ans.answer !== undefined ? ans.answer : "—"
-                const scoreAwarded = ans.scoreAwarded !== undefined ? ans.scoreAwarded : (ans.isCorrect ? q.points : 0)
-                const fb = ans.feedback || ""
+                const ans = answers.find((a) =>
+                    (a.questionId && (String(a.questionId) === String(q._id) || String(a.questionId) === String(q.id))) ||
+                    a.questionIndex === qIdx
+                ) || {}
+                const studentVal = ans.answer !== undefined ? ans.answer : (ans.answerText !== undefined ? ans.answerText : "—")
+                const scoreAwarded = typeof ans.score === 'number' ? ans.score : (ans.scoreAwarded !== undefined ? ans.scoreAwarded : (ans.awardedScore !== undefined ? ans.awardedScore : (ans.isCorrect ? q.points : 0)))
+                const fb = ans.feedback || ans.teacherFeedback || ""
 
-                let displayVal = studentVal
-                if (q.type === "multiple_choice" && Array.isArray(q.options)) {
-                    displayVal = q.options[studentVal] !== undefined ? `${q.options[studentVal]} (الخيار ${Number(studentVal) + 1})` : studentVal
+                let displayVal = escapeHTML(String(studentVal !== undefined && studentVal !== null ? studentVal : "—"))
+                if ((q.type === "multiple_choice" || q.type === "single_choice" || q.type === "mcq") && Array.isArray(q.options) && q.options.length > 0) {
+                    const optIdx = parseInt(studentVal, 10)
+                    if (!isNaN(optIdx) && q.options[optIdx] !== undefined) {
+                        displayVal = `${escapeHTML(q.options[optIdx])} (الخيار ${optIdx + 1})`
+                    }
                 } else if (q.type === "true_false") {
-                    displayVal = studentVal === true || studentVal === "true" ? "صحيح" : (studentVal === false || studentVal === "false" ? "خاطئ" : studentVal)
+                    displayVal = (studentVal === true || studentVal === "true" || studentVal === "صح") ? "صحيح (صح)" : ((studentVal === false || studentVal === "false" || studentVal === "خطأ") ? "خاطئ (خطأ)" : escapeHTML(String(studentVal)))
                 }
 
+                const modelAnswer = q.correctAnswer || ans.correctAnswer
+                const rubric = q.rubric || ans.rubric
+                const questionKey = q.id || q._id || ans.questionId || `q_${qIdx}`
+
                 return `
-                    <div class="rounded-2xl border border-slate-200 bg-white p-4 space-y-2">
+                    <div class="rounded-2xl border border-slate-200 bg-white p-4 space-y-3">
                         <div class="flex items-start justify-between">
                             <div class="flex items-start gap-2">
-                                <span class="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 text-xs font-bold text-slate-600">${qIdx + 1}</span>
+                                <span class="flex h-6 w-6 items-center justify-center rounded-full bg-purple-100 text-xs font-bold text-purple-700">${qIdx + 1}</span>
                                 <div>
-                                    <p class="text-xs font-bold text-slate-800">${q.text}</p>
-                                    <p class="text-[11px] text-purple-600">الدرجة المخصصة: ${q.points} نقطة</p>
+                                    <p class="text-xs font-bold text-slate-800">${escapeHTML(q.text || `سؤال ${qIdx + 1}`)}</p>
+                                    <p class="text-[11px] text-purple-600 font-semibold mt-0.5">الدرجة المخصصة: ${q.points || 10} نقطة</p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-2">
-                                <label class="text-xs font-bold text-slate-600">الدرجة المستحقة:</label>
-                                <input type="number" min="0" max="${q.points}" step="0.5" data-q-id="${q._id}" class="grade-score-input w-20 rounded-xl border border-slate-200 bg-slate-50 px-2 py-1 text-center text-xs font-bold text-slate-800 focus:border-purple-600 focus:outline-none" value="${scoreAwarded}">
+                                <label class="text-xs font-bold text-slate-700">الدرجة المستحقة:</label>
+                                <input type="number" min="0" max="${q.points || 10}" step="0.5" data-q-id="${questionKey}" class="grade-score-input w-20 rounded-xl border border-slate-200 bg-slate-50 px-2 py-1 text-center text-xs font-bold text-purple-700 focus:border-purple-600 focus:outline-none" value="${scoreAwarded}">
                             </div>
                         </div>
 
-                        <div class="rounded-xl border border-slate-100 bg-slate-50/80 p-3 text-xs">
-                            <span class="text-slate-400 block mb-1">إجابة الطالب:</span>
-                            <p class="font-bold text-slate-700">${displayVal}</p>
+                        <div class="rounded-xl border border-slate-100 bg-slate-50/80 p-3 text-xs space-y-1">
+                            <span class="text-slate-400 block mb-0.5 text-[11px]">إجابة الطالب المقدمة:</span>
+                            <p class="font-bold text-slate-800 text-sm leading-relaxed">${displayVal}</p>
+                            ${modelAnswer ? `<p class="text-[11px] text-emerald-700 mt-1 bg-emerald-50/70 p-1.5 rounded-lg border border-emerald-100">الإجابة النموذجية: <span class="font-bold">${escapeHTML(String(modelAnswer))}</span></p>` : ''}
+                            ${rubric ? `<p class="text-[11px] text-slate-500 mt-0.5">معيار التقييم: ${escapeHTML(String(rubric))}</p>` : ''}
                         </div>
 
                         <div>
-                            <input type="text" data-q-id="${q._id}" class="grade-feedback-input w-full rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-700 focus:border-purple-600 focus:outline-none" placeholder="ملاحظات وتوجيهات المعلم على هذه الإجابة (اختياري)..." value="${fb}">
+                            <input type="text" data-q-id="${questionKey}" class="grade-feedback-input w-full rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-700 focus:border-purple-600 focus:outline-none" placeholder="ملاحظات وتوجيهات المعلم على هذه الإجابة (اختياري)..." value="${escapeHTML(fb)}">
+                        </div>
+                    </div>
+                `
                         </div>
                     </div>
                 `
@@ -2062,8 +2077,9 @@ function setupFormHandlers() {
                     durationMinutes,
                     totalScore,
                     passingScore,
-                    startDate: startDate ? new Date(startDate).toISOString() : undefined,
+                    startDate: startDate ? new Date(startDate).toISOString() : new Date().toISOString(),
                     instructions,
+                    status: "active",
                     questions
                 }
 
