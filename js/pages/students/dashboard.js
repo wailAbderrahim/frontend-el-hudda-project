@@ -923,9 +923,10 @@ function renderExamsTab() {
         const isOnline = exam.format === "online"
 
         // Check if student has already submitted this exam
+        const myAtt = exam.myAttempt
         const existingResult = examResultsList.find((r) => r.exam?._id === exam._id || r.exam === exam._id)
-        const isSubmitted = existingResult && existingResult.status !== "in_progress" && existingResult.status !== "not_started"
-        const isPublished = exam.isResultsPublished || existingResult?.status === "published"
+        const isSubmitted = (myAtt && myAtt.status !== "in_progress" && myAtt.status !== "not_started") || (existingResult && existingResult.status !== "in_progress" && existingResult.status !== "not_started")
+        const isPublished = (exam.isResultsPublished && isSubmitted) || myAtt?.status === "published" || existingResult?.status === "published"
 
         let actionBtn = ""
         let statusBadge = ""

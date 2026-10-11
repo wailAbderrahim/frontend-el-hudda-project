@@ -282,7 +282,7 @@ function renderAdminExams() {
                 <span class="inline-block rounded-lg px-2.5 py-1 text-xs font-semibold ${statusMeta.cls}">
                     ${statusMeta.label}
                 </span>
-                ${exam.resultsPublished ? '<span class="block text-[10px] text-emerald-600 font-bold mt-1">النتائج معلنة للطلاب</span>' : ''}
+                ${(exam.isResultsPublished || exam.resultsPublished) ? '<span class="block text-[10px] text-emerald-600 font-bold mt-1">النتائج معلنة للطلاب</span>' : ''}
             </td>
             <td class="px-6 py-4 text-center">
                 <div class="flex items-center justify-center gap-1.5">
@@ -901,16 +901,17 @@ function renderAdminAllAttemptsTable() {
         const examTitle = att.exam?.title || "امتحان"
         const maxScore = att.exam?.totalScore || 20
         const passScore = att.exam?.passingScore || 12
-        const score = att.totalScore !== undefined ? att.totalScore : "—"
-        const isPassed = typeof score === "number" ? score >= passScore : false
+        const earned = typeof att.score === "number" ? att.score : (typeof att.totalScoreAwarded === "number" ? att.totalScoreAwarded : (typeof att.scoreAwarded === "number" ? att.scoreAwarded : null))
+        const score = earned !== null ? earned : "—"
+        const isPassed = typeof earned === "number" ? earned >= passScore : false
 
-        const isGraded = att.isGraded || att.status === "graded"
+        const isGraded = ['graded', 'approved', 'published'].includes(att.status) || att.isGraded || typeof att.score === "number"
         const statusBadge = isGraded
-            ? '<span class="inline-block rounded-lg bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700">تم التصحيح والاعتماد</span>'
-            : '<span class="inline-block rounded-lg bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-700">بانتظار التصحيح</span>'
+            ? '<span class="inline-block rounded-lg bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 border border-emerald-200">مصحح ومعلن</span>'
+            : '<span class="inline-block rounded-lg bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700 border border-amber-200">غير مصحح</span>'
 
-        const scoreBadge = typeof score === "number"
-            ? `<span class="font-bold ${isPassed ? "text-emerald-700" : "text-red-600"}">${score} / ${maxScore}</span>`
+        const scoreBadge = typeof earned === "number"
+            ? `<span class="font-bold ${isPassed ? "text-emerald-700" : "text-red-600"}">${earned} / ${maxScore}</span>`
             : '<span class="text-slate-400">لم ترصد</span>'
 
         const formatLabel = att.exam?.format === "in_person" ? "حضوري" : "عن بُعد"
@@ -943,7 +944,7 @@ function renderAdminAllAttemptsTable() {
                     <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
-                    <span>${isGraded ? "مراجعة / تعديل" : "تصحيح الإجابة"}</span>
+                    <span>${isGraded ? "مراجعة / تعديل" : "تصحيح وإعلان النتيجة"}</span>
                 </button>
             </td>
         `
@@ -1002,7 +1003,7 @@ async function openAdminAttemptsModal(examId) {
     if (publishBtn) {
         publishBtn.classList.remove("hidden")
         publishBtn.onclick = () => handleAdminPublishResults(examId)
-        if (selectedExamForAttempts.resultsPublished) {
+        if (selectedExamForAttempts.isResultsPublished || selectedExamForAttempts.resultsPublished) {
             publishBtn.textContent = "النتائج معلنة بالفعل (إعادة نشر)"
         } else {
             publishBtn.textContent = "إعلان ونشر النتائج للطلاب الآن"
@@ -1084,10 +1085,11 @@ function renderAdminAttemptsList() {
         tr.className = "hover:bg-slate-50 transition"
 
         const attId = getId(att)
-        const isGraded = att.isGraded || att.status === "graded"
-        const score = att.totalScore !== undefined ? att.totalScore : "—"
+        const isGraded = ['graded', 'approved', 'published'].includes(att.status) || att.isGraded || typeof att.score === "number"
+        const earned = typeof att.score === "number" ? att.score : (typeof att.totalScoreAwarded === "number" ? att.totalScoreAwarded : (typeof att.scoreAwarded === "number" ? att.scoreAwarded : null))
+        const score = earned !== null ? earned : "—"
         const maxScore = selectedExamForAttempts?.totalScore || 20
-        const isPassed = typeof score === "number" && score >= (selectedExamForAttempts?.passingScore || 10)
+        const isPassed = typeof earned === "number" && earned >= (selectedExamForAttempts?.passingScore || 10)
 
         tr.innerHTML = `
             <td class="px-4 py-3 font-semibold text-slate-800">
@@ -1097,8 +1099,8 @@ function renderAdminAttemptsList() {
                 ${formatDateTime(att.submittedAt || att.createdAt)}
             </td>
             <td class="px-4 py-3">
-                <span class="rounded px-2 py-0.5 font-semibold ${isGraded ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}">
-                    ${isGraded ? "مصحح" : "بانتظار التصحيح"}
+                <span class="rounded-lg px-2.5 py-0.5 text-xs font-bold ${isGraded ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-amber-50 text-amber-700 border border-amber-200"}">
+                    ${isGraded ? "مصحح ومعلن" : "غير مصحح"}
                 </span>
             </td>
             <td class="px-4 py-3 font-bold ${isPassed ? "text-emerald-700" : "text-slate-700"}">
@@ -1112,7 +1114,7 @@ function renderAdminAttemptsList() {
                     type="button"
                     data-grade-attempt-id="${attId}"
                     class="rounded-lg bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800 hover:bg-emerald-200 transition">
-                    ${isGraded ? "مراجعة وتعديل" : "تصحيح"}
+                    ${isGraded ? "مراجعة وتعديل" : "تصحيح وإعلان النتيجة"}
                 </button>
             </td>
         `
@@ -1231,7 +1233,7 @@ async function handleSaveGradeAttempt(e) {
     if (errBox) errBox.classList.add("hidden")
 
     submitBtn.disabled = true
-    submitBtn.textContent = "جاري الاعتماد..."
+    submitBtn.textContent = "جاري الاعتماد والإعلان..."
 
     const attemptId = $("grade-attempt-id")?.value
     const feedback = $("grade-feedback")?.value.trim()
@@ -1260,8 +1262,9 @@ async function handleSaveGradeAttempt(e) {
             totalScore,
             questionScores,
             feedback,
+            publishImmediately: true,
             isGraded: true,
-            status: "graded"
+            status: "published"
         })
 
         $("modal-admin-grade-attempt")?.classList.add("hidden")
@@ -1280,7 +1283,7 @@ async function handleSaveGradeAttempt(e) {
         showModalError(errBox, err.message || "تعذر اعتماد الدرجة والتصحيح.")
     } finally {
         submitBtn.disabled = false
-        submitBtn.textContent = "اعتماد الدرجة والتصحيح"
+        submitBtn.textContent = "تصحيح وإعلان النتيجة"
     }
 }
 

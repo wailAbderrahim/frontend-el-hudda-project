@@ -1264,8 +1264,8 @@ function renderExamsTable() {
         const score = `${exam.passingScore || 12} / ${exam.totalScore || 20}`
         const attempts = `${exam.attemptsCount || 0} مشارك`
         const pubBadge = exam.isResultsPublished
-            ? '<span class="inline-flex rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-700">النتائج معلنة</span>'
-            : '<span class="inline-flex rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-700">بانتظار الاعتماد</span>'
+            ? '<span class="inline-flex rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-700">مصحح ومعلن</span>'
+            : '<span class="inline-flex rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-700">غير مصحح</span>'
 
         return `
             <tr class="hover:bg-slate-50/50">
@@ -1497,14 +1497,15 @@ function renderAttemptsList() {
     container.innerHTML = activeGradingAttempts.map((att) => {
         const isSelected = att._id === activeSelectedAttemptId
         const sName = att.student?.name || "طالب"
-        const isGraded = att.status === "graded"
+        const isGraded = ['graded', 'approved', 'published'].includes(att.status) || att.isGraded || typeof att.score === 'number' || typeof att.totalScoreAwarded === 'number'
+        const earned = typeof att.score === 'number' ? att.score : (typeof att.totalScoreAwarded === 'number' ? att.totalScoreAwarded : 0)
         const badgeColor = isGraded ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"
-        const statusText = isGraded ? `تم الرصد (${att.totalScoreAwarded}/${activeGradingExam.totalScore})` : "بانتظار التصحيح"
+        const statusText = isGraded ? `مصحح (${earned}/${activeGradingExam.totalScore})` : "غير مصحح"
 
         return `
             <button type="button" onclick="window.selectAttemptForGrading('${att._id}')" class="flex items-center gap-2 rounded-xl border px-3 py-1.5 text-xs font-semibold transition ${isSelected ? "border-purple-600 bg-purple-50 text-purple-900" : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"}">
                 <span>${sName}</span>
-                <span class="rounded-md px-1.5 py-0.5 text-[10px] ${badgeColor}">${statusText}</span>
+                <span class="rounded-md px-1.5 py-0.5 text-[10px] font-bold ${badgeColor}">${statusText}</span>
             </button>
         `
     }).join("")
@@ -1521,6 +1522,7 @@ window.selectAttemptForGrading = function(attemptId) {
     const studentName = attempt.student?.name || "طالب"
     const questions = activeGradingExam.questions || []
     const answers = attempt.answers || []
+    const earned = typeof attempt.score === 'number' ? attempt.score : (typeof attempt.totalScoreAwarded === 'number' ? attempt.totalScoreAwarded : 0)
 
     detailContainer.innerHTML = `
         <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
@@ -1531,7 +1533,7 @@ window.selectAttemptForGrading = function(attemptId) {
                 </div>
                 <div class="text-left">
                     <span class="text-xs text-slate-500 block">الدرجة الكلية المرصودة:</span>
-                    <span id="current-awarded-sum" class="text-lg font-black text-purple-700">${attempt.totalScoreAwarded || 0} / ${activeGradingExam.totalScore}</span>
+                    <span id="current-awarded-sum" class="text-lg font-black text-purple-700">${earned} / ${activeGradingExam.totalScore}</span>
                 </div>
             </div>
         </div>
@@ -1588,9 +1590,6 @@ window.selectAttemptForGrading = function(attemptId) {
                         </div>
                     </div>
                 `
-                        </div>
-                    </div>
-                `
             }).join("")}
         </div>
 
@@ -1600,8 +1599,8 @@ window.selectAttemptForGrading = function(attemptId) {
         </div>
 
         <div class="flex justify-end pt-2">
-            <button type="button" onclick="window.saveCurrentAttemptGrade('${attempt._id}')" class="rounded-xl bg-purple-700 px-5 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-purple-800">
-                حفظ التصحيح والدرجة للطالب
+            <button type="button" id="btn-save-teacher-grade" onclick="window.saveCurrentAttemptGrade('${attempt._id}')" class="rounded-xl bg-purple-700 px-5 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-purple-800">
+                تصحيح وإعلان النتيجة للطالب
             </button>
         </div>
     `
@@ -1613,34 +1612,59 @@ window.saveCurrentAttemptGrade = async function(attemptId) {
     const scoreInputs = document.querySelectorAll(".grade-score-input")
     const fbInputs = document.querySelectorAll(".grade-feedback-input")
     const generalNotes = document.getElementById("grade-general-notes")?.value || ""
+    const saveBtn = document.getElementById("btn-save-teacher-grade")
 
+    let hasEmptySubjective = false
     const scores = {}
     const feedback = {}
 
     scoreInputs.forEach((inp) => {
         const qId = inp.dataset.qId
+        if (inp.value === "" || isNaN(parseFloat(inp.value))) {
+            hasEmptySubjective = true
+        }
         scores[qId] = parseFloat(inp.value) || 0
     })
+
+    if (hasEmptySubjective) {
+        showAlert("يرجى رصد درجات جميع الأسئلة قبل التصحيح وإعلان النتيجة", "error")
+        return
+    }
 
     fbInputs.forEach((inp) => {
         const qId = inp.dataset.qId
         feedback[qId] = inp.value.trim()
     })
 
+    if (saveBtn) {
+        saveBtn.disabled = true
+        saveBtn.textContent = "جاري الاعتماد والإعلان..."
+    }
+
     try {
         await gradeAttempt(activeGradingExam._id, attemptId, {
             scores,
             feedback,
             generalNotes,
-            status: "graded"
+            publishImmediately: true,
+            status: "published"
         })
-        showAlert("تم حفظ رصد درجات الطالب بنجاح")
+        showAlert("تم تصحيح وإعلان نتيجة الامتحان للطالب بنجاح")
         const attRes = await getExamAttempts(activeGradingExam._id)
         activeGradingAttempts = Array.isArray(attRes) ? attRes : attRes?.data || []
         renderAttemptsList()
         window.selectAttemptForGrading(attemptId)
+
+        const exRes = await getExams()
+        myExams = Array.isArray(exRes) ? exRes : exRes?.data || []
+        renderExamsTable()
     } catch (err) {
-        showAlert("فشل حفظ التصحيح: " + err.message, "error")
+        showAlert("فشل تصحيح وإعلان النتيجة: " + err.message, "error")
+    } finally {
+        if (saveBtn) {
+            saveBtn.disabled = false
+            saveBtn.textContent = "تصحيح وإعلان النتيجة للطالب"
+        }
     }
 }
 
@@ -1826,7 +1850,7 @@ async function viewStudentProgress(studentId) {
                                             <span class="text-[10px] text-slate-400">${formatDate(ea.submittedAt || ea.createdAt)}</span>
                                         </div>
                                         <div class="flex items-center gap-2">
-                                            <span class="font-extrabold text-purple-700">${ea.totalScoreAwarded || 0} / ${ea.exam?.totalScore || 20}</span>
+                                            <span class="font-extrabold text-purple-700">${typeof ea.score === 'number' ? ea.score : (ea.totalScoreAwarded || 0)} / ${ea.exam?.totalScore || 20}</span>
                                             ${passBadge}
                                         </div>
                                     </div>
