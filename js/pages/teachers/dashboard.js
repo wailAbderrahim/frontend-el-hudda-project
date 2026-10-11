@@ -1264,8 +1264,8 @@ function renderExamsTable() {
         const score = `${exam.passingScore || 12} / ${exam.totalScore || 20}`
         const attempts = `${exam.attemptsCount || 0} مشارك`
         const pubBadge = exam.isResultsPublished
-            ? '<span class="inline-flex rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-700">مصحح ومعلن</span>'
-            : '<span class="inline-flex rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-700">غير مصحح</span>'
+            ? '<span class="inline-flex rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-700">النتائج معلنة</span>'
+            : '<span class="inline-flex rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-bold text-slate-600">النتائج غير معلنة</span>'
 
         return `
             <tr class="hover:bg-slate-50/50">
@@ -1497,10 +1497,19 @@ function renderAttemptsList() {
     container.innerHTML = activeGradingAttempts.map((att) => {
         const isSelected = att._id === activeSelectedAttemptId
         const sName = att.student?.name || "طالب"
-        const isGraded = ['graded', 'approved', 'published'].includes(att.status) || att.isGraded || typeof att.score === 'number' || typeof att.totalScoreAwarded === 'number'
+        const isPublished = att.status === 'published'
+        const isGraded = ['graded', 'approved', 'published'].includes(att.status)
         const earned = typeof att.score === 'number' ? att.score : (typeof att.totalScoreAwarded === 'number' ? att.totalScoreAwarded : 0)
-        const badgeColor = isGraded ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"
-        const statusText = isGraded ? `مصحح (${earned}/${activeGradingExam.totalScore})` : "غير مصحح"
+
+        let statusText = "غير مصحح"
+        let badgeColor = "bg-amber-100 text-amber-800"
+        if (isPublished) {
+            statusText = `مصحح ومعلن (${earned}/${activeGradingExam.totalScore})`
+            badgeColor = "bg-emerald-100 text-emerald-800"
+        } else if (isGraded) {
+            statusText = `تم التصحيح (${earned}/${activeGradingExam.totalScore})`
+            badgeColor = "bg-blue-100 text-blue-800"
+        }
 
         return `
             <button type="button" onclick="window.selectAttemptForGrading('${att._id}')" class="flex items-center gap-2 rounded-xl border px-3 py-1.5 text-xs font-semibold transition ${isSelected ? "border-purple-600 bg-purple-50 text-purple-900" : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"}">
@@ -1522,7 +1531,9 @@ window.selectAttemptForGrading = function(attemptId) {
     const studentName = attempt.student?.name || "طالب"
     const questions = activeGradingExam.questions || []
     const answers = attempt.answers || []
+    const isGraded = ['graded', 'approved', 'published'].includes(attempt.status)
     const earned = typeof attempt.score === 'number' ? attempt.score : (typeof attempt.totalScoreAwarded === 'number' ? attempt.totalScoreAwarded : 0)
+    const totalScoreDisplay = isGraded ? `${earned} / ${activeGradingExam.totalScore}` : `بانتظار الرصد / ${activeGradingExam.totalScore}`
 
     detailContainer.innerHTML = `
         <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
@@ -1533,7 +1544,7 @@ window.selectAttemptForGrading = function(attemptId) {
                 </div>
                 <div class="text-left">
                     <span class="text-xs text-slate-500 block">الدرجة الكلية المرصودة:</span>
-                    <span id="current-awarded-sum" class="text-lg font-black text-purple-700">${earned} / ${activeGradingExam.totalScore}</span>
+                    <span id="current-awarded-sum" class="text-lg font-black text-purple-700">${totalScoreDisplay}</span>
                 </div>
             </div>
         </div>

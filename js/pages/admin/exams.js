@@ -245,8 +245,10 @@ function renderAdminExams() {
 
         const statusLabels = {
             draft: { label: "مسودة", cls: "bg-slate-100 text-slate-600" },
+            active: { label: "نشط ومتاح", cls: "bg-emerald-50 text-emerald-700" },
             scheduled: { label: "مجدول", cls: "bg-blue-50 text-blue-700" },
             ongoing: { label: "جارٍ حالياً", cls: "bg-emerald-50 text-emerald-700" },
+            ended: { label: "منتهٍ", cls: "bg-amber-50 text-amber-700" },
             completed: { label: "منتهٍ", cls: "bg-amber-50 text-amber-700" },
             graded: { label: "تم التصحيح", cls: "bg-purple-50 text-purple-700" },
             published: { label: "أُعلنت النتائج", cls: "bg-emerald-100 text-emerald-800" }
@@ -282,7 +284,7 @@ function renderAdminExams() {
                 <span class="inline-block rounded-lg px-2.5 py-1 text-xs font-semibold ${statusMeta.cls}">
                     ${statusMeta.label}
                 </span>
-                ${(exam.isResultsPublished || exam.resultsPublished) ? '<span class="block text-[10px] text-emerald-600 font-bold mt-1">النتائج معلنة للطلاب</span>' : ''}
+                ${(exam.isResultsPublished || exam.resultsPublished) ? '<span class="block text-[10px] text-emerald-600 font-bold mt-1">النتائج معلنة للطلاب</span>' : '<span class="block text-[10px] text-slate-400 font-medium mt-1">النتائج غير معلنة</span>'}
             </td>
             <td class="px-6 py-4 text-center">
                 <div class="flex items-center justify-center gap-1.5">
@@ -794,12 +796,12 @@ async function loadAdminAttempts() {
 
 function renderAdminAllAttemptsStats() {
     const total = allAdminAttempts.length
-    const pending = allAdminAttempts.filter(a => a.status === "submitted" || !a.isGraded).length
-    const graded = allAdminAttempts.filter(a => a.status === "graded" || a.isGraded).length
+    const pending = allAdminAttempts.filter(a => a.status === "submitted" || a.status === "in_progress" || a.status === "grading").length
+    const graded = allAdminAttempts.filter(a => ['graded', 'approved', 'published'].includes(a.status)).length
 
     const passed = allAdminAttempts.filter(a => {
         const passing = a.exam?.passingScore || 10
-        return (a.totalScore || 0) >= passing
+        return ['graded', 'approved', 'published'].includes(a.status) && (a.totalScore || 0) >= passing
     }).length
     const passRate = total > 0 ? Math.round((passed / total) * 100) : 0
 
@@ -905,14 +907,21 @@ function renderAdminAllAttemptsTable() {
         const score = earned !== null ? earned : "—"
         const isPassed = typeof earned === "number" ? earned >= passScore : false
 
-        const isGraded = ['graded', 'approved', 'published'].includes(att.status) || att.isGraded || typeof att.score === "number"
-        const statusBadge = isGraded
-            ? '<span class="inline-block rounded-lg bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 border border-emerald-200">مصحح ومعلن</span>'
-            : '<span class="inline-block rounded-lg bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700 border border-amber-200">غير مصحح</span>'
+        const isGraded = ['graded', 'approved', 'published'].includes(att.status)
+        let statusBadge = '<span class="inline-block rounded-lg bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700 border border-amber-200">غير مصحح</span>'
+        if (att.status === 'published') {
+            statusBadge = '<span class="inline-block rounded-lg bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 border border-emerald-200">مصحح ومعلن</span>'
+        } else if (att.status === 'graded' || att.status === 'approved') {
+            statusBadge = '<span class="inline-block rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700 border border-blue-200">تم التصحيح (بانتظار النشر)</span>'
+        } else if (att.status === 'grading') {
+            statusBadge = '<span class="inline-block rounded-lg bg-purple-50 px-2.5 py-1 text-xs font-bold text-purple-700 border border-purple-200">قيد التصحيح</span>'
+        } else if (att.status === 'in_progress') {
+            statusBadge = '<span class="inline-block rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-600 border border-slate-200">قيد التقديم</span>'
+        }
 
-        const scoreBadge = typeof earned === "number"
+        const scoreBadge = isGraded && typeof earned === "number"
             ? `<span class="font-bold ${isPassed ? "text-emerald-700" : "text-red-600"}">${earned} / ${maxScore}</span>`
-            : '<span class="text-slate-400">لم ترصد</span>'
+            : '<span class="text-slate-400">بانتظار التصحيح</span>'
 
         const formatLabel = att.exam?.format === "in_person" ? "حضوري" : "عن بُعد"
 
@@ -1045,10 +1054,10 @@ function renderAdminAttemptsList() {
     tbody.innerHTML = ""
 
     const total = selectedExamAttempts.length
-    const graded = selectedExamAttempts.filter(a => a.isGraded || a.status === "graded").length
+    const graded = selectedExamAttempts.filter(a => ['graded', 'approved', 'published'].includes(a.status)).length
     const passed = selectedExamAttempts.filter(a => {
         const passing = selectedExamForAttempts?.passingScore || 10
-        return (a.totalScore || 0) >= passing
+        return ['graded', 'approved', 'published'].includes(a.status) && (a.totalScore || 0) >= passing
     }).length
     const passRate = total > 0 ? Math.round((passed / total) * 100) : 0
 
@@ -1085,11 +1094,29 @@ function renderAdminAttemptsList() {
         tr.className = "hover:bg-slate-50 transition"
 
         const attId = getId(att)
-        const isGraded = ['graded', 'approved', 'published'].includes(att.status) || att.isGraded || typeof att.score === "number"
+        const isGraded = ['graded', 'approved', 'published'].includes(att.status)
         const earned = typeof att.score === "number" ? att.score : (typeof att.totalScoreAwarded === "number" ? att.totalScoreAwarded : (typeof att.scoreAwarded === "number" ? att.scoreAwarded : null))
-        const score = earned !== null ? earned : "—"
         const maxScore = selectedExamForAttempts?.totalScore || 20
         const isPassed = typeof earned === "number" && earned >= (selectedExamForAttempts?.passingScore || 10)
+
+        let statusBadge = '<span class="rounded-lg px-2.5 py-0.5 text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">غير مصحح</span>'
+        if (att.status === 'published') {
+            statusBadge = '<span class="rounded-lg px-2.5 py-0.5 text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">مصحح ومعلن</span>'
+        } else if (att.status === 'graded' || att.status === 'approved') {
+            statusBadge = '<span class="rounded-lg px-2.5 py-0.5 text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">تم التصحيح (بانتظار النشر)</span>'
+        } else if (att.status === 'grading') {
+            statusBadge = '<span class="rounded-lg px-2.5 py-0.5 text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200">قيد التصحيح</span>'
+        } else if (att.status === 'in_progress') {
+            statusBadge = '<span class="rounded-lg px-2.5 py-0.5 text-xs font-bold bg-slate-100 text-slate-600 border border-slate-200">قيد التقديم</span>'
+        }
+
+        const scoreDisplay = isGraded && typeof earned === "number"
+            ? `${earned} / ${maxScore}`
+            : '<span class="text-slate-400 font-normal">بانتظار التصحيح</span>'
+
+        const pctDisplay = isGraded && att.percentage !== undefined && att.percentage !== null
+            ? `${att.percentage}%`
+            : '—'
 
         tr.innerHTML = `
             <td class="px-4 py-3 font-semibold text-slate-800">
@@ -1099,15 +1126,13 @@ function renderAdminAttemptsList() {
                 ${formatDateTime(att.submittedAt || att.createdAt)}
             </td>
             <td class="px-4 py-3">
-                <span class="rounded-lg px-2.5 py-0.5 text-xs font-bold ${isGraded ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-amber-50 text-amber-700 border border-amber-200"}">
-                    ${isGraded ? "مصحح ومعلن" : "غير مصحح"}
-                </span>
+                ${statusBadge}
             </td>
             <td class="px-4 py-3 font-bold ${isPassed ? "text-emerald-700" : "text-slate-700"}">
-                ${score} / ${maxScore}
+                ${scoreDisplay}
             </td>
             <td class="px-4 py-3 text-slate-600">
-                ${att.percentage !== undefined ? `${att.percentage}%` : '—'}
+                ${pctDisplay}
             </td>
             <td class="px-4 py-3 text-center">
                 <button

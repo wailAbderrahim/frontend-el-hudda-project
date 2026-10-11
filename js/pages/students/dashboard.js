@@ -310,6 +310,29 @@ async function loadInitialData() {
             currentLevel = currentUser.currentLevel
         }
 
+        // Ensure currentLevel is a complete object with name and order
+        if (!currentLevel || typeof currentLevel === "string" || !currentLevel.name) {
+            try {
+                const allLvlsRes = await getLevels()
+                const allLvls = Array.isArray(allLvlsRes) ? allLvlsRes : allLvlsRes?.data || []
+                const targetLvlId = typeof currentLevel === "string" ? currentLevel : (currentLevel?._id || currentUser?.currentLevel?._id || currentUser?.currentLevel)
+                if (targetLvlId) {
+                    const match = allLvls.find(l => String(l._id || l.id) === String(targetLvlId))
+                    if (match) currentLevel = match
+                }
+                if (!currentLevel && allLvls.length > 0) {
+                    currentLevel = allLvls.sort((a,b) => (a.order || 1) - (b.order || 1))[0]
+                }
+            } catch (lvlErr) {
+                console.warn("Could not fetch levels:", lvlErr)
+            }
+        }
+
+        const profLevel = document.getElementById("prof-level")
+        if (profLevel && currentLevel) {
+            profLevel.value = `${currentLevel.name || "المستوى التعليمي"} (المستوى ${currentLevel.order || 1})`
+        }
+
         // Fetch level history if not populated
         if (levelHistoryList.length === 0 && currentUser?._id) {
             try {
@@ -924,9 +947,8 @@ function renderExamsTab() {
 
         // Check if student has already submitted this exam
         const myAtt = exam.myAttempt
-        const existingResult = examResultsList.find((r) => r.exam?._id === exam._id || r.exam === exam._id)
-        const isSubmitted = (myAtt && myAtt.status !== "in_progress" && myAtt.status !== "not_started") || (existingResult && existingResult.status !== "in_progress" && existingResult.status !== "not_started")
-        const isPublished = (exam.isResultsPublished && isSubmitted) || myAtt?.status === "published" || existingResult?.status === "published"
+        const isSubmitted = (myAtt && ['submitted', 'grading', 'graded', 'approved', 'published'].includes(myAtt.status)) || (existingResult && ['submitted', 'grading', 'graded', 'approved', 'published'].includes(existingResult.status))
+        const isPublished = myAtt?.status === "published" || existingResult?.status === "published"
 
         let actionBtn = ""
         let statusBadge = ""

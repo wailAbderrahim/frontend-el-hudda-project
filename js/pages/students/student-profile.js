@@ -2,7 +2,7 @@ import { protectPage, logout } from "../../auth/auth.js"
 import { getProfile, updateProfile, changePassword } from "../../api/usersApi.js"
 import { getStudentProgress } from "../../api/progressApi.js"
 import { parseBirthInfo, formatBirthDate, formatBirthPlaces } from "../../utils/birthUtils.js"
-import { getStudentLevelHistory } from "../../api/levelsApi.js"
+import { getLevels, getStudentLevelHistory } from "../../api/levelsApi.js"
 import { initNotificationBell } from "../../components/notificationBell.js"
 
 // Restrict to student role
@@ -130,7 +130,7 @@ function setupSidebar() {
 /* ===================================================
    POPULATE DATA
 =================================================== */
-function populateStudentData(profile, progress) {
+function populateStudentData(profile, progress, allLevels = []) {
     currentProfile = profile
     currentProgress = progress
 
@@ -202,12 +202,23 @@ function populateStudentData(profile, progress) {
     }
 
     // 4.5. Level Data & History
-    const lvl = profile.currentLevel || progress?.currentLevel || progress?.student?.currentLevel
-    if (lvl) {
-        const lvlName = typeof lvl === "object" ? (lvl.name || "المستوى التمهيدي") : "المستوى التمهيدي"
-        const lvlOrder = typeof lvl === "object" && lvl.order ? `المستوى ${lvl.order}` : "المستوى 1"
-        const lvlPassing = typeof lvl === "object" && lvl.passingScore ? `${lvl.passingScore}%` : "60%"
-        const lvlReqs = typeof lvl === "object" ? (lvl.requirements || "حفظ وتثبيت المقرر القرآني وإتقان مبادئ التجويد.") : "حفظ وتثبيت المقرر القرآني وإتقان مبادئ التجويد."
+    let lvl = profile.currentLevel || progress?.currentLevel || progress?.student?.currentLevel
+    if (lvl && typeof lvl === "string") {
+        const found = allLevels.find(l => String(l._id || l.id) === String(lvl))
+        if (found) lvl = found
+    } else if (lvl && typeof lvl === "object" && !lvl.name && lvl._id) {
+        const found = allLevels.find(l => String(l._id || l.id) === String(lvl._id))
+        if (found) lvl = found
+    }
+    if (!lvl && allLevels.length > 0) {
+        lvl = allLevels.sort((a,b) => (a.order || 1) - (b.order || 1))[0]
+    }
+
+    if (lvl && typeof lvl === "object") {
+        const lvlName = lvl.name || "المستوى التمهيدي"
+        const lvlOrder = lvl.order ? `المستوى ${lvl.order}` : "المستوى 1"
+        const lvlPassing = lvl.passingScore ? `${lvl.passingScore}%` : "60%"
+        const lvlReqs = lvl.requirements || "حفظ وتثبيت المقرر القرآني وإتقان مبادئ التجويد."
 
         if (levelNameVal) levelNameVal.textContent = lvlName
         if (levelOrderVal) levelOrderVal.textContent = lvlOrder
@@ -300,7 +311,13 @@ async function loadStudentProfile() {
             }
         }
 
-        populateStudentData(profile, progress)
+        let allLevels = []
+        try {
+            const lvlsRes = await getLevels()
+            allLevels = Array.isArray(lvlsRes) ? lvlsRes : lvlsRes?.data || []
+        } catch (_) {}
+
+        populateStudentData(profile, progress, allLevels)
 
         if (profileLoading) profileLoading.classList.add("hidden")
         if (profileContent) profileContent.classList.remove("hidden")
